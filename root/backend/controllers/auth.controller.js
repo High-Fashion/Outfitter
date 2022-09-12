@@ -98,10 +98,27 @@ exports.signin = (req, res) => {
 };
 
 exports.signout = (req, res) => {
-  return res.status(404).json({
-    success: false,
-    message: "TODO",
-  });
+  res.clearCookie("access_token");
+  res.clearCookie("refresh_token");
+  jwt.verify(
+    req.cookies.refresh_token,
+    process.env.REFRESH_TOKEN_SECRET,
+    async (err, decoded) => {
+      if (err != null || decoded == null)
+        return res.status(401).json({
+          success: false,
+          message: "INVALID TOKEN",
+        });
+      //Update old refresh token from database
+      const old_refresh_token = await getRefreshToken(decoded);
+      old_refresh_token.revoked = Date.now();
+      await old_refresh_token.save();
+      return res.status(200).json({
+        success: true,
+        message: "Successfully logged out.",
+      });
+    }
+  );
 };
 
 const getRefreshToken = async (token) => {
@@ -113,11 +130,9 @@ const getRefreshToken = async (token) => {
 };
 
 exports.refresh = async (req, res) => {
-  const old_token = req.cookies.refresh_token;
-
   //Verify old refresh token
   jwt.verify(
-    old_token,
+    req.cookies.refresh_token,
     process.env.REFRESH_TOKEN_SECRET,
     async (err, decoded) => {
       if (err != null || decoded == null)

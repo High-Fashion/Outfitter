@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
 const validator = require("validator");
-const { getRefreshToken } = require("../controllers/auth.controller");
 const User = require("../models/user");
 
 exports.validateSignUp = (req, res, next) => {
@@ -94,9 +93,6 @@ exports.authorize = async (req, res, next) => {
       if (decoded == null) return res.status(403).send("INVALID TOKEN 3");
 
       const { id } = decoded;
-      console.log(" ");
-      console.log(access_token);
-      console.log(" ");
 
       User.findById(id).then((user) => {
         if (user == null)
