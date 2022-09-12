@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const validator = require("validator");
-const { options } = require("../routes/user.routes");
+const { getRefreshToken } = require("../controllers/auth.controller");
+const User = require("../models/user");
 
 exports.validateSignUp = (req, res, next) => {
   let { email, firstName, lastName, acceptTerms, username, password } =
@@ -78,6 +79,35 @@ exports.validateSignIn = (req, res, next) => {
   return next();
 };
 
-exports.authenticate = (req, res, next) => {
-  return next();
+exports.authorize = async (req, res, next) => {
+  const { access_token } = req.cookies;
+  if (access_token == null)
+    return res.status(401).json({
+      success: false,
+      message: "INVALID TOKEN 1",
+    });
+  jwt.verify(
+    access_token,
+    process.env.ACCESS_TOKEN_SECRET,
+    async (err, decoded) => {
+      if (err != null) return res.status(403).send("INVALID TOKEN 2");
+      if (decoded == null) return res.status(403).send("INVALID TOKEN 3");
+
+      const { id } = decoded;
+      console.log(" ");
+      console.log(access_token);
+      console.log(" ");
+
+      User.findById(id).then((user) => {
+        if (user == null)
+          return res.status(400).json({
+            success: false,
+            message: "INVALID TOKEN 3",
+          });
+        req.user = user;
+        console.log(req.user);
+        return next();
+      });
+    }
+  );
 };
