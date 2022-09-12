@@ -1,7 +1,10 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const schema = new Schema({
+const ratingSchema = new Schema({});
+const measurementSchema = new Schema({});
+
+const userSchema = new Schema({
   email: { type: String, unique: true, required: true },
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
@@ -10,9 +13,14 @@ const schema = new Schema({
   hashedPassword: { type: String, required: true },
   role: { type: String, required: true, default: "User" },
   created: { type: Date, default: Date.now },
+  measurements: [{ type: Schema.Types.ObjectId, ref: "Measurement" }],
+  preferences: {
+    ratings: [{ type: Schema.Types.ObjectId, ref: "Rating" }],
+  },
+  wardrobes: [{ type: Schema.Types.ObjectId, ref: "Wardrobe" }],
 });
 
-schema.set("toJSON", {
+userSchema.set("toJSON", {
   virtuals: true,
   versionKey: false,
   transform: function (doc, ret) {
@@ -21,4 +29,4 @@ schema.set("toJSON", {
   },
 });
 
-module.exports = mongoose.model("User", schema);
+module.exports = mongoose.model("User", userSchema);

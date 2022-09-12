@@ -3,7 +3,6 @@ const {
   authorize,
   validateSignUp,
   validateSignIn,
-  validateRefresh,
 } = require("../middleware/auth.middleware");
 
 const auth_controller = require("../controllers/auth.controller");
