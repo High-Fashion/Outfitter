@@ -1,21 +1,17 @@
 const User = require("../models/user");
 
-exports.createOneRequest = (req, res) => {
-  res.status(201).json({ message: "New user created!" });
-};
-
-exports.readAllRequest = (req, res) => {
+exports.readAll = (req, res) => {
   res.status(302).json({ message: "Users found!" });
 };
 
-exports.readOneRequest = (req, res) => {
+exports.readOne = (req, res) => {
   res.status(302).json({ message: "User found!" });
 };
 
-exports.updateOneRequest = (req, res) => {
+exports.updateOne = (req, res) => {
   res.status(301).json({ message: "User updated!" });
 };
 
-exports.deleteOneRequest = (req, res) => {
+exports.deleteOne = (req, res) => {
   res.status(202).json({ message: "User deleted!" });
 };
