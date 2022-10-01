@@ -17,7 +17,8 @@ const userSchema = new Schema({
   preferences: {
     ratings: [{ type: Schema.Types.ObjectId, ref: "Rating" }],
   },
-  wardrobes: [{ type: Schema.Types.ObjectId, ref: "Wardrobe" }],
+  wardrobe: { type: Schema.Types.ObjectId, ref: "Wardrobe" },
+  W,
 });
 
 userSchema.set("toJSON", {

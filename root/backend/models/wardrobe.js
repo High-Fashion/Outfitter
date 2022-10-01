@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const styleSchema = new Schema({});
 
 const wardrobeSchema = new Schema({
+  gender: [String],
   items: [{ type: Schema.Types.ObjectId, ref: "Item" }],
   accessories: [{ type: Schema.Types.ObjectId, ref: "Item" }],
   styles: [{ type: Schema.Types.ObjectId, ref: "Style" }],
