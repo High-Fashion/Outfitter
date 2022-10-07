@@ -37,23 +37,10 @@ function App() {
             component={NewItemScreen}
             options={{ title: "New Item"}}
             />
-          {/* <SafeAreaView style={styles.container}> */}
-            {/* <Text>Open up App.js to start working on your app!</Text> */}
-            {/* <StatusBar style="auto" /> */}
-          {/* </SafeAreaView> */}
         </Stack.Navigator>
       </NavigationContainer>
     </NativeBaseProvider>
   );
 }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: 'green',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-// });
 
 export default App;

@@ -1,0 +1,222 @@
+{
+
+    "womens": {
+      "dress": {
+        "mini": {},
+        "knee_length": {},
+        "midi": {},
+        "maxi": {},
+        "high_low": {},
+        "jumpsuit": {},
+        "romper": {}
+      },
+      "top": {
+        "blouse": {},
+        "button_down": {},
+        "halter": {},
+        "knit": {},
+        "polo": {},
+        "t_shirt": {},
+        "tunic": {},
+        "turtle_neck": {},
+        "wrap": {},
+        "bodysuit": {},
+        "camisole": {},
+        "tank": {}
+      },
+      "sweater": {
+        "cardigan": {},
+        "collared": {},
+        "cowl_neck": {},
+        "crewneck": {},
+        "full_zip": {},
+        "henley": {},
+        "hooded": {},
+        "poncho": {},
+        "scoop_neck": {},
+        "shrug": {},
+        "sweater_coat": {},
+        "tunic": {},
+        "v_neck": {},
+        "wrap": {},
+        "mock_sweaters": {},
+        "turtle_neck": {},
+        "sleeveless": {},
+        "vest": {}
+      },
+      "jeans": {
+        "boot_cut": {},
+        "boyfriend": {},
+        "cargo": {},
+        "flare": {},
+        "leggings": {},
+        "overalls": {},
+        "relaxed": {},
+        "straight": {},
+        "wide_leg": {},
+        "capri": {},
+        "cropped": {},
+        "skinny": {},
+        "slim": {}
+      },
+      "pants": {
+        "cargo": {},
+        "casual": {},
+        "corduroys": {},
+        "dress": {},
+        "khakis": {},
+        "chinos": {},
+        "leather": {},
+        "linen": {},
+        "capri": {},
+        "cropped": {}
+      },
+      "skirts": {
+        "a_line": {},
+        "asymmetrical": {},
+        "bubble": {},
+        "full": {},
+        "maxi": {},
+        "mini": {},
+        "peasant": {},
+        "pleated": {},
+        "straight": {},
+        "pencil": {},
+        "tiered": {},
+        "wrap": {}
+      },
+      "coats_jackets": {
+        "cape": {},
+        "fleece": {},
+        "jean": {},
+        "military": {},
+        "motorcycle": {},
+        "parka": {},
+        "peacoat": {},
+        "poncho": {},
+        "puffer": {},
+        "raincoat": {},
+        "trench": {},
+        "vest": {},
+        "windbreaker": {},
+        "wool": {}
+      },
+      "suit": {
+        "blazer": {},
+        "dress": {},
+        "pant": {},
+        "skirt": {}
+      },
+      "athletic": {
+        "jacket": {},
+        "jersey": {},
+        "shorts": {},
+        "socks": {},
+        "sports_bra": {},
+        "vest": {},
+        "leggings": {},
+        "pants": {},
+        "tights": {},
+        "polos": {},
+        "t_shirt": {},
+        "tank": {},
+        "dress": {},
+        "skirt": {},
+        "skorts": {},
+        "hoodie": {},
+        "sweat_pants": {},
+        "sweat_shirt": {},
+        "sweat_suit": {},
+        "track_jacket": {},
+        "track_suit": {}
+      },
+      "swim": {
+        "one_piece": {},
+        "two_piece": {},
+        "cover_up": {},
+        "beach_accessory": {}
+      },
+      "accessories": {
+        "glasses": {
+          "prescription": {},
+          "sun": {}
+        },
+        "handbag": {
+          "shoulder": {},
+          "tote": {},
+          "crossbody": {},
+          "satchel": {},
+          "hobo": {},
+          "backpack": {},
+          "cosmetic": {},
+          "waist": {},
+          "fanny_pack": {},
+          "messenger": {},
+          "bucket": {}
+        },
+        "wallet": {},
+        "belt": {},
+        "hat": {},
+        "hair_accessory": {},
+        "watch": {},
+        "scarf": {},
+        "wrap": {},
+        "bandana": {},
+        "fascinator": {},
+        "gloves": {},
+        "headband": {},
+        "hijab": {},
+        "umbrella": {},
+        "cardholder": {}
+      },
+      "jewelry": {
+        "ring": {
+          "finger": {},
+          "ear": {},
+          "nose": {},
+          "toe": {}
+        },
+        "necklace": {},
+        "bracelet": {
+          "wrist": {},
+          "ankle": {}
+        },
+        "pins": {}
+      },
+      "shoes": {
+        "athletic": {},
+        "boots": {},
+        "sneakers": {},
+        "flats": {},
+        "outdoor": {},
+        "oxfords": {},
+        "heels": {
+          "stiletto": {},
+          "wedge": {},
+          "block": {},
+          "kitten": {},
+          "platform": {},
+          "cone": {}
+        },
+        "sandals": {},
+        "slippers": {},
+        "work": {},
+        "loafers": {},
+        "slip_ons": {},
+        "clogs": {},
+        "mules": {}
+      },
+      "shorts": {
+        "bermuda": {},
+        "bike": {},
+        "cargo": {},
+        "chino": {},
+        "khaki": {},
+        "jean": {},
+        "high_waisted": {},
+        "pull_on": {},
+        "short": {},
+        "skort": {}
+      }
+    }
+}

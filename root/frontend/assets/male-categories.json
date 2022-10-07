@@ -1,0 +1,164 @@
+{
+  
+    "mens": {
+      "tops": {
+        "button front": {},
+        "dress shirt": {},
+        "hawaiian": {},
+        "henley": {},
+        "tank": {},
+        "t shirt": {},
+        "turtle neck": {},
+        "polo": {},
+        "jersey": {},
+        "rugby": {}
+      },
+      "sweats": {
+        "sweat shirt": {},
+        "sweat shirt pullover": {},
+        "sweat pants": {},
+        "sweat suit": {},
+        "track jacket": {}
+      },
+      "hoodies": {},
+      "sweaters": {
+        "cardigan": {},
+        "crewneck": {},
+        "full zip": {},
+        "polo": {},
+        "turtle neck": {},
+        "vest": {},
+        "v neck": {}
+      },
+      "jeans": {
+        "baggy": {},
+        "boot cut": {},
+        "cargo": {},
+        "carpenter": {},
+        "straight leg": {},
+        "overalls": {},
+        "relaxed": {},
+        "skinny": {},
+        "slim": {}
+      },
+      "pants": {
+        "cargo": {},
+        "carpenter": {},
+        "casual": {},
+        "corduroys": {},
+        "dress flat": {},
+        "dress pleated": {},
+        "khakies": {},
+        "chinos": {}
+      },
+      "shorts": {
+        "athletic": {},
+        "board": {},
+        "cargo": {},
+        "carpenter": {},
+        "casual": {},
+        "corduroys": {},
+        "jean": {},
+        "dress": {},
+        "khakis": {},
+        "chinos": {}
+      },
+      "coats jackets": {
+        "fleece": {},
+        "bomber": {},
+        "jean": {},
+        "military": {},
+        "motorcycle": {},
+        "parka": {},
+        "peacoat": {},
+        "poncho": {},
+        "puffer": {},
+        "rainwear": {},
+        "trench": {},
+        "varsity": {},
+        "vest": {},
+        "windbreaker": {},
+        "wool": {}
+      },
+      "blazers sport coats": {
+        "double breasted": {},
+        "four button": {},
+        "one button": {},
+        "three button": {},
+        "two button": {}
+      },
+      "suits": {
+        "double breasted": {},
+        "four button": {},
+        "one button": {},
+        "three button": {},
+        "two button": {},
+        "tuxedo": {}
+      },
+      "athletic": {
+        "jacket": {},
+        "jersey": {},
+        "pants": {},
+        "shorts": {},
+        "polo": {},
+        "long sleeve shirt": {},
+        "short sleeve shirt": {},
+        "t shirt": {},
+        "tank": {},
+        "hoodie": {},
+        "sweat pants": {},
+        "sweat shirt": {},
+        "track pants": {},
+        "track suit": {}
+      },
+      "swim": {
+        "board": {},
+        "trunks": {}
+      },
+      "accessories": {
+        "belt": {},
+        "hat": {},
+        "glasses": {
+          "prescription": {},
+          "sun": {}
+        },
+        "tie": {},
+        "watch": {},
+        "wallet": {
+          "cardholder": {}
+        },
+        "backpack": {},
+        "bag": {},
+        "briefcase": {},
+        "bandana": {},
+        "collar stays": {},
+        "gloves": {},
+        "hankerchief": {},
+        "scarf": {},
+        "turban": {},
+        "umbrella": {}
+      },
+      "shoes": {
+        "athletic": {},
+        "boots": {},
+        "sneakers": {},
+        "outdoor": {},
+        "oxfords": {},
+        "sandals": {},
+        "slippers": {},
+        "work": {},
+        "loafers": {},
+        "slip ons": {},
+        "clogs": {},
+        "mules": {}
+      },
+      "jewelry": {
+        "bracelet": {},
+        "cufflinks": {},
+        "earrings": {},
+        "necklaces": {},
+        "pins": {},
+        "rings": {}
+      }
+    }
+}

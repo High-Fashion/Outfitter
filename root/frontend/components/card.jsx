@@ -1,32 +1,38 @@
 import React, { Component } from 'react';
 import { Text, Pressable, Image, StyleSheet } from 'react-native'
-import { VStack, Box, Divider } from 'native-base';
+import { VStack, Box, Divider, Center } from 'native-base';
 
 export default class Card extends Component {
 
     render() {
         return (
-            // <Text>The text works</Text>
-            <Pressable style={cardStyle.container}>
-                <Box border="1" borderRadius="md">
-                    <VStack space="4" divider={<Divider />}>
-                        <Box px="4" pt="4">
-                            <Image source={this.props.image}/>
-                            <Text>{this.props.itemType}</Text>
-                        </Box>
+                <Box display="flex" flexWrap="wrap" bgColor="light.100" borderStyle="solid" borderColor="coolGray.150" shadow="5" py="4" px="3" 
+                 borderRadius="5" rounded="md" width="100%">
+                    <VStack space="1" divider={<Divider />}>
+                        <Center px="3" pt="3">
+                            <Image source={this.props.image} />
+                            <Text style={{adjustsFontSizeToFit:"true", width:"25%"}}>{this.props.itemType}</Text>
+                        </Center>
                     </VStack>
                 </Box>
-            </Pressable>
         );
     }
 }
 
-const cardStyle = StyleSheet.create({
-    container: {
-        elevation: 5,
-        borderRadius: 5,
-        width: "30%",
-        height: "40%",
-        backgroundColor: "white"
-    }
-})
+// const cardStyle = StyleSheet.create({
+//     card: {
+//         // flex:1,
+//         flexDirection: "column",
+//         // elevation: 5,
+//         width: "100%",
+//         height: "30%",
+//         alignItems: "center",
+//         justifyContent: "center",
+//         border:3,
+//         margin:1:3,
+//         borderColor:"black",
+//         borderRadius: 5,
+//         backgroundColor: "blue"
+
+//     }
+// })
