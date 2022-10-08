@@ -10,23 +10,13 @@ const DATA = require("./../assets/male-categories.json")
 
 const modalStack = createNativeStackNavigator();
 
-export default class ItemModal extends Component {
-    state = {
-        modalVisible: false
-    };
-
-    setModalVisible = (visible) => {
-        this.setState({ modalVisible: visible });
-    }
+export default class ItemModalScreen extends Component {
 
     render() {
-        const { modalVisible } = this.state;
         return (
-            
-
             <View style={styles.centeredView}>
              {/* <View> */}
-                <Modal 
+                {/* <Modal 
                     // style={{flex:1}}
                     propogateSwipe={true}
                     animationType="slide" 
@@ -37,8 +27,12 @@ export default class ItemModal extends Component {
                         this.setModalVisible(!modalVisible);
                     }}
                 >
-                    <View style={styles.modalView}>
-                        <NavigationContainer independent="true">
+                    <View> */}
+                        {/* <NavigationContainer independent="true">
+                            <modalStack.Navigator initialRouteName="NewItemScreen">
+                                <modalStack.Screen name="NewItemScreen" component={NewItemScreen} />
+                                <modalStack.Screen name="CategoryListScreen" component={CategoryListScreen} />
+                            </modalStack.Navigator> */}
                             <FlatList 
                                 contentContainerStyle={{ paddingBottom: "60%"}}
                                 columnWrapperStyle={{justifyContent: "space-evenly"}}
@@ -53,15 +47,15 @@ export default class ItemModal extends Component {
                                     </Pressable>
                                 )}
                             />
-                        </NavigationContainer>
-                    </View>
+                        {/* </NavigationContainer> */}
+                    {/* </View>
                 </Modal>
                 <Button style={styles.centeredView}
                     title="Type of Item"
                     onPress={() => {
                     this.setModalVisible.bind(this)(!modalVisible)}
                     }
-                />
+                /> */}
             </View>
         );
     }

@@ -10,10 +10,10 @@ export default StyleSheet.create({
     modalView: {
         // margin: 0.1,
         // elevation: 5,
-        flex: 1,
+        // flex: 1,
         height: "45%",
         width: "100%",
-        // backgroundColor: "red",
+        backgroundColor: "red",
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         // padding: 20,
