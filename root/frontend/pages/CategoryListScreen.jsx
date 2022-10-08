@@ -16,10 +16,13 @@ function CategoryListScreen({ navigation }) {
         <View>
             {/* <Text>Data</Text> */}
             <FlatList 
+                contentContainerStyle={{ paddingBottom: "60%"}}
+                columnWrapperStyle={{justifyContent: "space-evenly", width: "100%" }}
+                ItemSeparatorComponent={() => <View style={{height: "2%"}} />}
                 numColumns={2} 
                 data={Object.keys(DATA["mens"])}
                 renderItem = {({ item }) => (
-                <Pressable onPress={() => {console.log(item + " pressed")}}>
+                <Pressable onPress={() => navigation.navigate("ItemList", {items: DATA["mens"][item], name: item})}>
                 <Card itemType={item} image={require("./../assets/hanger.png")}/>
                 </Pressable>
                 )}
@@ -27,7 +30,8 @@ function CategoryListScreen({ navigation }) {
             <Button style={styles.centeredView}
                 title="Category Type of Item"
                 onPress={() => (
-                    console.log(Object.keys(DATA["mens"]))
+                    navigation.navigate("ItemList", {items: DATA["mens"][item]})
+                    // console.log(Object.keys(DATA["mens"]))
                 )}
             />
         </View>

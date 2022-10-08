@@ -7,6 +7,7 @@ import { NativeBaseProvider } from "native-base"
 
 import NewItemScreen from './pages/NewItemScreen.js';
 import CategoryListScreen from './pages/CategoryListScreen.jsx';
+import ItemListScreen from './pages/ItemListScreen.jsx';
 
 const Stack = createNativeStackNavigator();
 
@@ -46,6 +47,7 @@ function App() {
           </Stack.Group>
           <Stack.Group screenOptions={{ presentation: 'modal' }}>
             <Stack.Screen name="CategoryList" component={CategoryListScreen} option={{ title:"Clothing Types"}} />
+            <Stack.Screen name="ItemList" component={ItemListScreen} options={({ route }) => ({ title: route.params.name })} />
           </Stack.Group>
 
 
