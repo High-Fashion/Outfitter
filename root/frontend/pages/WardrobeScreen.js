@@ -1,4 +1,5 @@
 import {
+  Fab,
   Input,
   SearchIcon,
   Icon,
@@ -14,6 +15,7 @@ import {
   Center,
   Badge,
   CloseIcon,
+  AddIcon,
 } from "native-base";
 
 function TypeSelector() {
@@ -153,18 +155,27 @@ function ClothingList() {
   );
 }
 
-function WardrobeScreen() {
+function WardrobeScreen({ navigation }) {
   return (
-    <ScrollView>
-      <VStack space={1} paddingTop={1} w="100%">
-        <TypeSelector />
-        <Divider />
-        <SearchBarArea />
-        <Divider />
-        <SortBar />
-        <ClothingList />
-      </VStack>
-    </ScrollView>
+    <View>
+      <ScrollView>
+        <VStack space={1} paddingTop={1} w="100%">
+          <TypeSelector />
+          <Divider />
+          <SearchBarArea />
+          <Divider />
+          <SortBar />
+          <ClothingList />
+        </VStack>
+      </ScrollView>
+      <Fab
+        renderInPortal={false}
+        shadow={2}
+        size="lg"
+        onPress={() => navigation.navigate("NewItem")}
+        icon={<AddIcon color="white" size="xl" />}
+      />
+    </View>
   );
 }
 export default WardrobeScreen;
