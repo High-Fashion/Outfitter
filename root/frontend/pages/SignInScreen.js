@@ -43,7 +43,11 @@ function SignInScreen({ navigation }) {
             </Stack>
           </Stack>
         </FormControl>
-        <Button>
+        <Button
+          onPress={() => {
+            navigation.navigate("Home");
+          }}
+        >
           <Text>Sign In</Text>
         </Button>
         <Divider />

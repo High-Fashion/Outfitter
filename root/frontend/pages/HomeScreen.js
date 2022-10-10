@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component, useEffect, useState } from "react";
 
 import {
   NavigationContainer,
@@ -11,24 +11,28 @@ import OutfitScreen from "./OutfitScreen";
 import NewItemScreen from "./NewItemScreen.js";
 import CategoryListScreen from "./CategoryListScreen.jsx";
 import ItemListScreen from "./ItemListScreen.jsx";
+import {
+  Measurements,
+  SetupScreen,
+  WardrobeSettings,
+  PrivacySettings,
+  StyleQuiz,
+} from "./SetupScreen.js";
 
 import {
   Text,
-  Image,
   HStack,
   Box,
   Pressable,
-  Icon,
   Center,
   SunIcon,
   MoonIcon,
   PlayIcon,
-  Button,
-  VStack,
   View,
 } from "native-base";
 
-function Footer({ navigationRef }) {
+function Footer(props) {
+  const { navigationRef, show } = props;
   const [selected, setSelected] = useState(1);
   const screens = {
     0: "Wardrobe",
@@ -41,6 +45,7 @@ function Footer({ navigationRef }) {
       navigationRef.navigate(screens[number]);
     }
   }
+  if (show == false) return <></>;
   return (
     <Box bg="white" width="100%" alignSelf="center">
       <Center flex={1}></Center>
@@ -96,11 +101,14 @@ const Stack = createNativeStackNavigator();
 
 function HomeScreen() {
   const navigationRef = useNavigationContainerRef();
+  const [isSetup, setIsSetup] = useState(false);
+  const initialRouteName = isSetup ? "Media" : "Setup";
+
   return (
     <View flex={1}>
       <View flex={1} my={0}>
         <NavigationContainer ref={navigationRef} independent={true}>
-          <Stack.Navigator initialRouteName="Media">
+          <Stack.Navigator initialRouteName={initialRouteName}>
             <Stack.Group>
               <Stack.Group>
                 <Stack.Screen
@@ -137,10 +145,40 @@ function HomeScreen() {
                 options={{ headerShown: false }}
               />
             </Stack.Group>
+            <Stack.Group>
+              <Stack.Screen
+                name="Setup"
+                component={SetupScreen}
+                initialParams={{ finish: () => setIsSetup(true) }}
+                options={{
+                  headerShown: false,
+                }}
+              />
+              <Stack.Screen
+                name="Wardrobe Settings"
+                component={WardrobeSettings}
+                options={{ headerShown: true }}
+              />
+              <Stack.Screen
+                name="Measurements"
+                component={Measurements}
+                options={{ headerShown: true }}
+              />
+              <Stack.Screen
+                name="Style Quiz"
+                component={StyleQuiz}
+                options={{ headerShown: true }}
+              />
+              <Stack.Screen
+                name="Privacy Settings"
+                component={PrivacySettings}
+                options={{ headerShown: true }}
+              />
+            </Stack.Group>
           </Stack.Navigator>
         </NavigationContainer>
       </View>
-      <Footer navigationRef={navigationRef} />
+      <Footer show={isSetup} navigationRef={navigationRef} />
     </View>
   );
 }

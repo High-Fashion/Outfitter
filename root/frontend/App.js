@@ -42,12 +42,14 @@ export default function App() {
                 title: "Outfitter",
                 headerTitleAlign: "center",
                 headerStyle: {
-                  backgroundColor: "#f4511e",
+                  backgroundColor: "#1e40af",
                 },
                 headerTintColor: "#fff",
                 headerTitleStyle: {
                   fontWeight: "bold",
+                  fontFamily: "sans-serif-medium",
                 },
+                headerLeft: () => <></>,
                 headerRight: () => (
                   <Pressable>
                     <HamburgerIcon size="md" color="white" />
