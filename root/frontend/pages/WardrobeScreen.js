@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Fab,
   Input,
@@ -16,6 +17,9 @@ import {
   Badge,
   CloseIcon,
   AddIcon,
+  Modal,
+  FormControl,
+  Checkbox,
 } from "native-base";
 
 function TypeSelector() {
@@ -34,9 +38,61 @@ function TypeSelector() {
   );
 }
 
-function SearchBarArea() {
+function FilterOptionsModal(props) {
+  function updateFilterOptions() {
+    props.close();
+  }
+
   return (
-    <HStack space={1} padding={1}>
+    <Modal size="full" isOpen={props.show} onClose={() => props.close()}>
+      <Modal.Content maxWidth="400px">
+        <Modal.CloseButton />
+        <Modal.Header>Filters</Modal.Header>
+        <Modal.Body>
+          <FormControl>
+            <HStack justifyContent="space-between" alignItems="center">
+              <FormControl.Label>Brand</FormControl.Label>
+              <Checkbox />
+            </HStack>
+          </FormControl>
+          <FormControl>
+            <HStack justifyContent="space-between" alignItems="center">
+              <FormControl.Label>Color</FormControl.Label>
+              <Checkbox />
+            </HStack>
+          </FormControl>
+          <FormControl>
+            <HStack justifyContent="space-between" alignItems="center">
+              <FormControl.Label>Pattern</FormControl.Label>
+              <Checkbox />
+            </HStack>
+          </FormControl>
+          <FormControl>
+            <HStack justifyContent="space-between" alignItems="center">
+              <FormControl.Label>Material</FormControl.Label>
+              <Checkbox />
+            </HStack>
+          </FormControl>
+          <FormControl>
+            <HStack justifyContent="space-between" alignItems="center">
+              <FormControl.Label>Fit</FormControl.Label>
+              <Checkbox />
+            </HStack>
+          </FormControl>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button.Group space={2}>
+            <Button onPress={() => updateFilterOptions()}>Apply</Button>
+          </Button.Group>
+        </Modal.Footer>
+      </Modal.Content>
+    </Modal>
+  );
+}
+
+function SearchBarArea(props) {
+  return (
+    <HStack alignItems="center" space={1} padding={1}>
       <Input
         flex={6}
         placeholder="Search"
@@ -50,34 +106,101 @@ function SearchBarArea() {
           </Center>
         }
       />
-      <Button flex={1}>
-        <Text>Filter</Text>
-      </Button>
+      <View flex={1}>
+        <Button onPress={() => props.open()} borderRadius="md">
+          <Text>Filter</Text>
+        </Button>
+      </View>
     </HStack>
   );
 }
 
-function SortBar() {
-  const filters = ["Filter", "Tag", "List"];
+function SortOptionsModal(props) {
+  function updateSortOptions() {
+    props.close();
+  }
+
+  return (
+    <Modal size="full" isOpen={props.show} onClose={() => props.close()}>
+      <Modal.Content maxWidth="400px">
+        <Modal.CloseButton />
+        <Modal.Header>Sort By</Modal.Header>
+        <Modal.Body>
+          <FormControl>
+            <HStack justifyContent="space-between" alignItems="center">
+              <FormControl.Label>Brand</FormControl.Label>
+              <Checkbox />
+            </HStack>
+          </FormControl>
+          <FormControl>
+            <HStack justifyContent="space-between" alignItems="center">
+              <FormControl.Label>Color</FormControl.Label>
+              <Checkbox />
+            </HStack>
+          </FormControl>
+          <FormControl>
+            <HStack justifyContent="space-between" alignItems="center">
+              <FormControl.Label>Pattern</FormControl.Label>
+              <Checkbox />
+            </HStack>
+          </FormControl>
+          <FormControl>
+            <HStack justifyContent="space-between" alignItems="center">
+              <FormControl.Label>Material</FormControl.Label>
+              <Checkbox />
+            </HStack>
+          </FormControl>
+          <FormControl>
+            <HStack justifyContent="space-between" alignItems="center">
+              <FormControl.Label>Fit</FormControl.Label>
+              <Checkbox />
+            </HStack>
+          </FormControl>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button.Group space={2}>
+            <Button onPress={() => updateSortOptions()}>Apply</Button>
+          </Button.Group>
+        </Modal.Footer>
+      </Modal.Content>
+    </Modal>
+  );
+}
+
+function SortBar(props) {
+  const [filters, setFilters] = useState(["Filter", "Tag", "List"]);
+
+  function removeFilter(name) {
+    const newFilters = filters.filter((filter) => filter != name);
+    setFilters(newFilters);
+  }
 
   return (
     <HStack padding={1} space={3} justifyContent="space-between">
-      <HStack space={2}>
+      <HStack alignItems="center">
         {filters.map((filter) => {
+          const remove = () => {
+            removeFilter(filter);
+          };
           return (
-            <Box bg="blueGray.300" padding={0}>
+            <Box mx="1" px="1" bg="blueGray.300" borderRadius="lg">
               <HStack space={1} alignItems="center">
                 <Text paddingBottom={1}>{filter}</Text>
-                <Button variant="ghost" padding={0}>
-                  <CloseIcon />
+                <Button
+                  onPress={() => remove()}
+                  variant="ghost"
+                  borderRadius="full"
+                  padding={0}
+                >
+                  <CloseIcon size="sm" />
                 </Button>
               </HStack>
             </Box>
           );
         })}
       </HStack>
-      <Button>
-        <Text>Sort Button</Text>
+      <Button borderRadius="lg" onPress={() => props.open()}>
+        <Text>Sort</Text>
       </Button>
     </HStack>
   );
@@ -111,36 +234,15 @@ function ItemCard(props) {
 }
 
 function ClothingList() {
-  const itemList = [
-    { name: "1sd" },
-    { name: "ds2" },
-    { name: "3sd" },
-    { name: "4sd" },
-    { name: "5sd" },
-    { name: "6sd" },
-    { name: "7sasdf" },
-    { name: "1sadsdf" },
-    { name: "assdf2" },
-    { name: "assddf3" },
-    { name: "assdf4" },
-    { name: "5sadsdf" },
-    { name: "assdf6" },
-    { name: "assddf7" },
-    { name: "asasdfsdfasd1" },
-    { name: "sassddf2" },
-    { name: "sasddf3" },
-    { name: "sassddf4" },
-    { name: "asdsfd5" },
-    { name: "6assdadsdfsfsadf" },
-    { name: "7asssdf" },
-    { name: "1asdf" },
-    { name: "asdsfd2" },
-    { name: "asddsf3" },
-    { name: "asddfs4" },
-    { name: "5assddf" },
-    { name: "asdsdf6" },
-    { name: "asddsf7" },
-  ];
+  const [itemList, setItemList] = useState([]);
+
+  if (itemList.length == 0)
+    return (
+      <Center>
+        <Text bold>No clothing items</Text>
+      </Center>
+    );
+
   return (
     <VStack space={3}>
       {itemList.map((item) => {
@@ -156,15 +258,26 @@ function ClothingList() {
 }
 
 function WardrobeScreen({ navigation }) {
+  const [showSortModal, setShowSortModal] = useState(false);
+  const [showFilterModal, setShowFilterModal] = useState(false);
+
   return (
-    <View>
+    <View flex={1}>
+      <SortOptionsModal
+        show={showSortModal}
+        close={() => setShowSortModal(false)}
+      />
+      <FilterOptionsModal
+        show={showFilterModal}
+        close={() => setShowFilterModal(false)}
+      />
       <ScrollView>
         <VStack space={1} paddingTop={1} w="100%">
           <TypeSelector />
           <Divider />
-          <SearchBarArea />
+          <SearchBarArea open={() => setShowFilterModal(true)} />
           <Divider />
-          <SortBar />
+          <SortBar open={() => setShowSortModal(true)} />
           <ClothingList />
         </VStack>
       </ScrollView>

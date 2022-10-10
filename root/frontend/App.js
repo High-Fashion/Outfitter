@@ -16,7 +16,7 @@ import SignInScreen from "./pages/SignInScreen.js";
 
 const Stack = createNativeStackNavigator();
 
-const signedIn = true;
+const signedIn = false;
 
 function HomeHeader(props) {
   return (
@@ -39,7 +39,7 @@ export default function App() {
               name="Home"
               component={HomeScreen}
               options={{
-                title: "Home",
+                title: "Outfitter",
                 headerTitleAlign: "center",
                 headerStyle: {
                   backgroundColor: "#f4511e",
