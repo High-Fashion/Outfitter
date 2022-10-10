@@ -5,16 +5,11 @@ function HomeScreen({ navigation }) {
     <View>
       <VStack space={2}>
         <Text>Home Screen</Text>
-        <Button
-          title="Go to Wardrobe"
-          onPress={() => navigation.navigate("Wardrobe")}
-        >
+        <Button onPress={() => navigation.navigate("Wardrobe")}>
           <Text>Wardrobe</Text>
         </Button>
-        <Button
-          onPress={() => navigation.navigate("NewItem")}
-        >
-          New Item
+        <Button onPress={() => navigation.navigate("NewItem")}>
+          <Text>New Item</Text>
         </Button>
       </VStack>
     </View>

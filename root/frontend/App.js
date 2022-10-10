@@ -1,15 +1,15 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { NativeBaseProvider } from "native-base"
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { NativeBaseProvider } from "native-base";
 
 import React from "react";
 import WardrobeScreen from "./pages/WardrobeScreen.js";
 import HomeScreen from "./pages/HomeScreen.js";
 import SignUpScreen from "./pages/SignUpScreen.js";
 import SignInScreen from "./pages/SignInScreen.js";
-import NewItemScreen from './pages/NewItemScreen.js';
-import CategoryListScreen from './pages/CategoryListScreen.jsx';
-import ItemListScreen from './pages/ItemListScreen.jsx';
+import NewItemScreen from "./pages/NewItemScreen.js";
+import CategoryListScreen from "./pages/CategoryListScreen.jsx";
+import ItemListScreen from "./pages/ItemListScreen.jsx";
 
 const Stack = createNativeStackNavigator();
 
@@ -22,18 +22,32 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator initialRouteName={initialRoute}>
           <Stack.Group>
-          <Stack.Screen name="Sign Up" component={SignUpScreen} />
-          <Stack.Screen name="Sign In" component={SignInScreen} />
-          <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'Welcome'}} />
-          <Stack.Screen name="Wardrobe" component={WardrobeScreen} />
-          <Stack.Screen name="NewItem" component={NewItemScreen} options={{ title: "New Item"}} />
+            <Stack.Screen name="Sign Up" component={SignUpScreen} />
+            <Stack.Screen name="Sign In" component={SignInScreen} />
+            <Stack.Screen
+              name="Home"
+              component={HomeScreen}
+              options={{ title: "Welcome" }}
+            />
+            <Stack.Screen name="Wardrobe" component={WardrobeScreen} />
+            <Stack.Screen
+              name="NewItem"
+              component={NewItemScreen}
+              options={{ title: "New Item" }}
+            />
           </Stack.Group>
-          <Stack.Group screenOptions={{ presentation: 'modal' }}>
-            <Stack.Screen name="CategoryList" component={CategoryListScreen} options={{ title:"Clothing Types"}} />
-            <Stack.Screen name="ItemList" component={ItemListScreen} options={({ route }) => ({ title: route.params.name })} />
+          <Stack.Group screenOptions={{ presentation: "modal" }}>
+            <Stack.Screen
+              name="CategoryList"
+              component={CategoryListScreen}
+              options={{ title: "Clothing Types" }}
+            />
+            <Stack.Screen
+              name="ItemList"
+              component={ItemListScreen}
+              options={({ route }) => ({ title: route.params.name })}
+            />
           </Stack.Group>
-
-
         </Stack.Navigator>
       </NavigationContainer>
     </NativeBaseProvider>
