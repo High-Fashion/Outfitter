@@ -18,7 +18,6 @@ const userSchema = new Schema({
     ratings: [{ type: Schema.Types.ObjectId, ref: "Rating" }],
   },
   wardrobe: { type: Schema.Types.ObjectId, ref: "Wardrobe" },
-  W,
 });
 
 userSchema.set("toJSON", {

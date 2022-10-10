@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const { randomBytes } = require("crypto");
 const User = require("../models/user");
 const RefreshToken = require("../models/refresh_token");
+const { errorMonitor } = require("stream");
 
 exports.signup = (req, res) => {
   let { email, firstName, lastName, acceptTerms, username, password } =
@@ -21,8 +22,8 @@ exports.signup = (req, res) => {
       username: username,
       hashedPassword: hash,
     });
-    User.create(user, (newUser) => {
-      if (newUser == null)
+    User.create(user, (err) => {
+      if (err != null)
         return res.status(400).json({
           success: false,
           message: "TRY AGAIN 2",
