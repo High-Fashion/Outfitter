@@ -2,7 +2,6 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 
 require("dotenv").config();
@@ -10,6 +9,8 @@ const source = process.env.MONGODB_URI;
 const PORT = process.env.PORT || 5000;
 
 const userRouter = require("./routes/user.routes");
+const wardrobeRouter = require("./routes/wardrobe.routes");
+const itemRouter = require("./routes/item.routes");
 
 // MongoDB
 mongoose.connect(source);
@@ -30,6 +31,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //Routing
 app.use("/users", userRouter);
+app.use("/wardrobe", wardrobeRouter);
+app.use("/item", itemRouter);
 
 app.listen(PORT, () => {
   console.log(`Successfully served on port: ${PORT}.`);

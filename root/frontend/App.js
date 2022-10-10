@@ -1,8 +1,8 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-
 import { NativeBaseProvider } from "native-base"
 
+import React from "react";
 import WardrobeScreen from "./pages/WardrobeScreen.js";
 import HomeScreen from "./pages/HomeScreen.js";
 import SignUpScreen from "./pages/SignUpScreen.js";
@@ -20,7 +20,7 @@ export default function App() {
   return (
     <NativeBaseProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName='Home'> 
+        <Stack.Navigator initialRouteName={initialRoute}>
           <Stack.Group>
           <Stack.Screen name="Sign Up" component={SignUpScreen} />
           <Stack.Screen name="Sign In" component={SignInScreen} />

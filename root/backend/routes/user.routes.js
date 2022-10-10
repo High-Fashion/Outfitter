@@ -15,9 +15,9 @@ router.post("/refresh", auth_controller.refresh);
 router.use(authorize);
 
 router.post("/signout", auth_controller.signout);
-router.get("/", user_controller.readAllRequest);
-router.get("/:id", user_controller.readOneRequest);
-router.put("/:id", user_controller.updateOneRequest);
-router.delete("/:id", user_controller.deleteOneRequest);
+router.get("/", user_controller.readAll);
+router.get("/:id", user_controller.readOne);
+router.put("/:id", user_controller.updateOne);
+router.delete("/:id", user_controller.deleteOne);
 
 module.exports = router;
