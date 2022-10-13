@@ -23,16 +23,41 @@ import {
 } from "native-base";
 
 function TypeSelector() {
+  const [selected, setSelected] = useState("clothing");
   return (
     <HStack space={3} justifyContent="center">
-      <Button variant="ghost" borderRadius="full">
-        <Heading size="md">Clothing</Heading>
+      <Button
+        onPress={() => setSelected("clothing")}
+        variant="ghost"
+        borderRadius="full"
+      >
+        <Heading
+          color={selected == "clothing" ? "blue.800" : "black"}
+          size="md"
+        >
+          Clothing
+        </Heading>
       </Button>
-      <Button variant="ghost" borderRadius="full">
-        <Heading size="md">Accessories</Heading>
+      <Button
+        onPress={() => setSelected("accessories")}
+        variant="ghost"
+        borderRadius="full"
+      >
+        <Heading
+          color={selected == "accessories" ? "blue.800" : "black"}
+          size="md"
+        >
+          Accessories
+        </Heading>
       </Button>
-      <Button variant="ghost" borderRadius="full">
-        <Heading size="md">Shoes</Heading>
+      <Button
+        onPress={() => setSelected("shoes")}
+        variant="ghost"
+        borderRadius="full"
+      >
+        <Heading color={selected == "shoes" ? "blue.800" : "black"} size="md">
+          Shoes
+        </Heading>
       </Button>
     </HStack>
   );
@@ -183,7 +208,7 @@ function SortBar(props) {
             removeFilter(filter);
           };
           return (
-            <Box mx="1" px="1" bg="blueGray.300" borderRadius="lg">
+            <Box key={filter} mx="1" px="1" bg="blueGray.300" borderRadius="lg">
               <HStack space={1} alignItems="center">
                 <Text paddingBottom={1}>{filter}</Text>
                 <Button
@@ -233,14 +258,16 @@ function ItemCard(props) {
   );
 }
 
-function ClothingList() {
+function ClothingList(props) {
   const [itemList, setItemList] = useState([]);
 
   if (itemList.length == 0)
     return (
-      <Center>
-        <Text bold>No clothing items</Text>
-      </Center>
+      <VStack alignItems="center">
+        <Box p={20}>
+          <Text bold>No items to display</Text>
+        </Box>
+      </VStack>
     );
 
   return (

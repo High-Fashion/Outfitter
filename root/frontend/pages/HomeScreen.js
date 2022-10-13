@@ -101,7 +101,7 @@ const Stack = createNativeStackNavigator();
 
 function HomeScreen() {
   const navigationRef = useNavigationContainerRef();
-  const [isSetup, setIsSetup] = useState(false);
+  const [isSetup, setIsSetup] = useState(true);
   const initialRouteName = isSetup ? "Media" : "Setup";
 
   return (
