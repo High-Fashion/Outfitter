@@ -1,19 +1,30 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NativeBaseProvider } from "native-base";
+import {
+  Button,
+  NativeBaseProvider,
+  View,
+  Text,
+  HamburgerIcon,
+  Pressable,
+} from "native-base";
 
 import React from "react";
-import WardrobeScreen from "./pages/WardrobeScreen.js";
 import HomeScreen from "./pages/HomeScreen.js";
 import SignUpScreen from "./pages/SignUpScreen.js";
 import SignInScreen from "./pages/SignInScreen.js";
-import NewItemScreen from "./pages/NewItemScreen.js";
-import CategoryListScreen from "./pages/CategoryListScreen.jsx";
-import ItemListScreen from "./pages/ItemListScreen.jsx";
 
 const Stack = createNativeStackNavigator();
 
-const signedIn = true;
+const signedIn = false;
+
+function HomeHeader(props) {
+  return (
+    <View>
+      <Text>Home</Text>
+    </View>
+  );
+}
 
 export default function App() {
   const initialRoute = signedIn ? "Home" : "SignUp";
@@ -27,25 +38,24 @@ export default function App() {
             <Stack.Screen
               name="Home"
               component={HomeScreen}
-              options={{ title: "Welcome" }}
-            />
-            <Stack.Screen name="Wardrobe" component={WardrobeScreen} />
-            <Stack.Screen
-              name="NewItem"
-              component={NewItemScreen}
-              options={{ title: "New Item" }}
-            />
-          </Stack.Group>
-          <Stack.Group screenOptions={{ presentation: "modal" }}>
-            <Stack.Screen
-              name="CategoryList"
-              component={CategoryListScreen}
-              options={{ title: "Clothing Types" }}
-            />
-            <Stack.Screen
-              name="ItemList"
-              component={ItemListScreen}
-              options={({ route }) => ({ title: route.params.name })}
+              options={{
+                title: "Outfitter",
+                headerTitleAlign: "center",
+                headerStyle: {
+                  backgroundColor: "#1e40af",
+                },
+                headerTintColor: "#fff",
+                headerTitleStyle: {
+                  fontWeight: "bold",
+                  fontFamily: "sans-serif-medium",
+                },
+                headerLeft: () => <></>,
+                headerRight: () => (
+                  <Pressable>
+                    <HamburgerIcon size="md" color="white" />
+                  </Pressable>
+                ),
+              }}
             />
           </Stack.Group>
         </Stack.Navigator>
