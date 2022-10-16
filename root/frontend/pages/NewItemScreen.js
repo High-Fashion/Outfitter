@@ -51,9 +51,9 @@ function SizePicker(props) {
   );
 }
 
-function CatergoryPicker(props) {
+function CatergoryPicker({ navigation }) {
   return (
-    <Button>
+    <Button onPress={() => navigation.navigate("CategoryList")}>
       <Text>CatergoryPicker</Text>
     </Button>
   );
@@ -244,7 +244,7 @@ function NewItemScreen({ navigation }) {
     },
     {
       name: "Category",
-      component: <CatergoryPicker />,
+      component: <CatergoryPicker navigation={navigation} />,
     },
     {
       name: "Slot",
