@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const { randomBytes } = require("crypto");
 const User = require("../models/user");
 const RefreshToken = require("../models/refresh_token");
+const { errorMonitor } = require("stream");
 
 exports.signup = (req, res) => {
   let { email, firstName, lastName, acceptTerms, username, password } =
@@ -11,7 +12,7 @@ exports.signup = (req, res) => {
     if (err | (hash == null))
       return res.status(400).json({
         success: false,
-        message: "TRY AGAIN 1",
+        message: "Failed to hash password",
       });
     const user = new User({
       email: email,
@@ -21,11 +22,11 @@ exports.signup = (req, res) => {
       username: username,
       hashedPassword: hash,
     });
-    User.create(user, (newUser) => {
-      if (newUser == null)
+    User.create(user, (err) => {
+      if (err != null)
         return res.status(400).json({
           success: false,
-          message: "TRY AGAIN 2",
+          message: "Failed to store user in database",
         });
       return res.status(201).json({
         success: true,

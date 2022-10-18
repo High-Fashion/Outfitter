@@ -1,4 +1,6 @@
+import { useState } from "react";
 import {
+  Fab,
   Input,
   SearchIcon,
   Icon,
@@ -14,27 +16,108 @@ import {
   Center,
   Badge,
   CloseIcon,
+  AddIcon,
+  Modal,
+  FormControl,
+  Checkbox,
 } from "native-base";
 
 function TypeSelector() {
+  const [selected, setSelected] = useState("clothing");
   return (
     <HStack space={3} justifyContent="center">
-      <Button variant="ghost" borderRadius="full">
-        <Heading size="md">Clothing</Heading>
+      <Button
+        onPress={() => setSelected("clothing")}
+        variant="ghost"
+        borderRadius="full"
+      >
+        <Heading
+          color={selected == "clothing" ? "blue.800" : "black"}
+          size="md"
+        >
+          Clothing
+        </Heading>
       </Button>
-      <Button variant="ghost" borderRadius="full">
-        <Heading size="md">Accessories</Heading>
+      <Button
+        onPress={() => setSelected("accessories")}
+        variant="ghost"
+        borderRadius="full"
+      >
+        <Heading
+          color={selected == "accessories" ? "blue.800" : "black"}
+          size="md"
+        >
+          Accessories
+        </Heading>
       </Button>
-      <Button variant="ghost" borderRadius="full">
-        <Heading size="md">Shoes</Heading>
+      <Button
+        onPress={() => setSelected("shoes")}
+        variant="ghost"
+        borderRadius="full"
+      >
+        <Heading color={selected == "shoes" ? "blue.800" : "black"} size="md">
+          Shoes
+        </Heading>
       </Button>
     </HStack>
   );
 }
 
-function SearchBarArea() {
+function FilterOptionsModal(props) {
+  function updateFilterOptions() {
+    props.close();
+  }
+
   return (
-    <HStack space={1} padding={1}>
+    <Modal size="full" isOpen={props.show} onClose={() => props.close()}>
+      <Modal.Content maxWidth="400px">
+        <Modal.CloseButton />
+        <Modal.Header>Filters</Modal.Header>
+        <Modal.Body>
+          <FormControl>
+            <HStack justifyContent="space-between" alignItems="center">
+              <FormControl.Label>Brand</FormControl.Label>
+              <Checkbox />
+            </HStack>
+          </FormControl>
+          <FormControl>
+            <HStack justifyContent="space-between" alignItems="center">
+              <FormControl.Label>Color</FormControl.Label>
+              <Checkbox />
+            </HStack>
+          </FormControl>
+          <FormControl>
+            <HStack justifyContent="space-between" alignItems="center">
+              <FormControl.Label>Pattern</FormControl.Label>
+              <Checkbox />
+            </HStack>
+          </FormControl>
+          <FormControl>
+            <HStack justifyContent="space-between" alignItems="center">
+              <FormControl.Label>Material</FormControl.Label>
+              <Checkbox />
+            </HStack>
+          </FormControl>
+          <FormControl>
+            <HStack justifyContent="space-between" alignItems="center">
+              <FormControl.Label>Fit</FormControl.Label>
+              <Checkbox />
+            </HStack>
+          </FormControl>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button.Group space={2}>
+            <Button onPress={() => updateFilterOptions()}>Apply</Button>
+          </Button.Group>
+        </Modal.Footer>
+      </Modal.Content>
+    </Modal>
+  );
+}
+
+function SearchBarArea(props) {
+  return (
+    <HStack alignItems="center" space={1} padding={1}>
       <Input
         flex={6}
         placeholder="Search"
@@ -48,34 +131,101 @@ function SearchBarArea() {
           </Center>
         }
       />
-      <Button flex={1}>
-        <Text>Filter</Text>
-      </Button>
+      <View flex={1}>
+        <Button onPress={() => props.open()} borderRadius="md">
+          <Text>Filter</Text>
+        </Button>
+      </View>
     </HStack>
   );
 }
 
-function SortBar() {
-  const filters = ["Filter", "Tag", "List"];
+function SortOptionsModal(props) {
+  function updateSortOptions() {
+    props.close();
+  }
+
+  return (
+    <Modal size="full" isOpen={props.show} onClose={() => props.close()}>
+      <Modal.Content maxWidth="400px">
+        <Modal.CloseButton />
+        <Modal.Header>Sort By</Modal.Header>
+        <Modal.Body>
+          <FormControl>
+            <HStack justifyContent="space-between" alignItems="center">
+              <FormControl.Label>Brand</FormControl.Label>
+              <Checkbox />
+            </HStack>
+          </FormControl>
+          <FormControl>
+            <HStack justifyContent="space-between" alignItems="center">
+              <FormControl.Label>Color</FormControl.Label>
+              <Checkbox />
+            </HStack>
+          </FormControl>
+          <FormControl>
+            <HStack justifyContent="space-between" alignItems="center">
+              <FormControl.Label>Pattern</FormControl.Label>
+              <Checkbox />
+            </HStack>
+          </FormControl>
+          <FormControl>
+            <HStack justifyContent="space-between" alignItems="center">
+              <FormControl.Label>Material</FormControl.Label>
+              <Checkbox />
+            </HStack>
+          </FormControl>
+          <FormControl>
+            <HStack justifyContent="space-between" alignItems="center">
+              <FormControl.Label>Fit</FormControl.Label>
+              <Checkbox />
+            </HStack>
+          </FormControl>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button.Group space={2}>
+            <Button onPress={() => updateSortOptions()}>Apply</Button>
+          </Button.Group>
+        </Modal.Footer>
+      </Modal.Content>
+    </Modal>
+  );
+}
+
+function SortBar(props) {
+  const [filters, setFilters] = useState(["Filter", "Tag", "List"]);
+
+  function removeFilter(name) {
+    const newFilters = filters.filter((filter) => filter != name);
+    setFilters(newFilters);
+  }
 
   return (
     <HStack padding={1} space={3} justifyContent="space-between">
-      <HStack space={2}>
+      <HStack alignItems="center">
         {filters.map((filter) => {
+          const remove = () => {
+            removeFilter(filter);
+          };
           return (
-            <Box bg="blueGray.300" padding={0}>
+            <Box key={filter} mx="1" px="1" bg="blueGray.300" borderRadius="lg">
               <HStack space={1} alignItems="center">
                 <Text paddingBottom={1}>{filter}</Text>
-                <Button variant="ghost" padding={0}>
-                  <CloseIcon />
+                <Button
+                  onPress={() => remove()}
+                  variant="ghost"
+                  borderRadius="full"
+                  padding={0}
+                >
+                  <CloseIcon size="sm" />
                 </Button>
               </HStack>
             </Box>
           );
         })}
       </HStack>
-      <Button>
-        <Text>Sort Button</Text>
+      <Button borderRadius="lg" onPress={() => props.open()}>
+        <Text>Sort</Text>
       </Button>
     </HStack>
   );
@@ -94,7 +244,9 @@ function ItemCard(props) {
         Item Picture
       </Box>
       <VStack space={3} flex={1}>
-        <Text>{props.item.name}</Text>
+        <Text>
+          {props.item.color} {props.item.material} {props.item.type}
+        </Text>
         <HStack space={1} paddingX={1} justifyContent="space-between" flex={1}>
           <Button flex={2}>
             <Text>Edit</Text>
@@ -108,37 +260,24 @@ function ItemCard(props) {
   );
 }
 
-function ClothingList() {
-  const itemList = [
-    { name: "1sd" },
-    { name: "ds2" },
-    { name: "3sd" },
-    { name: "4sd" },
-    { name: "5sd" },
-    { name: "6sd" },
-    { name: "7sasdf" },
-    { name: "1sadsdf" },
-    { name: "assdf2" },
-    { name: "assddf3" },
-    { name: "assdf4" },
-    { name: "5sadsdf" },
-    { name: "assdf6" },
-    { name: "assddf7" },
-    { name: "asasdfsdfasd1" },
-    { name: "sassddf2" },
-    { name: "sasddf3" },
-    { name: "sassddf4" },
-    { name: "asdsfd5" },
-    { name: "6assdadsdfsfsadf" },
-    { name: "7asssdf" },
-    { name: "1asdf" },
-    { name: "asdsfd2" },
-    { name: "asddsf3" },
-    { name: "asddfs4" },
-    { name: "5assddf" },
-    { name: "asdsdf6" },
-    { name: "asddsf7" },
-  ];
+function ClothingList(props) {
+  const [itemList, setItemList] = useState([
+    {
+      color: "White",
+      material: "Cotton",
+      type: "T-Shirt",
+    },
+  ]);
+
+  if (itemList.length == 0)
+    return (
+      <VStack alignItems="center">
+        <Box p={20}>
+          <Text bold>No items to display</Text>
+        </Box>
+      </VStack>
+    );
+
   return (
     <VStack space={3}>
       {itemList.map((item) => {
@@ -153,18 +292,38 @@ function ClothingList() {
   );
 }
 
-function WardrobeScreen() {
+function WardrobeScreen({ navigation }) {
+  const [showSortModal, setShowSortModal] = useState(false);
+  const [showFilterModal, setShowFilterModal] = useState(false);
+
   return (
-    <ScrollView>
-      <VStack space={1} paddingTop={1} w="100%">
-        <TypeSelector />
-        <Divider />
-        <SearchBarArea />
-        <Divider />
-        <SortBar />
-        <ClothingList />
-      </VStack>
-    </ScrollView>
+    <View flex={1}>
+      <SortOptionsModal
+        show={showSortModal}
+        close={() => setShowSortModal(false)}
+      />
+      <FilterOptionsModal
+        show={showFilterModal}
+        close={() => setShowFilterModal(false)}
+      />
+      <ScrollView>
+        <VStack space={1} paddingTop={1} w="100%">
+          <TypeSelector />
+          <Divider />
+          <SearchBarArea open={() => setShowFilterModal(true)} />
+          <Divider />
+          <SortBar open={() => setShowSortModal(true)} />
+          <ClothingList />
+        </VStack>
+      </ScrollView>
+      <Fab
+        renderInPortal={false}
+        shadow={2}
+        size="lg"
+        onPress={() => navigation.navigate("NewItem")}
+        icon={<AddIcon color="white" size="xl" />}
+      />
+    </View>
   );
 }
 export default WardrobeScreen;
