@@ -1,4 +1,8 @@
 const User = require("../models/user");
+exports.get = (req, res) => {
+  console.log("req.user ", req.user);
+  res.json(req.user);
+};
 
 exports.readOne = (req, res) => {
   const id = req.params.id;

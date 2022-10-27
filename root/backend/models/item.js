@@ -29,7 +29,9 @@ const clothingSlots = [
 const categories = {
   mens: {
     tops: {
-      button_front: {},
+      button_front: {
+        slot: ["torso"],
+      },
       dress_shirt: {},
       hawaiian: {},
       henley: {},

@@ -8,8 +8,6 @@ const {
 
 const wardrobe_controller = require("../controllers/wardrobe.contoller");
 
-router.use(authorize);
-
 router.post("/create", validateCreateWardrobe, wardrobe_controller.create);
 router.get("/", wardrobe_controller.readAll);
 router.get("/:id", wardrobe_controller.readOne);

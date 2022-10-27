@@ -2,7 +2,6 @@ import {
   Heading,
   Stack,
   Input,
-  View,
   Text,
   Divider,
   FormControl,
@@ -10,8 +9,18 @@ import {
   Button,
   ScrollView,
 } from "native-base";
+import { useAuth } from "../contexts/Auth";
+import { useState } from "react";
 
 function SignInScreen({ navigation }) {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const { signIn } = useAuth();
+
+  const submit = () => {
+    signIn({ username: username, password: password });
+  };
+
   return (
     <ScrollView>
       <VStack paddingTop={4} alignItems="center" space={3} paddingBottom={4}>
@@ -26,6 +35,8 @@ function SignInScreen({ navigation }) {
               <FormControl.Label>Username</FormControl.Label>
               <Input
                 isRequired
+                value={username}
+                onChangeText={(text) => setUsername(text)}
                 variant="outline"
                 p={2}
                 placeholder="Username"
@@ -35,6 +46,8 @@ function SignInScreen({ navigation }) {
               <FormControl.Label>Password</FormControl.Label>
               <Input
                 type="password"
+                value={password}
+                onChangeText={(text) => setPassword(text)}
                 variant="outline"
                 isRequired
                 p={2}
@@ -43,11 +56,7 @@ function SignInScreen({ navigation }) {
             </Stack>
           </Stack>
         </FormControl>
-        <Button
-          onPress={() => {
-            navigation.navigate("Home");
-          }}
-        >
+        <Button onPress={() => submit()}>
           <Text>Sign In</Text>
         </Button>
         <Divider />

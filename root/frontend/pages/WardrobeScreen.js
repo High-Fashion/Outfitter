@@ -284,7 +284,9 @@ function ItemCard(props) {
         Item Picture
       </Box>
       <VStack space={3} flex={1}>
-        <Text>{props.item.name}</Text>
+        <Text>
+          {props.item.color} {props.item.material} {props.item.type}
+        </Text>
         <HStack space={1} paddingX={1} justifyContent="space-between" flex={1}>
           <Button flex={2}>
             <Text>Edit</Text>
@@ -299,7 +301,14 @@ function ItemCard(props) {
 }
 
 function ClothingList(props) {
-
+  const [itemList, setItemList] = useState([
+    {
+      color: "White",
+      material: "Cotton",
+      type: "T-Shirt",
+    },
+  ]);
+  
   if (props.value.length == 0)
     return (
       <VStack alignItems="center">
@@ -313,10 +322,10 @@ function ClothingList(props) {
     <VStack space={3}>
       {props.value.map((item) => {
         return (
-          <>
+          <Box key={item.name}>
             <ItemCard key={item.name} item={item} />
             <Divider />
-          </>
+          </Box>
         );
       })}
     </VStack>

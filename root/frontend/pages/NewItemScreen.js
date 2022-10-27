@@ -15,9 +15,13 @@ import {
   AddIcon,
   Modal,
 } from "native-base";
+// import Category from "../components/category";
+import Category from "../components/category"
+
 import ColorPicker from "react-native-wheel-color-picker";
 
-import * as ImagePicker from "expo-image-picker";
+import ImagePickerExample from "../utils/imagePicker";
+// import * as ImagePicker from "expo-image-picker";
 
 //TODO Styling and get image picker/camera to work
 const pickImage = async () => {
@@ -36,6 +40,7 @@ const pickImage = async () => {
 };
 
 function SizePicker(props) {
+  const [measurement, setMeasurement] = React.useState("");
   var allSizes = {
     mens: {
       shirts: ["small", "medium", "large", "XL", "2XL", "3XL"],
@@ -43,28 +48,31 @@ function SizePicker(props) {
   };
   const sizes = allSizes.mens.shirts;
   return (
-    <Select>
+    <Select selectedValue={measurement} placeholder="Select Size"
+      onValueChange={itemValue => setMeasurement(itemValue)}>
       {sizes.map((size) => (
-        <Select.Item label={size} />
+        <Select.Item label={size} value={size} />
       ))}
     </Select>
   );
 }
 
-function CatergoryPicker(props) {
+function CatergoryPicker({ navigation }) {
   return (
-    <Button>
+    <Button onPress={() => navigation.navigate("CategoryList")}>
       <Text>CatergoryPicker</Text>
     </Button>
   );
 }
 
 function PatternPicker(props) {
+  const [design, setDesign] = React.useState("")
   const patterns = ["No pattern", "Polka dots", "Stripes", "..."];
   return (
-    <Select>
+    <Select selectedValue={design} 
+      onValueChange={itemValue => setDesign(itemValue)}>
       {patterns.map((pattern) => (
-        <Select.Item label={pattern} />
+        <Select.Item label={pattern} value={pattern} />
       ))}
     </Select>
   );
@@ -217,7 +225,7 @@ function ColorPickerSection(props) {
           }}
           flex="1"
           borderLeftRadius={0}
-        >
+          >
           <AddIcon color="black" />
         </Button>
       </HStack>
@@ -228,6 +236,14 @@ function ColorPickerSection(props) {
 function NewItemScreen({ navigation }) {
   const [image, setImage] = useState(null);
   const form = [
+    {
+      name: "Image",
+      component: <ImagePickerExample />,
+    },
+    {
+      name: "Category",
+      component: <Category />,
+    },
     {
       name: "Accessory",
       component: <Checkbox />,
@@ -241,10 +257,6 @@ function NewItemScreen({ navigation }) {
     {
       name: "Pattern",
       component: <PatternPicker />,
-    },
-    {
-      name: "Category",
-      component: <CatergoryPicker />,
     },
     {
       name: "Slot",
