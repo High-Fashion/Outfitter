@@ -79,7 +79,8 @@ exports.validateSignIn = (req, res, next) => {
 };
 
 exports.authorize = async (req, res, next) => {
-  const { access_token } = req.cookies;
+  const access_token = req.headers["authorization"].split(" ")[1];
+  console.log(req.headers);
   if (access_token == null)
     return res.status(401).json({
       success: false,

@@ -282,10 +282,10 @@ function ClothingList(props) {
     <VStack space={3}>
       {itemList.map((item) => {
         return (
-          <>
+          <Box key={item.name}>
             <ItemCard key={item.name} item={item} />
             <Divider />
-          </>
+          </Box>
         );
       })}
     </VStack>

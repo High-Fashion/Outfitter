@@ -38,7 +38,7 @@ exports.signup = (req, res) => {
 
 const generateAccessToken = (user) => {
   return jwt.sign({ id: user.id }, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "15m",
+    expiresIn: "5m",
   });
 };
 
@@ -73,36 +73,27 @@ exports.signin = (req, res) => {
       const access_token = generateAccessToken(user);
       const refresh_token = generateRefreshToken(user);
       const signed_refresh_token = jwt.sign(
-        refresh_token.token,
-        process.env.REFRESH_TOKEN_SECRET
+        { refresh_token: refresh_token.token },
+        process.env.REFRESH_TOKEN_SECRET,
+        { expiresIn: "7d" }
       );
 
       // save refresh token
       await refresh_token.save();
 
-      return res
-        .status(200)
-        .cookie("refresh_token", signed_refresh_token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
-        })
-        .cookie("access_token", access_token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
-        })
-        .json({
-          success: true,
-          message: "Welcome back " + user.username,
-        });
+      return res.status(200).json({
+        access_token: access_token,
+        refresh_token: signed_refresh_token,
+        success: true,
+        message: "Welcome back " + user.username,
+      });
     });
   });
 };
 
 exports.signout = (req, res) => {
-  res.clearCookie("access_token");
-  res.clearCookie("refresh_token");
   jwt.verify(
-    req.cookies.refresh_token,
+    req.body.refresh_token,
     process.env.REFRESH_TOKEN_SECRET,
     async (err, decoded) => {
       if (err != null || decoded == null)
@@ -126,14 +117,14 @@ const getRefreshToken = async (token) => {
   const refresh_token = await RefreshToken.findOne({ token: token }).populate(
     "user"
   );
-  if (!refresh_token || !refresh_token.isActive) return null;
   return refresh_token;
 };
 
 exports.refresh = async (req, res) => {
+  console.log("Refresh", req.body.refresh_token);
   //Verify old refresh token
   jwt.verify(
-    req.cookies.refresh_token,
+    req.body.refresh_token,
     process.env.REFRESH_TOKEN_SECRET,
     async (err, decoded) => {
       if (err != null || decoded == null)
@@ -142,15 +133,18 @@ exports.refresh = async (req, res) => {
           message: "INVALID TOKEN",
         });
       //Get old refresh token from database
-      const old_refresh_token = await getRefreshToken(decoded);
-      console.log(old_refresh_token);
+      const old_refresh_token = await getRefreshToken(decoded.refresh_token);
+      console.log(decoded.refresh_token);
       const { user } = old_refresh_token;
       const new_refresh_token = generateRefreshToken(user);
 
       //Sign new refresh token
       const signed_refresh_token = jwt.sign(
-        new_refresh_token.token,
-        process.env.REFRESH_TOKEN_SECRET
+        {refresh_token: new_refresh_token.token},
+        process.env.REFRESH_TOKEN_SECRET,
+        {
+          expiresIn: "7d"
+        }
       );
 
       //Update old refresh token
@@ -163,20 +157,12 @@ exports.refresh = async (req, res) => {
       //Generate new access token
       const new_access_token = generateAccessToken(user);
 
-      return res
-        .status(200)
-        .cookie("refresh_token", signed_refresh_token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
-        })
-        .cookie("access_token", new_access_token, {
-          httpOnly: true,
-          secure: process.env.NODE_ENV === "production",
-        })
-        .json({
-          success: true,
-          message: "Refreshed token.",
-        });
+      return res.status(200).json({
+        success: true,
+        message: "Refreshed token.",
+        access_token: new_access_token,
+        refresh_token: signed_refresh_token,
+      });
     }
   );
 };
