@@ -116,8 +116,48 @@ function FilterOptionsModal(props) {
 }
 
 function SearchBarArea(props) {
+
+  const onChangeSearch = (query) => {
+    props.setSearchQuery(query);
+    props.setItemList(
+      [{
+        name: "shoe 1",
+        category: "sneakers",
+        material: "leather",
+        colors: {
+        primary: "white",
+          secondary: "green",
+          tertiary: "gold",
+        },
+        brand: "adidas"
+      },
+      {
+        name: "shirt 1",
+        category: "shirt",
+        material: "cotton",
+        colors: {
+        primary: "blue",
+          secondary: "white",
+          tertiary: "gold",
+        },
+        brand: "free people"
+      }]
+    );
+    if(query){
+      const newItems = props.itemList.filter((item)=> {
+          const item_data = item.name.toUpperCase();
+          const input_data = query.toUpperCase();
+          return item_data.indexOf(input_data) > -1;
+      })
+      props.setItemList(
+        newItems
+      );
+    }else{
+      console.log("string doesn't exist, look into it");
+    }
+  };
   return (
-    <HStack alignItems="center" space={1} padding={1}>
+    <><HStack alignItems="center" space={1} padding={1}>
       <Input
         flex={6}
         placeholder="Search"
@@ -125,18 +165,18 @@ function SearchBarArea(props) {
         borderRadius="10"
         py="1"
         px="2"
-        InputLeftElement={
-          <Center padding={1}>
-            <SearchIcon />
-          </Center>
-        }
-      />
+        InputLeftElement={<Center padding={1}>
+          <SearchIcon />
+        </Center>}
+        value={props.searchQuery}
+        onChangeText={(query)=>onChangeSearch(query)} />
       <View flex={1}>
         <Button onPress={() => props.open()} borderRadius="md">
           <Text>Filter</Text>
         </Button>
       </View>
-    </HStack>
+    </HStack></>
+    
   );
 }
 
@@ -268,8 +308,8 @@ function ClothingList(props) {
       type: "T-Shirt",
     },
   ]);
-
-  if (itemList.length == 0)
+  
+  if (props.value.length == 0)
     return (
       <VStack alignItems="center">
         <Box p={20}>
@@ -280,7 +320,7 @@ function ClothingList(props) {
 
   return (
     <VStack space={3}>
-      {itemList.map((item) => {
+      {props.value.map((item) => {
         return (
           <Box key={item.name}>
             <ItemCard key={item.name} item={item} />
@@ -295,6 +335,32 @@ function ClothingList(props) {
 function WardrobeScreen({ navigation }) {
   const [showSortModal, setShowSortModal] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const [itemList, setItemList] = useState([{
+    name: "shoe 1",
+    category: "sneakers",
+    material: "leather",
+    colors: {
+    primary: "white",
+      secondary: "green",
+      tertiary: "gold",
+    },
+    brand: "adidas"
+  },
+  {
+    name: "shirt 1",
+    category: "shirt",
+    material: "cotton",
+    colors: {
+    primary: "blue",
+      secondary: "white",
+      tertiary: "gold",
+    },
+    brand: "free people"
+  }]);
+
+
 
   return (
     <View flex={1}>
@@ -310,10 +376,15 @@ function WardrobeScreen({ navigation }) {
         <VStack space={1} paddingTop={1} w="100%">
           <TypeSelector />
           <Divider />
-          <SearchBarArea open={() => setShowFilterModal(true)} />
+          <SearchBarArea open={() => setShowFilterModal(true)} 
+            searchQuery={searchQuery} 
+            setSearchQuery={setSearchQuery}
+            itemList={itemList}
+            setItemList={setItemList} />
           <Divider />
+          <Text>{searchQuery}</Text>
           <SortBar open={() => setShowSortModal(true)} />
-          <ClothingList />
+          <ClothingList value={itemList} />
         </VStack>
       </ScrollView>
       <Fab
