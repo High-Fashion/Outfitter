@@ -1,7 +1,16 @@
 const User = require("../models/user");
+
 exports.get = (req, res) => {
-  console.log("req.user ", req.user);
-  res.json(req.user);
+  User.findById(req.user.id)
+    .populate({
+      path: "wardrobe",
+      populate: {
+        path: "items",
+      },
+    })
+    .then((user) => {
+      res.json(user);
+    });
 };
 
 exports.readOne = (req, res) => {

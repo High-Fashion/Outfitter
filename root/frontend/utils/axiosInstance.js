@@ -2,9 +2,9 @@ import axios from "axios";
 import { API_URL } from "../config";
 import tokenService from "../services/tokenService";
 
-const axiosInstance = axios.create({
-  baseURL: API_URL,
-});
+const axiosInstance = axios.create();
+
+axiosInstance.defaults.baseURL = API_URL || "http://localhost:4000";
 
 // Request interceptor for API calls
 axiosInstance.interceptors.request.use(

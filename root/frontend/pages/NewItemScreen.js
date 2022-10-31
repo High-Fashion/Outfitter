@@ -14,11 +14,17 @@ import {
   Divider,
   AddIcon,
   Modal,
+  Icon,
+  DeleteIcon,
+  CheckCircleIcon,
 } from "native-base";
-// import Category from "../components/category";
-import Category from "../components/category"
-
-import ColorPicker from "react-native-wheel-color-picker";
+import patterns from "../assets/patterns.json";
+import materials from "../assets/materials.json";
+import colors from "../assets/colors.json";
+const colorList = colors.list;
+const colorCodes = colors.codes;
+import Category from "../components/category";
+import { addItem } from "../services/wardrobeService";
 
 import ImagePickerExample from "../utils/imagePicker";
 // import * as ImagePicker from "expo-image-picker";
@@ -48,10 +54,13 @@ function SizePicker(props) {
   };
   const sizes = allSizes.mens.shirts;
   return (
-    <Select selectedValue={measurement} placeholder="Select Size"
-      onValueChange={itemValue => setMeasurement(itemValue)}>
+    <Select
+      selectedValue={measurement}
+      placeholder="Select Size"
+      onValueChange={(itemValue) => setMeasurement(itemValue)}
+    >
       {sizes.map((size) => (
-        <Select.Item label={size} value={size} />
+        <Select.Item key={size} label={size} value={size} />
       ))}
     </Select>
   );
@@ -65,219 +74,215 @@ function CatergoryPicker({ navigation }) {
   );
 }
 
-function PatternPicker(props) {
-  const [design, setDesign] = React.useState("")
-  const patterns = ["No pattern", "Polka dots", "Stripes", "..."];
+function ColorSelect(props) {
+  const colorCategories = Object.keys(colorList);
+  const [selectedColor, setSelectedColor] = useState(null);
+
+  const [listOptions, setListOptions] = useState(colorCategories);
+
+  const selectColor = (color) => {
+    if (color == null) {
+      setListOptions(colorCategories);
+    } else {
+      setListOptions(colorList[color]);
+    }
+    setSelectedColor(color);
+  };
+
   return (
-    <Select selectedValue={design} 
-      onValueChange={itemValue => setDesign(itemValue)}>
-      {patterns.map((pattern) => (
-        <Select.Item label={pattern} value={pattern} />
-      ))}
+    <Select
+      flex={1}
+      key={props.rank}
+      placeholder={"Select " + props.rank + " color"}
+      onClose={() => {
+        selectColor(null);
+        props.setColor(null);
+      }}
+      defaultValue={props.value}
+      onValueChange={(value) => {
+        props.setColor(value);
+      }}
+      _stack={{
+        divider: <Box bgColor={colorCodes[props.value]} p="5%" />,
+      }}
+      _item={{
+        _stack: {
+          alignItems: "center",
+          justifyContent: "space-around",
+        },
+        _text: {
+          paddingLeft: "4%",
+          paddingY: "1%",
+          color: "black",
+          fontSize: "xl",
+        },
+        padding: 0,
+      }}
+      _actionSheetContent={{ padding: 0 }}
+    >
+      {listOptions.map((option) => {
+        return selectedColor == null ? (
+          <Select.Item
+            key={option}
+            label={option}
+            value={option}
+            onPress={() => {
+              selectColor(option);
+            }}
+            bgColor={colorCodes[option]}
+          />
+        ) : (
+          <Select.Item
+            key={option}
+            label={option}
+            value={option}
+            bgColor={colorCodes[option]}
+          />
+        );
+      })}
     </Select>
   );
 }
 
 function ColorPickerSection(props) {
-  const [showModal, setShowModal] = useState(false);
-  const [currentModalColor, setCurrentModalColor] = useState({
-    name: "primary",
-  });
-  const [primary, setPrimary] = useState({
-    open: true,
-    code: null,
-    label: null,
-  });
-  const [secondary, setSecondary] = useState({
-    open: false,
-    code: null,
-    label: null,
-  });
-  const [tertiary, setTertiary] = useState({
-    open: false,
-    code: null,
-    label: null,
-  });
+  const [length, setLength] = useState(1);
 
-  const [colors, setColors] = useState([primary, secondary, tertiary]);
-
-  useEffect(() => {
-    setColors([primary, secondary, tertiary]);
-  }, [primary, secondary, tertiary]);
-
-  function addColor() {
-    var first = null;
-    if (!secondary.open) {
-      setSecondary({ open: true, code: "blue.400", label: "blue" });
-      return;
-    }
-    if (!tertiary.open) {
-      setTertiary({ open: true, code: "blue.400", label: "blue" });
-      return;
-    }
-  }
-
-  function removeColor(name) {
-    if (name == "primary") return;
-    if (name == "secondary") {
-      if (tertiary.open) {
-        setSecondary(tertiary);
-        setTertiary({
-          open: false,
-          code: null,
-          label: null,
-        });
-      } else {
-        setSecondary({
-          open: false,
-          code: null,
-          label: null,
-        });
-        setShowModal(false);
-      }
-    }
-    if (name == "tertiary") {
-      setTertiary({
-        open: false,
-        code: null,
-        label: null,
-      });
-      setShowModal(false);
-    }
-  }
-
-  function openColor(name) {
-    setCurrentModalColor({ name: name });
-    setShowModal(true);
-  }
-
-  function applyChanges() {
-    if (currentModalColor.name == "primary")
-      setPrimary({ ...primary, code: currentModalColor.code });
-    if (currentModalColor.name == "secondary")
-      setSecondary({ ...secondary, code: currentModalColor.code });
-    if (currentModalColor.name == "tertiary")
-      setTertiary({ ...tertiary, code: currentModalColor.code });
-    setShowModal(false);
-    return;
-  }
+  const removeColor = (rank) => {
+    console.log("remove " + rank);
+    setLength(length - 1);
+    props?.setColors({ ...props.colors, [rank]: null });
+  };
 
   return (
-    <Box borderRadius="md" borderWidth="1" borderColor="gray.300">
-      <Modal isOpen={showModal}>
-        <Modal.Content maxWidth="400px">
-          <Modal.CloseButton onPress={() => setShowModal(false)} />
-          <Modal.Header>{currentModalColor.name}</Modal.Header>
-          <Modal.Body>
-            <ColorPicker
-              onColorChangeComplete={(color) =>
-                setCurrentModalColor({ ...currentModalColor, code: color })
-              }
-            />
-          </Modal.Body>
-          <Modal.Footer>
-            <Button.Group space={2}>
-              {currentModalColor.name != "primary" && (
-                <Button onPress={() => removeColor(currentModalColor)}>
-                  Remove
+    <VStack space={"1"} borderRadius="md">
+      {["primary", "secondary", "tertiary"].map(
+        (rank, index) =>
+          index < length && (
+            <HStack key={rank} space={"1%"} alignItems="center">
+              <ColorSelect
+                value={props.colors?.[rank]}
+                setColor={(c) =>
+                  props?.setColors({ ...props.colors, [rank]: c })
+                }
+                rank={rank}
+              />
+              {index == length - 1 && index > 0 && (
+                <Button onPress={() => removeColor(rank)} bgColor="red.600">
+                  <DeleteIcon color="white" />
                 </Button>
               )}
-              <Button onPress={() => applyChanges()}>Apply</Button>
-            </Button.Group>
-          </Modal.Footer>
-        </Modal.Content>
-      </Modal>
-      <HStack alignItems="center">
-        <Button
-          onPress={() => openColor("primary")}
-          flex="10"
-          borderRightRadius={secondary.open ? 0 : "md"}
-          borderLeftRadius={"xl"}
-          bgColor={primary.code != null ? primary.code : "blue.400"}
-        >
-          <Text>Primary</Text>
+            </HStack>
+          )
+      )}
+      {length < 3 && (
+        <Button onPress={() => setLength(length + 1)}>
+          <Text>Add Color</Text>
         </Button>
-        {secondary.open && (
-          <Button
-            onPress={() => openColor("secondary")}
-            flex="10"
-            borderRightRadius={tertiary.open ? 0 : "md"}
-            borderLeftRadius={0}
-            bgColor={secondary.code != null ? secondary.code : "blue.400"}
-          >
-            <Text>Secondary</Text>
-          </Button>
-        )}
-        {tertiary.open && (
-          <Button
-            onPress={() => openColor("tertiary")}
-            flex="10"
-            borderRightRadius={"xl"}
-            borderLeftRadius={0}
-            bgColor={tertiary.code != null ? tertiary.code : "blue.400"}
-          >
-            <Text>Tertiary</Text>
-          </Button>
-        )}
-        <Button
-          onPress={() => {
-            addColor();
-          }}
-          flex="1"
-          borderLeftRadius={0}
-          >
-          <AddIcon color="black" />
-        </Button>
-      </HStack>
-    </Box>
+      )}
+    </VStack>
   );
 }
 
+// <Button
+// onPress={() => {
+//   addColor();
+// }}
+// flex="1"
+// borderLeftRadius={0}
+// >
+// <AddIcon color="black" />
+// </Button>
+
 function NewItemScreen({ navigation }) {
   const [image, setImage] = useState(null);
+
+  const [formData, setData] = useState({});
+
   const form = [
     {
       name: "Image",
       component: <ImagePickerExample />,
     },
     {
-      name: "Category",
-      component: <Category />,
-    },
-    {
       name: "Accessory",
-      component: <Checkbox />,
+      component: (
+        <Checkbox
+          accessibilityLabel="Accessory"
+          onChange={(isSelected) =>
+            setData({ ...formData, accessory: isSelected })
+          }
+        />
+      ),
       isRequired: true,
       horizontal: true,
     },
     {
+      name: "Category",
+      component: (
+        <Category
+          accessory={formData.accessory}
+          setCategory={(category) =>
+            setData({ ...formData, category: category })
+          }
+        />
+      ),
+      isRequired: true,
+    },
+    {
       name: "Colors",
-      component: <ColorPickerSection />,
+      component: (
+        <ColorPickerSection
+          colors={formData.colors}
+          setColors={(color) => setData({ ...formData, colors: color })}
+        />
+      ),
+      isRequired: true,
     },
     {
       name: "Pattern",
-      component: <PatternPicker />,
-    },
-    {
-      name: "Slot",
-      component: <Input />,
+      component: (
+        <Select
+          onValueChange={(text) => setData({ ...formData, pattern: text })}
+        >
+          {patterns.map((pattern) => (
+            <Select.Item
+              key={pattern}
+              label={pattern.charAt(0).toUpperCase() + pattern.slice(1)}
+              value={pattern}
+            />
+          ))}
+        </Select>
+      ),
+      isRequired: true,
     },
     {
       name: "Brand",
-      component: <Input />,
+      component: (
+        <Input onChangeText={(text) => setData({ ...formData, brand: text })} />
+      ),
     },
     {
       name: "Material",
-      component: <Input />,
-    },
-    {
-      name: "Size",
-      component: <SizePicker />,
+      component: (
+        <Select
+          onValueChange={(text) => setData({ ...formData, material: text })}
+        >
+          {materials.map((material) => (
+            <Select.Item key={material} label={material} value={material} />
+          ))}
+        </Select>
+      ),
     },
   ];
+
+  const submit = async () => {
+    var res = await addItem(formData);
+    if (res == true) navigation.navigate("Wardrobe");
+  };
+
   return (
     <ScrollView>
-      <VStack mx="3" paddingTop={3} paddingBottom={7}>
+      <VStack mx="3" space={2} paddingTop={3} paddingBottom={7}>
         {form.map((field) => {
           if (field.horizontal)
             return (
@@ -308,6 +313,9 @@ function NewItemScreen({ navigation }) {
               </FormControl>
             );
         })}
+        <Button onPress={() => submit()}>
+          <Text>Submit</Text>
+        </Button>
       </VStack>
     </ScrollView>
   );

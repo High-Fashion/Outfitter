@@ -13,11 +13,9 @@ exports.validateCreateWardrobe = (req, res, next) => {
       !req.body.gender.includes("mens") &&
       !req.body.gender.includes("womens")
     ) {
-      res
-        .status(400)
-        .send({
-          message: "gender must be a list containing 'mens' and or 'womens'",
-        });
+      res.status(400).send({
+        message: "gender must be a list containing 'mens' and or 'womens'",
+      });
       return;
     }
   }
@@ -35,7 +33,7 @@ exports.validateUpdateWardrobe = (req, res, next) => {
 
 exports.validateCreateItem = (req, res, next) => {
   // Validate request
-  if (!req.body.title) {
+  if (!req.body.colors) {
     res.status(400).send({ message: "Content can not be empty!" });
     return;
   }

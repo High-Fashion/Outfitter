@@ -7,30 +7,148 @@ import {
   Heading,
   Divider,
   HamburgerIcon,
+  Image,
+  View,
+  ScrollView,
+  Badge,
+  Input,
+  DeleteIcon,
+  CloseIcon,
 } from "native-base";
+import { useAuth } from "../contexts/Auth";
 
 export function WardrobeSettings({ route }) {
+  const { gender } = route.params;
+  const [mens, setMens] = useState(gender.includes("mens"));
+  const [womens, setWomens] = useState(gender.includes("womens"));
+
+  const getList = () => {
+    var list = [];
+    if (mens) list.push("mens");
+    if (womens) list.push("womens");
+    return list;
+  };
+
   return (
-    <VStack>
-      <Text>Wardrobe Settings</Text>
-      <Button
-        isDisabled={route.params.completed}
-        onPress={() => route.params.complete()}
+    <ScrollView>
+      <VStack
+        mx={2}
+        paddingTop={2}
+        alignItems="center"
+        space={2}
+        paddingBottom={2}
       >
-        <Text>Complete</Text>
-      </Button>
-    </VStack>
+        <Text>What clothes do you wear? </Text>
+        <HStack space={2}>
+          <Button
+            flex={1}
+            variant={mens ? "solid" : "outline"}
+            onPress={() => {
+              setMens(!mens);
+            }}
+          >
+            <VStack alignItems="center">
+              <Text>Mens</Text>
+              <Image
+                height="200"
+                resizeMode="contain"
+                source={require("../assets/mens.png")}
+              />
+            </VStack>
+          </Button>
+          <Button
+            flex={1}
+            variant={womens ? "solid" : "outline"}
+            onPress={() => {
+              setWomens(!womens);
+            }}
+          >
+            <VStack alignItems="center">
+              <Text>Womens</Text>
+              <Image
+                height="200"
+                resizeMode="contain"
+                source={require("../assets/womens.png")}
+              />
+            </VStack>
+          </Button>
+        </HStack>
+        <Button
+          isDisabled={!(mens || womens)}
+          onPress={() => route.params.complete(getList())}
+        >
+          <Text>Submit</Text>
+        </Button>
+      </VStack>
+    </ScrollView>
   );
 }
-export function StyleQuiz({ route }) {
+
+function StyleTag(props) {
   return (
-    <VStack>
-      <Text>Style Quiz</Text>
-      <Button
-        isDisabled={route.params.completed}
-        onPress={() => route.params.complete()}
-      >
-        <Text>Complete</Text>
+    <Badge
+      _text={{ fontSize: "lg" }}
+      rightIcon={
+        <Button
+          borderRadius="full"
+          onPress={() => props.remove()}
+          variant="ghost"
+        >
+          <CloseIcon color="black" />
+        </Button>
+      }
+      variant="subtle"
+      colorScheme="info"
+      key={props.style}
+    >
+      {props.style}
+    </Badge>
+  );
+}
+
+export function StyleQuiz({ route }) {
+  const { complete } = route.params;
+  const [styles, setStyles] = useState(route.params.styles);
+  const [currentInput, setInput] = useState();
+
+  const updateValue = (text) => {
+    if (!text.includes("\n")) {
+      setInput(text);
+      return;
+    }
+    if (text == "\n") {
+      setInput("");
+      return;
+    }
+    setInput("");
+    if (!styles.includes(text.replace(/(\r\n|\n|\r)/gm, "")))
+      setStyles([...styles, text.replace(/(\r\n|\n|\r)/gm, "")]);
+  };
+
+  const removeStyle = (style) => {
+    setStyles(
+      styles.filter((value) => {
+        return value != style;
+      })
+    );
+  };
+
+  return (
+    <VStack alignItems="center" space={3}>
+      <Text>How would you describe your style?</Text>
+      <HStack space={1}>
+        {styles.map((style) => (
+          <StyleTag style={style} remove={() => removeStyle(style)} />
+        ))}
+      </HStack>
+      <Input
+        multiline={true}
+        placeholder="Input style tags"
+        value={currentInput}
+        onChangeText={(text) => updateValue(text)}
+      />
+      <Button onPress={() => complete(styles)}>
+        <Text>Submit</Text>
       </Button>
     </VStack>
   );
@@ -58,7 +176,10 @@ export function PrivacySettings({ navigation }) {
 }
 
 export function SetupScreen({ navigation: { navigate }, route }) {
-  // const firstName = props.user.firstName;
+  const { user } = useAuth();
+
+  const [styles, setStyles] = useState([]);
+  const [gender, setGender] = useState([]);
 
   const [completed, setCompleted] = useState({
     wardrobeSettings: false,
@@ -83,17 +204,21 @@ export function SetupScreen({ navigation: { navigate }, route }) {
     setSetupComplete(complete);
   });
 
-  function finishSetup() {
+  async function finishSetup() {
     if (!setupComplete) return;
-    route.params.finish();
-    navigate("Media");
+    var finished = await route.params.finish({
+      styles: styles,
+      gender: gender,
+    });
+    if (finished) {
+      navigate("Media");
+    }
   }
 
-  const firstName = "User";
   return (
     <VStack space={2} alignItems="center" flex={1} my={4}>
       <Heading size="xl">
-        Welcome, {firstName == null ? "User" : firstName}
+        Welcome, {user.firstName == null ? "User" : user.firstName}
       </Heading>
       <Text>
         Thanks for signing up with Outfitter. Please complete the following
@@ -105,7 +230,9 @@ export function SetupScreen({ navigation: { navigate }, route }) {
           onPress={() => {
             navigate("Wardrobe Settings", {
               completed: completed["wardrobeSettings"],
-              complete: () => {
+              gender: gender,
+              complete: (data) => {
+                setGender(data);
                 complete("wardrobeSettings");
                 navigate("Setup");
               },
@@ -124,7 +251,9 @@ export function SetupScreen({ navigation: { navigate }, route }) {
           onPress={() => {
             navigate("Style Quiz", {
               completed: completed["styleQuiz"],
-              complete: () => {
+              styles: styles,
+              complete: (data) => {
+                setStyles(data);
                 complete("styleQuiz");
                 navigate("Setup");
               },

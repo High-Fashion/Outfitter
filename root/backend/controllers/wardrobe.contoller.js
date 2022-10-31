@@ -1,24 +1,51 @@
 const Wardrobe = require("../models/wardrobe");
+const Style = require("../models/style");
+const User = require("../models/user");
 
 exports.create = (req, res) => {
+  var styleObjectList = [];
+  if (req.body.styles) {
+    req.body.styles.map((style) => {
+      Style.findOne({ name: style })
+        .then((style) => {
+          styleObjectList.push(style);
+        })
+        .catch((err) => {
+          console.log("couldnt find ", style);
+        });
+    });
+  }
+
   // Create a wardrobe
   const wardrobe = new Wardrobe({
     user: req.user.id,
     gender: [...req.body.gender],
+    styles: styleObjectList,
   });
 
   // Save Wardrobe in the database
   wardrobe
     .save()
     .then((data) => {
-      res.send(data);
+      res.status(200).send(data);
     })
     .catch((err) => {
       res.status(500).send({
         message:
           err.message || "Some error occurred while creating the wardrobe.",
       });
+      return;
     });
+
+  User.updateOne({ _id: req.user._id }, { wardrobe: wardrobe }, (err, doc) => {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    if (doc) {
+      console.log("updated doc", doc);
+    }
+  });
 };
 
 exports.readOne = (req, res) => {

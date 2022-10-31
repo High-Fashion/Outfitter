@@ -1,8 +1,4 @@
-//https://omjclothing.com/blogs/blog/17243569-patterns-101
-//https://sewguide.com/fabric-patterns/
-
-export default patterns = [
-  //common mens
+[
   "stripes",
   "hairline stripes",
   "dress stripes",
@@ -15,7 +11,7 @@ export default patterns = [
   "paisley",
   "houndstooth",
   "diamonds",
-  // indian
+
   "bandhni",
   "kalamkari",
   "patola",
@@ -102,5 +98,5 @@ export default patterns = [
   "navajo",
   "kilm",
   "suzaani",
-  "tribal",
-];
+  "tribal"
+]

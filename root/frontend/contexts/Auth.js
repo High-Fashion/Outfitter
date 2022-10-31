@@ -20,11 +20,13 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState({});
   const [signedIn, setSignedIn] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [token, setToken] = useState();
 
   useEffect(() => {
     async function getCreds() {
       const { access_token } = await TokenService.getCredentials();
       if (access_token) {
+        setToken(access_token);
         setSignedIn(true);
       }
     }
@@ -35,6 +37,7 @@ export function AuthProvider({ children }) {
     async function load() {
       console.log("loading user");
       const response = await axiosInstance.get(config.API_URL + "/user/");
+      console.log(response.data);
       setUser(response.data);
     }
     if (signedIn) load();
@@ -72,9 +75,6 @@ export function AuthProvider({ children }) {
         acceptTerms: body.acceptTerms,
         username: body.username,
         password: body.password,
-      })
-      .then((res) => {
-        console.log(res);
       })
       .catch((err) => console.log(err));
   };

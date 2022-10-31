@@ -1,6 +1,8 @@
 const Item = require("../models/item");
+const Wardrobe = require("../models/wardrobe");
 
 exports.create = (req, res) => {
+  console.log("CREATE OBJECT");
   // Create a item
   const item = new Item({
     accessory: req.body.accessory,
@@ -16,9 +18,14 @@ exports.create = (req, res) => {
   });
 
   // Save
-  Item.save(item)
+  item
+    .save()
     .then((data) => {
-      res.send(data);
+      Wardrobe.findById(req.user.wardrobe).then((wardrobe) => {
+        wardrobe.items.push(item);
+        wardrobe.save();
+        res.send(data);
+      });
     })
     .catch((err) => {
       res.status(500).send({

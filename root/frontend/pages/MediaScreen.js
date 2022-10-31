@@ -5,9 +5,7 @@ import { useEffect } from "react";
 function MediaScreen({ navigation }) {
   const { user } = useAuth();
   return (
-    <View>
-      <Text>Welcome back, {user.firstName}</Text>
-    </View>
+    <View>{user.firstName && <Text>Welcome back, {user.firstName}</Text>}</View>
   );
 }
 
