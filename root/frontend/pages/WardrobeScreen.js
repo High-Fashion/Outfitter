@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Fab,
   Input,
@@ -20,7 +20,10 @@ import {
   Modal,
   FormControl,
   Checkbox,
+  Image,
 } from "native-base";
+import { useAuth } from "../contexts/Auth";
+import { SetupScreen } from "./SetupScreen";
 
 function TypeSelector() {
   const [selected, setSelected] = useState("clothing");
@@ -116,67 +119,68 @@ function FilterOptionsModal(props) {
 }
 
 function SearchBarArea(props) {
-
   const onChangeSearch = (query) => {
     props.setSearchQuery(query);
-    props.setItemList(
-      [{
+    props.setItemList([
+      {
         name: "shoe 1",
         category: "sneakers",
         material: "leather",
         colors: {
-        primary: "white",
+          primary: "white",
           secondary: "green",
           tertiary: "gold",
         },
-        brand: "adidas"
+        brand: "adidas",
       },
       {
         name: "shirt 1",
         category: "shirt",
         material: "cotton",
         colors: {
-        primary: "blue",
+          primary: "blue",
           secondary: "white",
           tertiary: "gold",
         },
-        brand: "free people"
-      }]
-    );
-    if(query){
-      const newItems = props.itemList.filter((item)=> {
-          const item_data = item.name.toUpperCase();
-          const input_data = query.toUpperCase();
-          return item_data.indexOf(input_data) > -1;
-      })
-      props.setItemList(
-        newItems
-      );
-    }else{
+        brand: "free people",
+      },
+    ]);
+    if (query) {
+      const newItems = props.itemList.filter((item) => {
+        const item_data = item.name.toUpperCase();
+        const input_data = query.toUpperCase();
+        return item_data.indexOf(input_data) > -1;
+      });
+      props.setItemList(newItems);
+    } else {
       console.log("string doesn't exist, look into it");
     }
   };
   return (
-    <><HStack alignItems="center" space={1} padding={1}>
-      <Input
-        flex={6}
-        placeholder="Search"
-        size="md"
-        borderRadius="10"
-        py="1"
-        px="2"
-        InputLeftElement={<Center padding={1}>
-          <SearchIcon />
-        </Center>}
-        value={props.searchQuery}
-        onChangeText={(query)=>onChangeSearch(query)} />
-      <View flex={1}>
-        <Button onPress={() => props.open()} borderRadius="md">
-          <Text>Filter</Text>
-        </Button>
-      </View>
-    </HStack></>
-    
+    <>
+      <HStack alignItems="center" space={1} padding={1}>
+        <Input
+          flex={6}
+          placeholder="Search"
+          size="md"
+          borderRadius="10"
+          py="1"
+          px="2"
+          InputLeftElement={
+            <Center padding={1}>
+              <SearchIcon />
+            </Center>
+          }
+          value={props.searchQuery}
+          onChangeText={(query) => onChangeSearch(query)}
+        />
+        <View flex={1}>
+          <Button onPress={() => props.open()} borderRadius="md">
+            <Text>Filter</Text>
+          </Button>
+        </View>
+      </HStack>
+    </>
   );
 }
 
@@ -273,42 +277,44 @@ function SortBar(props) {
 
 function ItemCard(props) {
   return (
-    <HStack space={3}>
-      <Box
-        maxW="80"
-        rounded="lg"
-        overflow="hidden"
-        borderColor="coolGray.200"
-        borderWidth="4"
-      >
-        Item Picture
-      </Box>
-      <VStack space={3} flex={1}>
-        <Text>
-          {props.item.color} {props.item.material} {props.item.type}
-        </Text>
-        <HStack space={1} paddingX={1} justifyContent="space-between" flex={1}>
-          <Button flex={2}>
-            <Text>Edit</Text>
-          </Button>
-          <Button flex={1}>
-            <Text>Delete</Text>
-          </Button>
+    <VStack alignItems="center">
+      {props.item?.image && (
+        <HStack marginBottom={-20} width="100%">
+          <Image
+            source={{
+              uri: props.item.image,
+            }}
+            alt="Alternate Text"
+            size="2xl"
+          />
         </HStack>
-      </VStack>
-    </HStack>
+      )}
+      <HStack space={3}>
+        <VStack space={3} flex={1}>
+          <Text>
+            {props.item.colors.primary} {props.item.material} {props.item.brand}{" "}
+            {props.item.category}
+          </Text>
+          <HStack
+            space={1}
+            paddingX={1}
+            justifyContent="space-between"
+            flex={1}
+          >
+            <Button flex={2}>
+              <Text>Edit</Text>
+            </Button>
+            <Button flex={1}>
+              <Text>Delete</Text>
+            </Button>
+          </HStack>
+        </VStack>
+      </HStack>
+    </VStack>
   );
 }
 
 function ClothingList(props) {
-  const [itemList, setItemList] = useState([
-    {
-      color: "White",
-      material: "Cotton",
-      type: "T-Shirt",
-    },
-  ]);
-  
   if (props.value.length == 0)
     return (
       <VStack alignItems="center">
@@ -332,35 +338,44 @@ function ClothingList(props) {
   );
 }
 
+// [
+//   {
+//     name: "shoe 1",
+//     category: "sneakers",
+//     material: "leather",
+//     colors: {
+//       primary: "white",
+//       secondary: "green",
+//       tertiary: "gold",
+//     },
+//     brand: "adidas",
+//     image:
+//       "https://assets.adidas.com/images/h_2000,f_auto,q_auto,fl_lossy,c_fill,g_auto/9802edf99c4245149145ac5a01571e82_9366/Stan_Smith_Shoes_White_Q47226_01_standard.jpg",
+//   },
+//   {
+//     name: "shirt 1",
+//     category: "shirt",
+//     material: "cotton",
+//     colors: {
+//       primary: "blue",
+//       secondary: "white",
+//       tertiary: "gold",
+//     },
+//     brand: "free people",
+//   },
+// ]
+
 function WardrobeScreen({ navigation }) {
   const [showSortModal, setShowSortModal] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const { user } = useAuth();
 
-  const [itemList, setItemList] = useState([{
-    name: "shoe 1",
-    category: "sneakers",
-    material: "leather",
-    colors: {
-    primary: "white",
-      secondary: "green",
-      tertiary: "gold",
-    },
-    brand: "adidas"
-  },
-  {
-    name: "shirt 1",
-    category: "shirt",
-    material: "cotton",
-    colors: {
-    primary: "blue",
-      secondary: "white",
-      tertiary: "gold",
-    },
-    brand: "free people"
-  }]);
+  const [itemList, setItemList] = useState(user.wardrobe.items);
 
-
+  useEffect(() => {
+    setItemList(user.wardrobe.items);
+  });
 
   return (
     <View flex={1}>
@@ -376,11 +391,13 @@ function WardrobeScreen({ navigation }) {
         <VStack space={1} paddingTop={1} w="100%">
           <TypeSelector />
           <Divider />
-          <SearchBarArea open={() => setShowFilterModal(true)} 
-            searchQuery={searchQuery} 
+          <SearchBarArea
+            open={() => setShowFilterModal(true)}
+            searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
             itemList={itemList}
-            setItemList={setItemList} />
+            setItemList={setItemList}
+          />
           <Divider />
           <Text>{searchQuery}</Text>
           <SortBar open={() => setShowSortModal(true)} />
@@ -391,7 +408,10 @@ function WardrobeScreen({ navigation }) {
         renderInPortal={false}
         shadow={2}
         size="lg"
-        onPress={() => navigation.navigate("NewItem")}
+        onPress={() => {
+          console.log(itemList);
+          // navigation.navigate("NewItem")
+        }}
         icon={<AddIcon color="white" size="xl" />}
       />
     </View>

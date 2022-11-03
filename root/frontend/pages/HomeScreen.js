@@ -30,6 +30,9 @@ import {
   PlayIcon,
   View,
 } from "native-base";
+import axiosInstance from "../utils/axiosInstance.js";
+import { useAuth } from "../contexts/Auth";
+import config from "../config";
 
 function Footer(props) {
   const { navigationRef, show } = props;
@@ -101,8 +104,27 @@ const Stack = createNativeStackNavigator();
 
 function HomeScreen() {
   const navigationRef = useNavigationContainerRef();
-  const [isSetup, setIsSetup] = useState(true);
+  const { user } = useAuth();
+  const [isSetup, setIsSetup] = useState(false);
+
   const initialRouteName = isSetup ? "Media" : "Setup";
+
+  const finishSetup = async (data) => {
+    const response = await axiosInstance.post(
+      config.API_URL + "/wardrobe/create",
+      data
+    );
+    if (response.status == 200) {
+      return true;
+    }
+  };
+
+  useEffect(() => {
+    if (user.wardrobe != null) {
+      setIsSetup(true);
+      navigationRef.navigate("Media");
+    }
+  }, [user]);
 
   return (
     <View flex={1}>
@@ -149,7 +171,7 @@ function HomeScreen() {
               <Stack.Screen
                 name="Setup"
                 component={SetupScreen}
-                initialParams={{ finish: () => setIsSetup(true) }}
+                initialParams={{ finish: (data) => finishSetup(data) }}
                 options={{
                   headerShown: false,
                 }}
