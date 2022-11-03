@@ -20,24 +20,8 @@ import Category from "../components/category"
 
 import ColorPicker from "react-native-wheel-color-picker";
 
-import ImagePickerExample from "../utils/imagePicker";
+import ImageSelecter from "../utils/imageSelecter";
 // import * as ImagePicker from "expo-image-picker";
-
-//TODO Styling and get image picker/camera to work
-const pickImage = async () => {
-  let result = await ImagePicker.launchImageLibraryAsync({
-    mediaTypes: ImagePicker.MediaTypeOptions.Image,
-    allowsEditing: true,
-    aspect: [4, 3],
-    quality: 1,
-  });
-
-  if (!result.cancelled) {
-    this.setImage(result.uri);
-  } else {
-    return null;
-  }
-};
 
 function SizePicker(props) {
   const [measurement, setMeasurement] = React.useState("");
@@ -238,7 +222,7 @@ function NewItemScreen({ navigation }) {
   const form = [
     {
       name: "Image",
-      component: <ImagePickerExample />,
+      component: <ImageSelecter />,
     },
     {
       name: "Category",
