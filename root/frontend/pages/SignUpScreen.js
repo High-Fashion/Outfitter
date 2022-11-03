@@ -174,11 +174,11 @@ function SignUpScreen({ navigation }) {
   const submit = () => {
     const test = {
       confirmPassword: "abc123!A",
-      email: "spencerbass1001@gmail.com",
-      firstName: "Spencer",
-      lastName: "Bass",
+      email: "liamstokes@ufl.edu",
+      firstName: "Liam",
+      lastName: "Stokes",
       password: "abc123!A",
-      username: "spencerbass",
+      username: "Liamstokes",
       acceptTerms: true,
     };
     // if (validate() == true) {
