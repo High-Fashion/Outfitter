@@ -36,9 +36,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     async function load() {
       console.log("loading user");
-      const response = await axiosInstance.get(config.API_URL + "/user/");
-      console.log(response.data);
-      setUser(response.data);
+      refreshUser();
     }
     if (signedIn) load();
   }, [signedIn]);
@@ -84,9 +82,15 @@ export function AuthProvider({ children }) {
     TokenService.removeUser();
   };
 
+  const refreshUser = async () => {
+    const response = await axiosInstance.get(config.API_URL + "/user/");
+    console.log(response.data);
+    setUser(response.data);
+  };
+
   return (
     <AuthContext.Provider
-      value={{ signedIn, user, loading, signIn, signUp, signOut }}
+      value={{ signedIn, user, loading, signIn, signUp, signOut, refreshUser }}
     >
       {children}
     </AuthContext.Provider>

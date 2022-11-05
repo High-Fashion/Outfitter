@@ -11,13 +11,6 @@ import OutfitScreen from "./OutfitScreen";
 import NewItemScreen from "./NewItemScreen.js";
 import CategoryListScreen from "./CategoryListScreen.jsx";
 import ItemListScreen from "./ItemListScreen.jsx";
-import {
-  Measurements,
-  SetupScreen,
-  WardrobeSettings,
-  PrivacySettings,
-  StyleQuiz,
-} from "./SetupScreen.js";
 
 import {
   Text,
@@ -105,26 +98,9 @@ const Stack = createNativeStackNavigator();
 function HomeScreen() {
   const navigationRef = useNavigationContainerRef();
   const { user } = useAuth();
-  const [isSetup, setIsSetup] = useState(false);
+  const [isSetup, setIsSetup] = useState(user.wardrobe != null);
 
   const initialRouteName = isSetup ? "Media" : "Setup";
-
-  const finishSetup = async (data) => {
-    const response = await axiosInstance.post(
-      config.API_URL + "/wardrobe/create",
-      data
-    );
-    if (response.status == 200) {
-      return true;
-    }
-  };
-
-  useEffect(() => {
-    if (user.wardrobe != null) {
-      setIsSetup(true);
-      navigationRef.navigate("Media");
-    }
-  }, [user]);
 
   return (
     <View flex={1}>
@@ -165,36 +141,6 @@ function HomeScreen() {
                 name="Media"
                 component={MediaScreen}
                 options={{ headerShown: false }}
-              />
-            </Stack.Group>
-            <Stack.Group>
-              <Stack.Screen
-                name="Setup"
-                component={SetupScreen}
-                initialParams={{ finish: (data) => finishSetup(data) }}
-                options={{
-                  headerShown: false,
-                }}
-              />
-              <Stack.Screen
-                name="Wardrobe Settings"
-                component={WardrobeSettings}
-                options={{ headerShown: true }}
-              />
-              <Stack.Screen
-                name="Measurements"
-                component={Measurements}
-                options={{ headerShown: true }}
-              />
-              <Stack.Screen
-                name="Style Quiz"
-                component={StyleQuiz}
-                options={{ headerShown: true }}
-              />
-              <Stack.Screen
-                name="Privacy Settings"
-                component={PrivacySettings}
-                options={{ headerShown: true }}
               />
             </Stack.Group>
           </Stack.Navigator>

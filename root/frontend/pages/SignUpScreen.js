@@ -17,7 +17,7 @@ import {
 } from "native-base";
 import { React, useState, useEffect, useRef } from "react";
 import { useAuth } from "../contexts/Auth";
-import {Image} from 'react-native'; 
+import { Image } from "react-native";
 
 const validator = require("validator");
 
@@ -235,9 +235,16 @@ function SignUpScreen({ navigation }) {
       <Text>{formData.email}</Text>
       <Stack paddingTop={4} alignItems="center" space={2} paddingBottom={4}>
         <VStack alignItems="center" paddingBottom={4}>
-        <Image 
-        source = {require('./logo.png')}
-        style={{width:200,height:200,position:'absolute',left:120,top:-63}}/>
+          <Image
+            source={require("../assets/logo.png")}
+            style={{
+              width: 200,
+              height: 200,
+              position: "absolute",
+              left: 120,
+              top: -63,
+            }}
+          />
           <Heading size="xl">Outfitter</Heading>
           <Text>Sign up to begin tracking your wardrobe</Text>
         </VStack>

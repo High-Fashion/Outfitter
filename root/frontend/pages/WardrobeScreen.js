@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useIsFocused } from "@react-navigation/native";
 import {
   Fab,
   Input,
@@ -118,44 +119,25 @@ function FilterOptionsModal(props) {
   );
 }
 
-function SearchBarArea(props) {
-  const onChangeSearch = (query) => {
-    props.setSearchQuery(query);
-    props.setItemList([
-      {
-        name: "shoe 1",
-        category: "sneakers",
-        material: "leather",
-        colors: {
-          primary: "white",
-          secondary: "green",
-          tertiary: "gold",
-        },
-        brand: "adidas",
-      },
-      {
-        name: "shirt 1",
-        category: "shirt",
-        material: "cotton",
-        colors: {
-          primary: "blue",
-          secondary: "white",
-          tertiary: "gold",
-        },
-        brand: "free people",
-      },
-    ]);
-    if (query) {
-      const newItems = props.itemList.filter((item) => {
-        const item_data = item.name.toUpperCase();
-        const input_data = query.toUpperCase();
-        return item_data.indexOf(input_data) > -1;
-      });
-      props.setItemList(newItems);
-    } else {
-      console.log("string doesn't exist, look into it");
+function getItemString(item) {
+  var result = "";
+  Object.keys(item).map((key) => {
+    if (!["category", "material", "pattern", "brand"].includes(key)) return;
+    if (item[key]) {
+      result += item[key];
     }
-  };
+  });
+  if (item.colors) {
+    Object.keys(item.colors).map((color) => {
+      if (item.colors[color]) {
+        result += item.colors[color];
+      }
+    });
+  }
+  return result.toUpperCase();
+}
+
+function SearchBarArea(props) {
   return (
     <>
       <HStack alignItems="center" space={1} padding={1}>
@@ -172,7 +154,7 @@ function SearchBarArea(props) {
             </Center>
           }
           value={props.searchQuery}
-          onChangeText={(query) => onChangeSearch(query)}
+          onChangeText={(query) => props.setSearchQuery(query)}
         />
         <View flex={1}>
           <Button onPress={() => props.open()} borderRadius="md">
@@ -329,7 +311,7 @@ function ClothingList(props) {
       {props.value.map((item) => {
         return (
           <Box key={item.name}>
-            <ItemCard key={item.name} item={item} />
+            <ItemCard key={item._id} item={item} />
             <Divider />
           </Box>
         );
@@ -365,17 +347,44 @@ function ClothingList(props) {
 //   },
 // ]
 
+function getInitialData() {}
+
 function WardrobeScreen({ navigation }) {
   const [showSortModal, setShowSortModal] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
+  const isFocused = useIsFocused();
 
   const [itemList, setItemList] = useState(user.wardrobe.items);
+  const [filteredItemList, setFilteredItemList] = useState(itemList);
+
+  useEffect(() => {
+    console.log("called");
+    // Call only when screen open or when back on screen
+    if (isFocused) {
+      refreshUser();
+    }
+  }, [isFocused]);
 
   useEffect(() => {
     setItemList(user.wardrobe.items);
-  });
+  }, [user]);
+
+  useEffect(() => {
+    if (!searchQuery || searchQuery == "") {
+      setFilteredItemList(itemList);
+      return;
+    }
+    const newItems = itemList.filter((item) => {
+      const item_data = getItemString(item);
+      console.log("Item", item);
+      console.log("String", item_data);
+      const input_data = searchQuery.toUpperCase();
+      return item_data.includes(input_data);
+    });
+    setFilteredItemList(newItems);
+  }, [itemList, searchQuery]);
 
   return (
     <View flex={1}>
@@ -395,13 +404,13 @@ function WardrobeScreen({ navigation }) {
             open={() => setShowFilterModal(true)}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}
-            itemList={itemList}
-            setItemList={setItemList}
+            itemList={filteredItemList}
+            setFilteredItemList={setFilteredItemList}
           />
           <Divider />
           <Text>{searchQuery}</Text>
           <SortBar open={() => setShowSortModal(true)} />
-          <ClothingList value={itemList} />
+          <ClothingList value={filteredItemList} />
         </VStack>
       </ScrollView>
       <Fab
@@ -410,7 +419,7 @@ function WardrobeScreen({ navigation }) {
         size="lg"
         onPress={() => {
           console.log(itemList);
-          // navigation.navigate("NewItem")
+          navigation.navigate("NewItem");
         }}
         icon={<AddIcon color="white" size="xl" />}
       />
