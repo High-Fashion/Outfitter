@@ -110,7 +110,6 @@ function AppStack(props) {
           headerTintColor: "#fff",
           headerTitleStyle: {
             fontWeight: "bold",
-            fontFamily: "sans-serif-medium",
           },
           headerLeft: () => <></>,
           headerRight: () => (
