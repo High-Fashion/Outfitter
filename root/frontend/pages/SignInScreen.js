@@ -11,6 +11,7 @@ import {
 } from "native-base";
 import { useAuth } from "../contexts/Auth";
 import { useState } from "react";
+import { Image } from "react-native";
 
 function SignInScreen({ navigation }) {
   const [username, setUsername] = useState("");
@@ -25,6 +26,16 @@ function SignInScreen({ navigation }) {
     <ScrollView>
       <VStack paddingTop={4} alignItems="center" space={3} paddingBottom={4}>
         <VStack alignItems="center" paddingBottom={4}>
+          <Image
+            source={require("../assets/logo.png")}
+            style={{
+              width: 200,
+              height: 200,
+              position: "absolute",
+              left: 120,
+              top: -63,
+            }}
+          />
           <Heading size="xl">Outfitter</Heading>
           <Text>Sign in to continue tracking your wardrobe</Text>
         </VStack>
