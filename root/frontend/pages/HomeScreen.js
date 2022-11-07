@@ -9,6 +9,7 @@ import WardrobeScreen from "./WardrobeScreen.js";
 import MediaScreen from "./MediaScreen";
 import OutfitScreen from "./OutfitScreen";
 import NewItemScreen from "./NewItemScreen.js";
+import QuizScreen from "./QuizScreen.js";
 import CategoryListScreen from "./CategoryListScreen.jsx";
 import ItemListScreen from "./ItemListScreen.jsx";
 
@@ -22,6 +23,7 @@ import {
   MoonIcon,
   PlayIcon,
   View,
+  QuestionIcon
 } from "native-base";
 import axiosInstance from "../utils/axiosInstance.js";
 import { useAuth } from "../contexts/Auth";
@@ -34,6 +36,7 @@ function Footer(props) {
     0: "Wardrobe",
     1: "Media",
     2: "Outfits",
+    3: "Quiz"
   };
   function selectScreen(number) {
     setSelected(number);
@@ -85,6 +88,20 @@ function Footer(props) {
             <MoonIcon mb="1" color="white" size="sm" />
             <Text color="white" fontSize="12">
               Outfits
+            </Text>
+          </Center>
+        </Pressable>
+        <Pressable
+          cursor="pointer"
+          opacity={selected === 3 ? 1 : 0.5}
+          py="2"
+          flex={1}
+          onPress={() => selectScreen(3)}
+        >
+          <Center>
+            <QuestionIcon mb="1" color="white" size="sm" />
+            <Text color="white" fontSize="12">
+              Quiz
             </Text>
           </Center>
         </Pressable>
@@ -141,6 +158,11 @@ function HomeScreen() {
                 name="Media"
                 component={MediaScreen}
                 options={{ headerShown: false }}
+              />
+              <Stack.Screen
+              name="Quiz"
+              component={QuizScreen}
+              options={{ headerShown: false }}
               />
             </Stack.Group>
           </Stack.Navigator>

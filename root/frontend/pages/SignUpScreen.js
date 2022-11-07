@@ -175,17 +175,17 @@ function SignUpScreen({ navigation }) {
   const submit = () => {
     const test = {
       confirmPassword: "abc123!A",
-      email: "liamstokes@ufl.edu",
-      firstName: "Liam",
-      lastName: "Stokes",
+      email: "kianaalizediaz@ufl.edu",
+      firstName: "Kiana",
+      lastName: "Diaz",
       password: "abc123!A",
-      username: "Liamstokes",
+      username: "kianadiaz",
       acceptTerms: true,
     };
-    // if (validate() == true) {
+     if (validate() == true) {
     console.log("Valid.");
     signUp(test);
-    // }
+     }
   };
 
   const setName = (name) => {
