@@ -1,7 +1,11 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const ratingSchema = new Schema({});
+const ratingSchema = new Schema({
+  outfit: { type: Schema.Types.ObjectId, ref: "Outfit" },
+  score: Number,
+});
+
 const measurementSchema = new Schema({});
 
 const userSchema = new Schema({

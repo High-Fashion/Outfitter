@@ -172,20 +172,14 @@ function SignUpScreen({ navigation }) {
     return valid;
   };
 
-  const submit = () => {
-    const test = {
-      confirmPassword: "abc123!A",
-      email: "liamstokes@ufl.edu",
-      firstName: "Liam",
-      lastName: "Stokes",
-      password: "abc123!A",
-      username: "Liamstokes",
-      acceptTerms: true,
-    };
-    // if (validate() == true) {
-    console.log("Valid.");
-    signUp(test);
-    // }
+  const submit = async () => {
+    if (validate() == true) {
+      console.log("Valid.");
+      const response = await signUp({ ...formData, acceptTerms: acceptTerms });
+      if (response == true) {
+        navigation.navigate("Sign In");
+      }
+    }
   };
 
   const setName = (name) => {
@@ -353,7 +347,7 @@ function SignUpScreen({ navigation }) {
                       <Text>I agree to Outfitters</Text>
                       <Pressable
                         onPress={() => {
-                          navigation.navigate("Home");
+                          navigation.navigate("HomeScreen");
                         }}
                       >
                         <Text color="blue.900">Terms & Conditions</Text>

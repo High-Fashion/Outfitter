@@ -79,12 +79,18 @@ exports.validateSignIn = (req, res, next) => {
 };
 
 exports.authorize = async (req, res, next) => {
+  if (!req.headers["authorization"]) {
+    return res.status(401).json({
+      success: false,
+      message: "INVALID TOKEN",
+    });
+  }
   const access_token = req.headers["authorization"].split(" ")[1];
   console.log(req.headers);
   if (access_token == null)
     return res.status(401).json({
       success: false,
-      message: "INVALID TOKEN 1",
+      message: "INVALID TOKEN",
     });
   jwt.verify(
     access_token,
@@ -99,7 +105,7 @@ exports.authorize = async (req, res, next) => {
         if (user == null)
           return res.status(400).json({
             success: false,
-            message: "INVALID TOKEN 3",
+            message: "INVALID TOKEN",
           });
         req.user = user;
         console.log(req.user);

@@ -424,7 +424,7 @@ const schema = new Schema({
   pattern: String,
   material: String,
   fit: String, //tight, well, loose
-  category: { type: Schema.Types.ObjectId, ref: "Category" },
+  category: String,
 });
 
 schema.set("toJSON", {

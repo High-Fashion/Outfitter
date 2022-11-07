@@ -9,12 +9,15 @@ axiosInstance.defaults.baseURL = API_URL || "http://localhost:4000";
 // Request interceptor for API calls
 axiosInstance.interceptors.request.use(
   async (config) => {
-    const { access_token } = await tokenService.getCredentials();
-    config.headers = {
-      Authorization: `Bearer ${access_token}`,
-      Accept: "application/json",
-      "Content-Type": "application/x-www-form-urlencoded",
-    };
+    const keys = await tokenService.getCredentials();
+    if (keys) {
+      const { access_token } = keys;
+      config.headers = {
+        Authorization: `Bearer ${access_token}`,
+        Accept: "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+      };
+    }
     return config;
   },
   (error) => {
@@ -31,8 +34,12 @@ axiosInstance.interceptors.response.use(
     const originalRequest = error.config;
     if (error.response.status === 403 && !originalRequest._retry) {
       originalRequest._retry = true;
-      const { access_token } = await tokenService.getCredentials();
-      axios.defaults.headers.common["Authorization"] = "Bearer " + access_token;
+      const keys = await tokenService.getCredentials();
+      if (keys) {
+        const { access_token } = keys;
+        axios.defaults.headers.common["Authorization"] =
+          "Bearer " + access_token;
+      }
       return axiosInstance(originalRequest);
     }
     return Promise.reject(error);

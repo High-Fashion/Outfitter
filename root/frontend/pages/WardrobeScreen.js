@@ -30,9 +30,8 @@ import { Dimensions, StyleSheet, TouchableOpacity } from "react-native";
 
 const { width, height } = Dimensions.get("window");
 const CARD_HEIGHT = 200;
-const CARD_WIDTH = width-50;
+const CARD_WIDTH = width - 50;
 const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
-
 
 function TypeSelector() {
   const [selected, setSelected] = useState("clothing");
@@ -266,75 +265,57 @@ function SortBar(props) {
 }
 
 function ItemCard(props) {
+  const getText = (item) => {
+    var text = "";
+    if (item.colors) {
+      if (item.colors.primary) text += item.colors.primary;
+      if (item.colors.tertiary) {
+        text += ", " + item.colors.secondary + ", and " + item.colors.tertiary;
+      } else if (item.colors.secondary) {
+        text += " and " + item.colors.secondary;
+      }
+    }
+    if (item.brand) text += " " + item.brand;
+    if (item.material) text += " " + item.material;
+    if (item.category)
+      text +=
+        " " + item.category.charAt(0).toUpperCase() + item.category.slice(1);
+    return text;
+  };
 
-  return(
+  return (
     <View>
-      <VStack alignItems='center'>
+      <VStack alignItems="center">
         <View style={styles.card}>
           <Image
-            source={{uri: props.item.image}}
+            source={{ uri: props.item.image }}
             style={styles.cardImage}
-            resizeMode="cover">
-          </Image>
+            resizeMode="cover"
+            alt="No image..."
+          ></Image>
         </View>
         <View style={styles.cardDescription}>
           <VStack space={2} alignItems="center">
-            <Text numberOfLines={1} style={styles.cardtitle}>{props.item.colors.primary} {props.item.material} {props.item.type}</Text>
+            <Text numberOfLines={1} style={styles.cardtitle}>
+              {getText(props.item)}
+            </Text>
             <HStack space={2}>
-              <TouchableOpacity 
-                onPress={() => {}}
-                style={[styles.button1, {}]}>
-                <Text textAlign="center" lineHeight={30}>Item Details</Text>
+              <TouchableOpacity onPress={() => {}} style={[styles.button1, {}]}>
+                <Text textAlign="center" lineHeight={30}>
+                  Item Details
+                </Text>
               </TouchableOpacity>
-              <TouchableOpacity 
-                onPress={() => {}}
-                style={[styles.button2, {}]}>
-                <Text textAlign='center'lineHeight={30} fontSize={12}>Delete Item</Text>
+              <TouchableOpacity onPress={() => {}} style={[styles.button2, {}]}>
+                <Text textAlign="center" lineHeight={30} fontSize={12}>
+                  Delete Item
+                </Text>
               </TouchableOpacity>
-           </HStack>
+            </HStack>
           </VStack>
         </View>
       </VStack>
     </View>
-  )
-
-  /*
-  return (
-    <VStack alignItems="center">
-      {props.item?.image && (
-        <HStack marginBottom={-20} width="100%">
-          <Image
-            source={{
-              uri: props.item.image,
-            }}
-            alt="Alternate Text"
-            size="2xl"
-          />
-        </HStack>
-      )}
-      <HStack space={3}>
-        <VStack space={3} flex={1}>
-          <Text>
-            {props.item.colors.primary} {props.item.material} {props.item.brand}{" "}
-            {props.item.category}
-          </Text>
-          <HStack
-            space={1}
-            paddingX={1}
-            justifyContent="space-between"
-            flex={1}
-          >
-            <Button flex={2}>
-              <Text>Edit</Text>
-            </Button>
-            <Button flex={1}>
-              <Text>Delete</Text>
-            </Button>
-          </HStack>
-        </VStack>
-      </HStack>
-    </VStack>
-  );*/
+  );
 }
 
 function ClothingList(props) {
@@ -352,7 +333,7 @@ function ClothingList(props) {
       {props.value.map((item) => {
         return (
           <Box key={item.name}>
-            <ItemCard key={item._id} item={item} />
+            <ItemCard key={item.id} item={item} />
             <Divider />
           </Box>
         );
@@ -360,35 +341,6 @@ function ClothingList(props) {
     </VStack>
   );
 }
-
-// [
-//   {
-//     name: "shoe 1",
-//     category: "sneakers",
-//     material: "leather",
-//     colors: {
-//       primary: "white",
-//       secondary: "green",
-//       tertiary: "gold",
-//     },
-//     brand: "adidas",
-//     image:
-//       "https://assets.adidas.com/images/h_2000,f_auto,q_auto,fl_lossy,c_fill,g_auto/9802edf99c4245149145ac5a01571e82_9366/Stan_Smith_Shoes_White_Q47226_01_standard.jpg",
-//   },
-//   {
-//     name: "shirt 1",
-//     category: "shirt",
-//     material: "cotton",
-//     colors: {
-//       primary: "blue",
-//       secondary: "white",
-//       tertiary: "gold",
-//     },
-//     brand: "free people",
-//   },
-// ]
-
-function getInitialData() {}
 
 function WardrobeScreen({ navigation }) {
   const [showSortModal, setShowSortModal] = useState(false);
@@ -438,7 +390,7 @@ function WardrobeScreen({ navigation }) {
         close={() => setShowFilterModal(false)}
       />
       <ScrollView>
-        <VStack space={1} paddingTop={1} w="100%">
+        <VStack space={1} paddingTop={1} paddingBottom={10} w="100%">
           <TypeSelector />
           <Divider />
           <SearchBarArea
@@ -459,7 +411,6 @@ function WardrobeScreen({ navigation }) {
         shadow={2}
         size="lg"
         onPress={() => {
-          console.log(itemList);
           navigation.navigate("NewItem");
         }}
         icon={<AddIcon color="white" size="xl" />}
@@ -476,10 +427,10 @@ const styles = StyleSheet.create({
   card: {
     marginLeft: 20,
     marginRight: 20,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderTopLeftRadius: 15,
     borderTopRightRadius: 15,
-    borderColor: '#102f42',
+    borderColor: "#102f42",
     borderWidth: 2,
     height: 220,
     width: CARD_WIDTH,
@@ -500,16 +451,16 @@ const styles = StyleSheet.create({
   },
   cardDescription: {
     height: 80,
-    alignItems: 'center',
+    alignItems: "center",
     fontSize: 20,
     color: "#478bb5",
     width: CARD_WIDTH,
     borderBottomLeftRadius: 15,
     borderBottomRightRadius: 15,
-    backgroundColor: '#aed0e6',
+    backgroundColor: "#aed0e6",
     marginBottom: 10,
     borderWidth: 2,
-    borderColor: '#102f42',
+    borderColor: "#102f42",
     marginLeft: 20,
     marginRight: 20,
   },
@@ -520,8 +471,8 @@ const styles = StyleSheet.create({
     marginRight: 10,
     width: 250,
     height: 33,
-    borderColor: '#102f42',
-    backgroundColor: '#478bb5',
+    borderColor: "#102f42",
+    backgroundColor: "#478bb5",
     borderRadius: 40,
   },
 
@@ -531,10 +482,8 @@ const styles = StyleSheet.create({
     marginRight: 10,
     width: 75,
     height: 33,
-    borderColor: '#102f42',
-    backgroundColor: '#478bb5',
+    borderColor: "#102f42",
+    backgroundColor: "#478bb5",
     borderRadius: 40,
-  }
-
-
-})
+  },
+});

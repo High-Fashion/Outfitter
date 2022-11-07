@@ -6,6 +6,7 @@ import { Text, HamburgerIcon, Pressable, Center } from "native-base";
 import SignUpScreen from "./pages/SignUpScreen.js";
 import SignInScreen from "./pages/SignInScreen.js";
 import HomeScreen from "./pages/HomeScreen.js";
+import * as SplashScreen from "expo-splash-screen";
 
 import {
   Measurements,
@@ -16,15 +17,9 @@ import {
 } from "./pages/SetupScreen.js";
 
 import { useAuth } from "./contexts/Auth";
-import { useEffect, useState } from "react";
-
-function Loading() {
-  return (
-    <Center>
-      <Text>Loading</Text>
-    </Center>
-  );
-}
+import { useEffect, useState, useCallback } from "react";
+import axiosInstance from "./utils/axiosInstance";
+import config from "./config";
 
 function AuthStack(props) {
   const Stack = createNativeStackNavigator();
@@ -51,7 +46,7 @@ function SetupStack(props) {
   };
 
   return (
-    <Stack.Group>
+    <Stack.Navigator>
       <Stack.Screen
         name="Setup"
         component={SetupScreen}
@@ -80,14 +75,14 @@ function SetupStack(props) {
         component={PrivacySettings}
         options={{ headerShown: true }}
       />
-    </Stack.Group>
+    </Stack.Navigator>
   );
 }
 
 function AppStack(props) {
   const Stack = createNativeStackNavigator();
 
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const [isSetup, setIsSetup] = useState(user.wardrobe != null);
 
   useEffect(() => {
@@ -114,7 +109,11 @@ function AppStack(props) {
           headerLeft: () => <></>,
           headerRight: () => (
             <Pressable>
-              <HamburgerIcon size="md" color="white" />
+              <HamburgerIcon
+                size="md"
+                color="white"
+                onPress={() => signOut()}
+              />
             </Pressable>
           ),
         }}
@@ -126,9 +125,47 @@ function AppStack(props) {
 }
 
 export default function Router() {
-  const { signedIn, loading } = useAuth();
-  if (loading) {
-    return <Loading />;
+  const { signedIn, refreshUser, getTokens } = useAuth();
+
+  const [appIsReady, setAppIsReady] = useState(false);
+
+  useEffect(() => {
+    async function prepare() {
+      try {
+        // Pre-load fonts, make any API calls you need to do here
+        const keys = await getTokens();
+        await new Promise(async (resolve) => {
+          if (!keys) {
+            resolve();
+            return;
+          }
+          var bool = await refreshUser();
+          resolve();
+        });
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        // Tell the application to render
+        setAppIsReady(true);
+      }
+    }
+
+    prepare();
+  }, []);
+
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      // This tells the splash screen to hide immediately! If we call this after
+      // `setAppIsReady`, then we may see a blank screen while the app is
+      // loading its initial state and rendering its first pixels. So instead,
+      // we hide the splash screen once we know the root view has already
+      // performed layout.
+      await SplashScreen.hideAsync();
+    }
+  }, [appIsReady]);
+
+  if (!appIsReady) {
+    return null;
   }
 
   return (

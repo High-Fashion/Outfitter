@@ -53,6 +53,7 @@ export function WardrobeSettings({ route }) {
                 height="200"
                 resizeMode="contain"
                 source={require("../assets/mens.png")}
+                alt="Men's"
               />
             </VStack>
           </Button>
@@ -69,6 +70,7 @@ export function WardrobeSettings({ route }) {
                 height="200"
                 resizeMode="contain"
                 source={require("../assets/womens.png")}
+                alt="Women's"
               />
             </VStack>
           </Button>
@@ -176,7 +178,7 @@ export function PrivacySettings({ navigation }) {
 }
 
 export function SetupScreen({ navigation: { navigate }, route }) {
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
 
   const [styles, setStyles] = useState([]);
   const [gender, setGender] = useState([]);
@@ -211,12 +213,12 @@ export function SetupScreen({ navigation: { navigate }, route }) {
       gender: gender,
     });
     if (finished) {
-      navigate("Media");
+      refreshUser();
     }
   }
 
   return (
-    <VStack space={2} alignItems="center" flex={1} my={4}>
+    <VStack paddingTop={4} space={2} alignItems="center" flex={1} my={4}>
       <Heading size="xl">
         Welcome, {user.firstName == null ? "User" : user.firstName}
       </Heading>

@@ -8,6 +8,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import WardrobeScreen from "./WardrobeScreen.js";
 import MediaScreen from "./MediaScreen";
 import OutfitScreen from "./OutfitScreen";
+import NewOutfitScreen from "./NewOutfitScreen.js";
 import NewItemScreen from "./NewItemScreen.js";
 import CategoryListScreen from "./CategoryListScreen.jsx";
 import ItemListScreen from "./ItemListScreen.jsx";
@@ -29,7 +30,7 @@ import config from "../config";
 
 function Footer(props) {
   const { navigationRef, show } = props;
-  const [selected, setSelected] = useState(1);
+  const [selected, setSelected] = useState(0);
   const screens = {
     0: "Wardrobe",
     1: "Media",
@@ -100,7 +101,7 @@ function HomeScreen() {
   const { user } = useAuth();
   const [isSetup, setIsSetup] = useState(user.wardrobe != null);
 
-  const initialRouteName = isSetup ? "Media" : "Setup";
+  const initialRouteName = isSetup ? "Wardrobe" : "Setup";
 
   return (
     <View flex={1}>
@@ -136,6 +137,11 @@ function HomeScreen() {
                 name="Outfits"
                 component={OutfitScreen}
                 options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="NewOutfit"
+                component={NewOutfitScreen}
+                options={{ title: "New Outfit" }}
               />
               <Stack.Screen
                 name="Media"

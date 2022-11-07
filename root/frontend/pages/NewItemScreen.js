@@ -50,11 +50,65 @@ function SizePicker(props) {
   );
 }
 
-function CatergoryPicker({ navigation }) {
+function CategoryPicker(props) {
+  const categories = require("../assets/male-categories.json")["mens"];
+  const [selectedCategory, setSelectedCategory] = useState(null);
+
+  const [listOptions, setListOptions] = useState(Object.keys(categories));
+
+  const selectCategory = (category) => {
+    if (category == null) {
+      setListOptions(Object.keys(categories));
+    } else {
+      console.log("selected", category);
+      setListOptions(Object.keys(categories[category]));
+    }
+    setSelectedCategory(category);
+  };
+
   return (
-    <Button onPress={() => navigation.navigate("CategoryList")}>
-      <Text>CatergoryPicker</Text>
-    </Button>
+    <Select
+      flex={1}
+      key={props.rank}
+      placeholder={"Select clothing type"}
+      onClose={() => {
+        selectCategory(null);
+        props.setCategory(null);
+      }}
+      defaultValue={props.value}
+      onValueChange={(value) => {
+        props.setCategory(value);
+      }}
+      _item={{
+        _stack: {
+          alignItems: "center",
+          justifyContent: "space-around",
+        },
+        _text: {
+          paddingLeft: "4%",
+          paddingY: "1%",
+          color: "black",
+          fontSize: "xl",
+        },
+        padding: 0,
+      }}
+      _actionSheetContent={{ padding: 0 }}
+    >
+      {listOptions.map((option) => {
+        return selectedCategory == null ? (
+          <Select.Item
+            key={option}
+            label={option}
+            value={option}
+            onPress={() => {
+              selectCategory(option);
+            }}
+          />
+        ) : (
+          <Select.Item key={option} label={option} value={option} />
+        );
+      })}
+    </Select>
   );
 }
 
@@ -167,16 +221,6 @@ function ColorPickerSection(props) {
   );
 }
 
-// <Button
-// onPress={() => {
-//   addColor();
-// }}
-// flex="1"
-// borderLeftRadius={0}
-// >
-// <AddIcon color="black" />
-// </Button>
-
 function NewItemScreen({ navigation }) {
   const [image, setImage] = useState(null);
 
@@ -203,7 +247,7 @@ function NewItemScreen({ navigation }) {
     {
       name: "Category",
       component: (
-        <Category
+        <CategoryPicker
           accessory={formData.accessory}
           setCategory={(category) =>
             setData({ ...formData, category: category })

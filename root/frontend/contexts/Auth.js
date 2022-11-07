@@ -19,27 +19,26 @@ export function useAuth() {
 export function AuthProvider({ children }) {
   const [user, setUser] = useState({});
   const [signedIn, setSignedIn] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [token, setToken] = useState();
 
-  useEffect(() => {
-    async function getCreds() {
-      const { access_token } = await TokenService.getCredentials();
-      if (access_token) {
-        setToken(access_token);
-        setSignedIn(true);
-      }
-    }
-    getCreds();
-  }, []);
+  // useEffect(() => {
+  //   async function getCreds() {
+  //     const keys = await TokenService.getCredentials();
+  //     if (!keys) return;
+  //     const { access_token } = keys;
+  //     if (access_token) {
+  //       setSignedIn(true);
+  //     }
+  //   }
+  //   getCreds();
+  // }, []);
 
-  useEffect(() => {
-    async function load() {
-      console.log("loading user");
-      refreshUser();
-    }
-    if (signedIn) load();
-  }, [signedIn]);
+  // useEffect(() => {
+  //   async function load() {
+  //     console.log("loading user");
+  //     refreshUser();
+  //   }
+  //   if (signedIn) load();
+  // }, [signedIn]);
 
   const signIn = (body) => {
     axios
@@ -54,8 +53,7 @@ export function AuthProvider({ children }) {
             refresh_token: res.data.refresh_token,
           });
         }
-        setSignedIn(true);
-
+        refreshUser();
         return res.data;
       })
       .catch((error) => {
@@ -63,9 +61,8 @@ export function AuthProvider({ children }) {
       });
   };
 
-  const signUp = (body) => {
-    console.log("Attempting post to: ", config.API_URL + "/signup");
-    axios
+  const signUp = async (body) => {
+    const response = await axios
       .post(config.API_URL + "/signup", {
         email: body.email,
         firstName: body.firstName,
@@ -75,22 +72,40 @@ export function AuthProvider({ children }) {
         password: body.password,
       })
       .catch((err) => console.log(err));
+    if (response.status == 201) return true;
   };
 
-  const signOut = () => {
-    //TODO write this function
-    TokenService.removeUser();
+  const signOut = async () => {
+    await TokenService.removeUser();
+    setSignedIn(false);
+    setUser(undefined);
+    return true;
   };
 
   const refreshUser = async () => {
     const response = await axiosInstance.get(config.API_URL + "/user/");
-    console.log(response.data);
+    if (!response.data) return false;
     setUser(response.data);
+    setSignedIn(true);
+    return true;
+  };
+
+  const getTokens = async () => {
+    const keys = await TokenService.getCredentials();
+    return keys;
   };
 
   return (
     <AuthContext.Provider
-      value={{ signedIn, user, loading, signIn, signUp, signOut, refreshUser }}
+      value={{
+        signedIn,
+        user,
+        signIn,
+        signUp,
+        signOut,
+        refreshUser,
+        getTokens,
+      }}
     >
       {children}
     </AuthContext.Provider>

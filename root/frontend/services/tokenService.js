@@ -73,6 +73,7 @@ const setCredentials = async (keys) => {
 const getCredentials = async () => {
   try {
     let credentials = await AsyncStorage.getItem("keys");
+    if (!credentials) return null;
     let cred = await getVerifiedKeys(JSON.parse(credentials));
     if (credentials != null && cred != null) {
       return cred;
@@ -85,7 +86,13 @@ const getCredentials = async () => {
   return null;
 };
 
+const removeUser = async () => {
+  await AsyncStorage.removeItem("keys");
+  return true;
+};
+
 export default {
   getCredentials,
   setCredentials,
+  removeUser,
 };
