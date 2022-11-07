@@ -134,8 +134,8 @@ function QuizScreen({ navigation: { navigate }, route }) {
     }
   }
 
-   /*TO DO: Render badge style*/
-  /* https://hossein-zare.github.io/react-native-dropdown-picker-website/docs/5.1/advanced/modes */
+              /*TO DO: Render badge style*/
+              /* https://hossein-zare.github.io/react-native-dropdown-picker-website/docs/5.1/advanced/modes */
     return(
      <View>{user.firstName && <Text>{ user.firstName}, How would you describe your style?</Text>} 
        <VStack space={5} alignItems="center" >
@@ -150,7 +150,7 @@ function QuizScreen({ navigation: { navigate }, route }) {
         value={currentInput}
         onChangeText={(text) => updateValue(text)}
       />
-        <DropDownPicker style ={BadgeStyle}
+        <DropDownPicker
           open={open}
           value={value}
           items={items}

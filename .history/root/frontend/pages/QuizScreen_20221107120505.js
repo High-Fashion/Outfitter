@@ -160,6 +160,7 @@ function QuizScreen({ navigation: { navigate }, route }) {
           multiple={true}
           min={0}
           mode="BADGE"
+          badgeTextStyle={fontStyle:"lg"
           placeholder="Select Style"
         />
         <Button

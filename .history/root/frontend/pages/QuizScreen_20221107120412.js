@@ -160,7 +160,10 @@ function QuizScreen({ navigation: { navigate }, route }) {
           multiple={true}
           min={0}
           mode="BADGE"
+          badgeTextStyle="lg"
+          variant="ghost"
           placeholder="Select Style"
+          colorScheme="info"
         />
         <Button
                 isDisabled={!setupComplete}

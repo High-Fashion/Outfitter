@@ -160,6 +160,8 @@ function QuizScreen({ navigation: { navigate }, route }) {
           multiple={true}
           min={0}
           mode="BADGE"
+          badge
+          variant="ghost"
           placeholder="Select Style"
         />
         <Button

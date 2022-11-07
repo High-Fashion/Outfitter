@@ -1,3 +1,4 @@
+
 /*https://snack.expo.dev/@mali_ai/react-native-dropdown-picker*/
 import { useAuth } from "../contexts/Auth";
 import { useState,useEffect } from "react";
@@ -8,32 +9,12 @@ import {
   HStack,
   Button,
   Input,
+  HamburgerIcon,
   Badge,
   CloseIcon,
 } from "native-base";
 import DropDownPicker from 'react-native-dropdown-picker';
 
-function BadgeStyle(props){
-  return(
-    <Badge
-    _text={{ fontSize: "lg" }}
-    rightIcon={
-      <Button
-        borderRadius="full"
-        onPress={() => props.remove()}
-        variant="ghost"
-      >
-        <CloseIcon color="black" />
-      </Button>
-    }
-    variant="subtle"
-    colorScheme="info"
-    key={props.style}
-  >
-    {props.style}
-  </Badge>
-  );
-}
 
 function StyleTag(props) {
   return (
@@ -62,10 +43,6 @@ function QuizScreen({ navigation: { navigate }, route }) {
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState([]);
     const [currentInput, setInput] = useState();
-    const { user } = useAuth();
-    const [styles, setStyles] = useState([]);
-    const [completed, setCompleted] = useState(false);
-    const [setupComplete, setSetupComplete] = useState(false);
     const [items, setItems] = useState([
       {label: 'Emo', value: 'emo'},
       {label: 'Goth', value: 'goth', parent: 'emo'},
@@ -107,12 +84,19 @@ function QuizScreen({ navigation: { navigate }, route }) {
           })
         );
       };
+
+    const { user } = useAuth();
+    const [styles, setStyles] = useState([]);
+    const [completed, setCompleted] = useState(false);
     
       function complete(name) {
         const temp = completed;
         temp[name] = true;
         setCompleted(temp);
-      } 
+      }
+    
+      const [setupComplete, setSetupComplete] = useState(false);
+
 
   useEffect(() => {
     console.log("key");
@@ -134,8 +118,7 @@ function QuizScreen({ navigation: { navigate }, route }) {
     }
   }
 
-   /*TO DO: Render badge style*/
-  /* https://hossein-zare.github.io/react-native-dropdown-picker-website/docs/5.1/advanced/modes */
+
     return(
      <View>{user.firstName && <Text>{ user.firstName}, How would you describe your style?</Text>} 
        <VStack space={5} alignItems="center" >
@@ -150,7 +133,7 @@ function QuizScreen({ navigation: { navigate }, route }) {
         value={currentInput}
         onChangeText={(text) => updateValue(text)}
       />
-        <DropDownPicker style ={BadgeStyle}
+        <DropDownPicker
           open={open}
           value={value}
           items={items}

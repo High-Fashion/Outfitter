@@ -159,7 +159,7 @@ function QuizScreen({ navigation: { navigate }, route }) {
           setItems={setItems}
           multiple={true}
           min={0}
-          mode="BADGE"
+          
           placeholder="Select Style"
         />
         <Button

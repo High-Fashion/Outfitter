@@ -14,25 +14,7 @@ import {
 import DropDownPicker from 'react-native-dropdown-picker';
 
 function BadgeStyle(props){
-  return(
-    <Badge
-    _text={{ fontSize: "lg" }}
-    rightIcon={
-      <Button
-        borderRadius="full"
-        onPress={() => props.remove()}
-        variant="ghost"
-      >
-        <CloseIcon color="black" />
-      </Button>
-    }
-    variant="subtle"
-    colorScheme="info"
-    key={props.style}
-  >
-    {props.style}
-  </Badge>
-  );
+  return();
 }
 
 function StyleTag(props) {
@@ -134,8 +116,8 @@ function QuizScreen({ navigation: { navigate }, route }) {
     }
   }
 
-   /*TO DO: Render badge style*/
-  /* https://hossein-zare.github.io/react-native-dropdown-picker-website/docs/5.1/advanced/modes */
+              /*TO DO: Render badge style*/
+              /* https://hossein-zare.github.io/react-native-dropdown-picker-website/docs/5.1/advanced/modes */
     return(
      <View>{user.firstName && <Text>{ user.firstName}, How would you describe your style?</Text>} 
        <VStack space={5} alignItems="center" >
@@ -150,7 +132,7 @@ function QuizScreen({ navigation: { navigate }, route }) {
         value={currentInput}
         onChangeText={(text) => updateValue(text)}
       />
-        <DropDownPicker style ={BadgeStyle}
+        <DropDownPicker
           open={open}
           value={value}
           items={items}
