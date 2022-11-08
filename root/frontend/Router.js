@@ -9,7 +9,7 @@ import HomeScreen from "./pages/HomeScreen.js";
 import * as SplashScreen from "expo-splash-screen";
 
 import {
-  Measurements,
+  BodyShape,
   SetupScreen,
   WardrobeSettings,
   PrivacySettings,
@@ -61,8 +61,8 @@ function SetupStack(props) {
         options={{ headerShown: true }}
       />
       <Stack.Screen
-        name="Measurements"
-        component={Measurements}
+        name="Body Shape"
+        component={BodyShape}
         options={{ headerShown: true }}
       />
       <Stack.Screen

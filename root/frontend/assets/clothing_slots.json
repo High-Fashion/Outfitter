@@ -1,0 +1,55 @@
+{
+  "head": {
+    "hair": {},
+    "top": {},
+    "eyes": {},
+    "ears": {
+      "left": {},
+      "right": {}
+    },
+    "face": {},
+    "neck": {}
+  },
+  "torso": {
+    "chest": {},
+    "back": {}
+  },
+  "arms": {
+    "left": {
+      "hand": {
+        "fingers": {
+          "thumb": {},
+          "index": {},
+          "middle": {},
+          "ring": {},
+          "pinky": {}
+        }
+      },
+      "wrist": {}
+    },
+    "right": {
+      "hand": {
+        "fingers": {
+          "thumb": {},
+          "index": {},
+          "middle": {},
+          "ring": {},
+          "pinky": {}
+        }
+      },
+      "wrist": {}
+    }
+  },
+  "legs": {
+    "waist": {},
+    "hips": {},
+    "left": {
+      "ankle": {},
+      "foot": {}
+    },
+    "right": {
+      "ankle": {},
+      "foot": {}
+    }
+  }
+}

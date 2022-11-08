@@ -14,6 +14,8 @@ import {
   Input,
   DeleteIcon,
   CloseIcon,
+  Center,
+  Box,
 } from "native-base";
 import { useAuth } from "../contexts/Auth";
 
@@ -155,14 +157,170 @@ export function StyleQuiz({ route }) {
     </VStack>
   );
 }
-export function Measurements({ navigation }) {
+
+//TODO make suggestions better and add suggestions for men and differentiate them
+export function BodyShape({ navigation }) {
+  const [shape, setShape] = useState();
+  const shapes = [
+    {
+      name: "Inverted Triangle",
+      aliases: ["Apple"],
+      male_image: require("../assets/bodytypes/men_inverted_triangle.png"),
+      female_image: require("../assets/bodytypes/women_inverted_triangle.png"),
+      description:
+        "People with an inverted triangle body shape have shoulders and a bust that are wider than their hips.",
+      suggestions:
+        "ops that have some shaping around the waist and more open necklines, or clothing that shows off your legs. fitted but not waist defined dresses. A-line dresses and skirts. skinny pants over flares or boot legs.",
+    },
+    {
+      name: "Rectangle",
+      aliases: ["Straight,", "Banana"],
+      male_image: require("../assets/bodytypes/men_rectangle.png"),
+      female_image: require("../assets/bodytypes/women_rectangle.png"),
+      description:
+        "People with a rectangle body shape have a waist measurement that is roughly the same as their hips or shoulders.",
+      suggestions:
+        "try to define your waist with dresses that have a defined waist line or tuck shirts into jeans and skirts. If you feel a little boxy, try to add more curves to your clothing in the form of scoop neck shirts instead of V-necks or dresses that have flowy skirts to add volume on you lower half. off-the-shoulder tops, tube dresses, and belted waists",
+      subtypes: [
+        {
+          name: "Athletic",
+          description:
+            "The athletic body type is similar to the rectangle body type in that the shoulder and hip measurements are roughly the same, however athletic body types are generally more muscular and tend to have a waist that is narrower than the hips and shoulders.",
+          suggestions: "halter, strapless, and racerback styles",
+        },
+      ],
+    },
+    {
+      name: "Pear",
+      aliases: ["Triangle"],
+      male_image: require("../assets/bodytypes/men_pear.png"),
+      female_image: require("../assets/bodytypes/women_pear.png"),
+      description:
+        "People with a pear body shape have hips that are wider than both their shoulders and waist.",
+      suggestions:
+        "You’ve got a heavier bottom half of your bod if this is you. If you aren’t in love with this, define your waist with tucked shirts or dresses with a defined waist seam. If you prefer not to define your waist, statement necklaces or hairdos are a great way to draw the eye up and make your body look longer!",
+      subtypes: [
+        {
+          name: "Diamond",
+          description:
+            "Similar to the pear body shape, the diamond body shape has broader hips than shoulders. However, the diamond body shape has a narrow bust and a fuller midsection.",
+          suggestions: "Flowy off-the-shoulder or boat-neck tops",
+        },
+        {
+          name: "Spoon",
+          description:
+            "Similar to the pear body shape, however the hips are larger than the bust.",
+          suggestions:
+            "classic “baby doll” cuts or other items with an empire waist",
+        },
+      ],
+    },
+    {
+      name: "Hourglass",
+      male_image: require("../assets/bodytypes/men_hourglass.png"),
+      female_image: require("../assets/bodytypes/women_hourglass.png"),
+      description:
+        "People with an hourglass body shape have a waist measurement that is smaller than their hips and shoulders. Their hips and shoulders are usually roughly the same width.",
+      subtypes: [
+        {
+          name: "Top Hourglass",
+          description:
+            "Top hourglass body shapes are similar to general hourglass shapes, but have slightly larger bust measurements than their hips.",
+          suggestions:
+            "Boot cut or slightly flared pants probably fit you well, as do full or A-line skirts and tailored jackets.",
+        },
+        {
+          name: "Bottom Hourglass",
+          description:
+            "Top hourglass body shapes are similar to general hourglass shapes, but have slightly larger hip measurements than their bust.",
+          suggestions: "form-fitting knits and dresses",
+        },
+      ],
+      suggestions:
+        "Form-fitting or tailored clothing. Your waist is already there, but it’s up to you if you want to define it or not! If you want to define it, follow the advice for rectangles and pears. Thinner hourglasses might want to add volume to their bottom half with full skirts or dresses while a more curvy hourglass may want to go with a form fitting bottom option. ",
+    },
+    {
+      name: "Round",
+      aliases: ["Oval"],
+      male_image: require("../assets/bodytypes/men_apple.png"),
+      female_image: require("../assets/bodytypes/women_apple.png"),
+      description:
+        "Round body types have a large bust, narrow hips, and a fuller midsection.",
+      suggestions: "tops that flare at the top or that have vertical details.",
+    },
+  ];
+
   return (
-    <VStack>
-      <Text>Measurements</Text>
-      <Button>
-        <Text>Complete</Text>
-      </Button>
-    </VStack>
+    <ScrollView>
+      <VStack space={3} paddingTop={4} paddingBottom={4} mx={4}>
+        <View>
+          <Heading>What is Body Shape?</Heading>
+          <Text>
+            Bodies come in different all shapes and sizes, yet most people fit
+            into a few broad categories. The way we dress can help flatter our
+            body shape, so many people find it important to determine theirs so
+            that they can dress accordingly.
+          </Text>
+        </View>
+        <Heading>Determining Your Body Shape</Heading>
+        <Text>
+          Body shapes can be catergorized by the width of your shoulders, bust,
+          waist, and hips.
+        </Text>
+
+        <View>
+          <VStack space={4}>
+            {shapes.map((content) => {
+              return (
+                <Box backgroundColor="blue.100" borderRadius="lg" shadow={4}>
+                  <VStack space="1" padding="2" mx="2">
+                    <Heading size="md">{content.name}</Heading>
+                    {content.aliases && (
+                      <Text italic={true}>
+                        Also known as{content.aliases.map((a) => " " + a)}
+                      </Text>
+                    )}
+                    <VStack space="4">
+                      <HStack
+                        backgroundColor="white"
+                        justifyContent="space-evenly"
+                        borderRadius="lg"
+                      >
+                        <Image source={content.female_image} />
+                        <Image source={content.male_image} />
+                      </HStack>
+                      <Text>{content.description}</Text>
+                      <Text>{content.suggestions}</Text>
+                      {content.subtypes &&
+                        content.subtypes.map((subtype) => {
+                          return (
+                            <Box
+                              backgroundColor="blue.200"
+                              shadow={2}
+                              borderRadius="lg"
+                            >
+                              <VStack padding={4} paddingBottom={0}>
+                                <Heading size="sm">{subtype.name}</Heading>
+                                <Text>{subtype.description}</Text>
+                                <Text>{subtype.suggestions}</Text>
+                              </VStack>
+                            </Box>
+                          );
+                        })}
+                      <Center paddingTop="2" paddingBottom="2">
+                        <Button>
+                          <Text>Select</Text>
+                        </Button>
+                      </Center>
+                    </VStack>
+                  </VStack>
+                </Box>
+              );
+            })}
+          </VStack>
+        </View>
+      </VStack>
+    </ScrollView>
   );
 }
 
@@ -182,10 +340,12 @@ export function SetupScreen({ navigation: { navigate }, route }) {
 
   const [styles, setStyles] = useState([]);
   const [gender, setGender] = useState([]);
+  const [bodyShape, setBodyShape] = useState([]);
 
   const [completed, setCompleted] = useState({
     wardrobeSettings: false,
     styleQuiz: false,
+    bodyShape: true,
   });
 
   function complete(name) {
@@ -271,11 +431,10 @@ export function SetupScreen({ navigation: { navigate }, route }) {
           </HStack>
         </Button>
         <Button
-          isDisabled={true}
           onPress={() => {
-            navigate("Measurements", {
-              completed: completed["measurements"],
-              complete: () => complete("measurements"),
+            navigate("Body Shape", {
+              completed: completed["bodyshape"],
+              complete: () => complete("bodyshape"),
             });
           }}
           p={7}
@@ -283,7 +442,7 @@ export function SetupScreen({ navigation: { navigate }, route }) {
           <HStack space={3} alignItems="center">
             <HamburgerIcon color="white" />
             <Text bold color="white">
-              Sizes / Measurements
+              Body Shape
             </Text>
           </HStack>
         </Button>

@@ -9,62 +9,63 @@ import {
   ScrollView,
   Select,
   Fab,
+  Image,
+  Center,
+  View,
+  Box,
 } from "native-base";
+import { useAuth } from "../contexts/Auth";
 
-import ImageSelecter from "../utils/imageSelecter";
+const clothingSlots = require("../assets/clothing_slots.json");
+
+function Model(props) {
+  return (
+    <Center>
+      <VStack alignItems="center">
+        <Image
+          source={require("../assets/bodytypes/men_inverted_triangle.png")}
+        />
+        <Box
+          height="100%"
+          width="20%"
+          borderColor="black"
+          borderWidth={1}
+          zIndex={1}
+          position="absolute"
+          paddingTop="5"
+          paddingBottom="3"
+          justifyContent="space-between"
+        >
+          <Button flex="1" variant="ghost" borderRadius="full">
+            <Text>Head</Text>
+          </Button>
+          <Button flex="2" variant="ghost">
+            <Text>Torso</Text>
+          </Button>
+          <Button flex="2" variant="ghost">
+            <Text>Legs</Text>
+          </Button>
+          <Button flex="1" variant="ghost">
+            <Text>Feet</Text>
+          </Button>
+        </Box>
+      </VStack>
+    </Center>
+  );
+}
 
 function NewOutfitScreen({ navigation }) {
-  const [image, setImage] = useState(null);
-
+  const { user } = useAuth();
   const [formData, setData] = useState({});
 
-  const form = [
-    {
-      name: "Image",
-      component: <ImageSelecter />,
-    },
-  ];
-
-  const addItem = () => {};
-
-  const submit = async () => {
-    var res = await addItem(formData);
-    if (res == true) navigation.navigate("Outfits");
-  };
+  const submit = async () => {};
 
   return (
     <ScrollView>
       <VStack mx="3" space={2} paddingTop={3} paddingBottom={7}>
-        {form.map((field) => {
-          if (field.horizontal)
-            return (
-              <FormControl key={field.name} isRequired={field.isRequired}>
-                <HStack alignItems="center" justifyContent="space-between">
-                  <FormControl.Label
-                    _text={{
-                      bold: true,
-                    }}
-                  >
-                    {field.name}
-                  </FormControl.Label>
-                  {field.component}
-                </HStack>
-              </FormControl>
-            );
-          else
-            return (
-              <FormControl key={field.name} isRequired={field.isRequired}>
-                <FormControl.Label
-                  _text={{
-                    bold: true,
-                  }}
-                >
-                  {field.name}
-                </FormControl.Label>
-                {field.component}
-              </FormControl>
-            );
-        })}
+        <Box borderColor="black" borderWidth={1}>
+          <Model />
+        </Box>
         <Button onPress={() => submit()}>
           <Text>Submit</Text>
         </Button>
