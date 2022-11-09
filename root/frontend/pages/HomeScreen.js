@@ -24,11 +24,12 @@ import {
   MoonIcon,
   PlayIcon,
   View,
-  QuestionIcon
+  QuestionIcon,
 } from "native-base";
 import axiosInstance from "../utils/axiosInstance.js";
 import { useAuth } from "../contexts/Auth";
 import config from "../config";
+import { Keyboard } from "react-native";
 
 function Footer(props) {
   const { navigationRef, show } = props;
@@ -37,7 +38,7 @@ function Footer(props) {
     0: "Wardrobe",
     1: "Media",
     2: "Outfits",
-    3: "Quiz"
+    3: "Quiz",
   };
   function selectScreen(number) {
     setSelected(number);
@@ -120,6 +121,28 @@ function HomeScreen() {
 
   const initialRouteName = isSetup ? "Wardrobe" : "Setup";
 
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        setKeyboardVisible(true); // or some other action
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setKeyboardVisible(false); // or some other action
+      }
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
   return (
     <View flex={1}>
       <View flex={1} my={0}>
@@ -158,7 +181,11 @@ function HomeScreen() {
               <Stack.Screen
                 name="NewOutfit"
                 component={NewOutfitScreen}
-                options={{ title: "New Outfit" }}
+                options={({ navigation, route }) => ({
+                  headerTitle: route?.params?.title
+                    ? route.params.title
+                    : "New Outfit",
+                })}
               />
               <Stack.Screen
                 name="Media"
@@ -166,15 +193,18 @@ function HomeScreen() {
                 options={{ headerShown: false }}
               />
               <Stack.Screen
-              name="Quiz"
-              component={QuizScreen}
-              options={{ headerShown: false }}
+                name="Quiz"
+                component={QuizScreen}
+                options={{ headerShown: false }}
               />
             </Stack.Group>
           </Stack.Navigator>
         </NavigationContainer>
       </View>
-      <Footer show={isSetup} navigationRef={navigationRef} />
+      <Footer
+        show={isSetup && !isKeyboardVisible}
+        navigationRef={navigationRef}
+      />
     </View>
   );
 }

@@ -3,12 +3,16 @@
     "hair": {},
     "top": {},
     "eyes": {},
+    "nose": {},
     "ears": {
       "left": {},
       "right": {}
     },
-    "face": {},
-    "neck": {}
+    "mouth": {},
+    "neck": {
+      "upper": {},
+      "lower": {}
+    }
   },
   "torso": {
     "chest": {},

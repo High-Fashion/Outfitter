@@ -99,6 +99,7 @@ function AppStack(props) {
         options={{
           title: "Outfitter",
           headerTitleAlign: "center",
+
           headerStyle: {
             backgroundColor: "#1e40af",
           },
