@@ -20,6 +20,9 @@
   },
   "arms": {
     "left": {
+      "upper": {},
+      "forearm": {},
+      "wrist": {},
       "hand": {
         "fingers": {
           "thumb": {},
@@ -28,10 +31,12 @@
           "ring": {},
           "pinky": {}
         }
-      },
-      "wrist": {}
+      }
     },
     "right": {
+      "upper": {},
+      "forearm": {},
+      "wrist": {},
       "hand": {
         "fingers": {
           "thumb": {},
@@ -40,18 +45,19 @@
           "ring": {},
           "pinky": {}
         }
-      },
-      "wrist": {}
+      }
     }
   },
   "legs": {
     "waist": {},
     "hips": {},
     "left": {
+      "thigh": {},
       "ankle": {},
       "foot": {}
     },
     "right": {
+      "thigh": {},
       "ankle": {},
       "foot": {}
     }

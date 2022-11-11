@@ -1,25 +1,19 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Button,
   VStack,
   Text,
-  FormControl,
-  Input,
-  Checkbox,
   ScrollView,
-  Select,
-  Fab,
-  Image,
-  Center,
-  View,
   Box,
   HStack,
   Modal,
   Heading,
+  View,
 } from "native-base";
-import { HeaderBackButton } from "@react-navigation/elements";
 import { useAuth } from "../contexts/Auth";
 import ClothingList from "../components/ClothingList";
+import Model from "../components/Model";
+import capitalize from "../utils/capitalize";
 
 const clothingSlots = require("../assets/clothing_slots.json");
 
@@ -92,10 +86,7 @@ function SlotModal(props) {
         <Modal.Content>
           <Modal.CloseButton onPress={() => props.setSlot(null)} />
           <Modal.Header alignItems="center">
-            <Heading>
-              {String(props.slot).charAt(0).toUpperCase() +
-                String(props.slot).slice(1)}
-            </Heading>
+            <Heading>{capitalize(props.slot, true)}</Heading>
           </Modal.Header>
           <Modal.Body>
             <ClothingList
@@ -120,243 +111,6 @@ function SlotModal(props) {
   );
 }
 
-function Model(props) {
-  const [focus, setFocus] = useState("whole");
-
-  useEffect(() => {
-    if (focus != "whole") {
-      props.navigation.setOptions({
-        headerLeft: () => (
-          <HeaderBackButton onPress={() => setFocus("whole")} />
-        ),
-        headerTitle: focus,
-      });
-    } else {
-      props.navigation.setOptions({
-        headerLeft: () => (
-          <HeaderBackButton onPress={() => props.navigation.goBack()} />
-        ),
-        headerTitle: "New Outfit",
-      });
-    }
-  }, [focus]);
-
-  const { setSlot } = props;
-  return (
-    <Center>
-      {focus == "whole" && (
-        <VStack alignItems="center">
-          <Image
-            source={require("../assets/bodytypes/men_inverted_triangle.png")}
-          />
-          <Box
-            height="100%"
-            width="30%"
-            zIndex={1}
-            position="absolute"
-            paddingTop="6"
-            paddingBottom="6"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Button
-              width="40%"
-              onPress={() => setFocus("head")}
-              flex={1}
-              borderRadius="full"
-              variant="outline"
-            ></Button>
-            <HStack flex={3} justifyContent="space-between">
-              <Button
-                variant="outline"
-                flex={1}
-                onPress={() => setFocus("arms")}
-              ></Button>
-              <Button
-                variant="outline"
-                flex={5}
-                onPress={() => setSlot("torso")}
-              ></Button>
-              <Button
-                variant="outline"
-                flex={1}
-                onPress={() => setFocus("arms")}
-              ></Button>
-            </HStack>
-            <Button
-              width="50%"
-              flex={4}
-              onPress={() => setFocus("legs")}
-              variant="outline"
-            ></Button>
-          </Box>
-        </VStack>
-      )}
-      {focus == "head" && (
-        <VStack alignItems="center">
-          <Image
-            resizeMode="cover"
-            maxHeight="400"
-            source={require("../assets/men_head.png")}
-          />
-          <VStack
-            height="80%"
-            zIndex={2}
-            position="absolute"
-            paddingTop="5"
-            paddingBottom="3"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Button
-              variant="outline"
-              width="60%"
-              flex={8}
-              onPress={() => setSlot("hat")}
-            >
-              <Text>Hat</Text>
-            </Button>
-
-            <HStack justifyContent="space-between" width="70%" flex={6}>
-              <Button
-                flex={1}
-                variant="outline"
-                onPress={() => setSlot("eyes")}
-              >
-                <Text>Eyes</Text>
-              </Button>
-            </HStack>
-            <HStack justifyContent="space-between" width="65%" flex={8}>
-              <Button
-                flex={1}
-                variant="outline"
-                onPress={() => setSlot("left ear")}
-              >
-                <Text>LE</Text>
-              </Button>
-              <Button flex={1} variant="ghost"></Button>
-              <Button
-                flex={5}
-                variant="outline"
-                onPress={() => setSlot("nose")}
-              >
-                <Text>Nose</Text>
-              </Button>
-              <Button flex={1} variant="ghost"></Button>
-              <Button
-                flex={1}
-                variant="outline"
-                onPress={() => setSlot("right ear")}
-              >
-                <Text>RE</Text>
-              </Button>
-            </HStack>
-            <Button
-              width="55%"
-              variant="outline"
-              flex={4}
-              onPress={() => setSlot("mouth")}
-            >
-              <Text>Mouth</Text>
-            </Button>
-            <Button
-              width="50%"
-              variant="outline"
-              flex={8}
-              onPress={() => setSlot("neck")}
-            >
-              <Text>Neck</Text>
-            </Button>
-          </VStack>
-        </VStack>
-      )}
-      {focus == "legs" && (
-        <VStack alignItems="center">
-          <View
-            borderColor="black"
-            borderWidth="2"
-            style={{
-              display: "flex",
-              justifyContent: "space-around",
-              alignItems: "center",
-              height: 400,
-              overflow: "hidden",
-            }}
-          >
-            <Image
-              style={{
-                resizeMode: "stretch",
-                height: 800,
-                width: 400,
-                bottom: 150,
-              }}
-              source={require("../assets/bodytypes/men_inverted_triangle.png")}
-            />
-          </View>
-          <VStack
-            height="100%"
-            zIndex={2}
-            position="absolute"
-            paddingTop="2"
-            paddingBottom="3"
-            justifyContent="space-between"
-            alignItems="center"
-          >
-            <Button
-              variant="outline"
-              width="60%"
-              flex={1}
-              onPress={() => setSlot("waist")}
-            >
-              <Text>Waist</Text>
-            </Button>
-            <Button
-              width="55%"
-              variant="outline"
-              flex={1}
-              onPress={() => setSlot("hips")}
-            >
-              <Text>Hips</Text>
-            </Button>
-            <Button
-              width="50%"
-              variant="outline"
-              flex={8}
-              onPress={() => setSlot("pants")}
-            >
-              <Text>Pants</Text>
-            </Button>
-            <HStack justifyContent="space-between" width="50%" flex={1}>
-              <Button
-                flex={1}
-                variant="outline"
-                onPress={() => setSlot("left ankle")}
-              >
-                <Text>Left Ankle</Text>
-              </Button>
-              <Button
-                flex={1}
-                variant="outline"
-                onPress={() => setSlot("right ankle")}
-              >
-                <Text>Right Ankle</Text>
-              </Button>
-            </HStack>
-            <HStack flex={2}>
-              <Button variant="outline" onPress={() => setSlot("left foot")}>
-                <Text>Left Foot</Text>
-              </Button>
-              <Button variant="outline" onPress={() => setSlot("right foot")}>
-                <Text>Right Foot</Text>
-              </Button>
-            </HStack>
-          </VStack>
-        </VStack>
-      )}
-    </Center>
-  );
-}
-
 function NewOutfitScreen({ navigation, route }) {
   const { user } = useAuth();
   const [outfit, setOutfit] = useState({});
@@ -378,22 +132,22 @@ function NewOutfitScreen({ navigation, route }) {
 
   return (
     <ScrollView>
-      <SlotModal
-        slot={slot}
-        setSlot={setSlot}
-        addItem={addItem}
-        removeItem={removeItem}
-        clothing={user.wardrobe.items}
-        inSlot={outfit[slot]}
-      />
-      <VStack mx="3" space={2} paddingTop={3} paddingBottom={7}>
-        <Box borderColor="black" borderWidth={1}>
-          <Model setSlot={setSlot} navigation={navigation} />
-        </Box>
+      {slot && (
+        <SlotModal
+          slot={slot}
+          setSlot={setSlot}
+          addItem={addItem}
+          removeItem={removeItem}
+          clothing={user.wardrobe.items}
+          inSlot={outfit[slot]}
+        />
+      )}
+      <View>
+        <Model setSlot={setSlot} navigation={navigation} />
         <Button onPress={() => submit()}>
           <Text>Submit</Text>
         </Button>
-      </VStack>
+      </View>
     </ScrollView>
   );
 }

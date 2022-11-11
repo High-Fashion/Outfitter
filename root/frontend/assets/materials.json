@@ -4,6 +4,7 @@
   "Silk",
   "Denim",
   "Leather",
+  "Knitted",
   "Wool",
   "Fleece",
   "Fur",
@@ -16,5 +17,8 @@
   "Hemp",
   "Snakeskin",
   "Gatorskin",
-  "Nylon"
+  "Nylon",
+  "Wood",
+  "Horn",
+  "Rubber"
 ]

@@ -17,6 +17,10 @@ import {
   Icon,
   DeleteIcon,
   CheckCircleIcon,
+  View,
+  ChevronDownIcon,
+  ArrowBackIcon,
+  Heading,
 } from "native-base";
 import patterns from "../assets/patterns.json";
 import materials from "../assets/materials.json";
@@ -27,7 +31,9 @@ import Category from "../components/category";
 import { addItem } from "../services/wardrobeService";
 
 import ImageSelecter from "../utils/imageSelecter";
+import capitalize from "../utils/capitalize";
 // import * as ImagePicker from "expo-image-picker";
+import { useAuth } from "../contexts/Auth";
 
 function SizePicker(props) {
   const [measurement, setMeasurement] = React.useState("");
@@ -50,8 +56,21 @@ function SizePicker(props) {
   );
 }
 
+function getCategories(type, gender) {
+  console.log(type, gender);
+  var categories = require("../assets/categories.json");
+  var newCategories = {};
+  gender.map((gender) => {
+    newCategories = { ...newCategories, ...categories[type][gender] };
+  });
+  return newCategories;
+}
+
 function CategoryPicker(props) {
-  const categories = require("../assets/male-categories.json")["mens"];
+  const { user } = useAuth();
+
+  const categories = getCategories(props.type, user.wardrobe.gender);
+
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const [listOptions, setListOptions] = useState(Object.keys(categories));
@@ -70,7 +89,7 @@ function CategoryPicker(props) {
     <Select
       flex={1}
       key={props.rank}
-      placeholder={"Select clothing type"}
+      placeholder={"Select " + props.type + " type"}
       onClose={() => {
         selectCategory(null);
         props.setCategory(null);
@@ -85,27 +104,70 @@ function CategoryPicker(props) {
           justifyContent: "space-around",
         },
         _text: {
-          paddingLeft: "4%",
-          paddingY: "1%",
           color: "black",
+          padding: 1,
           fontSize: "xl",
         },
         padding: 0,
       }}
-      _actionSheetContent={{ padding: 0 }}
+      _actionSheetBody={{
+        ListHeaderComponent: selectedCategory != null && (
+          <View
+            mx="3"
+            style={{
+              display: "flex",
+              flexWrap: "nowrap",
+              alignItems: "center",
+              padding: 5,
+            }}
+          >
+            <View
+              style={{
+                zIndex: 5,
+                position: "absolute",
+                overflow: "visible",
+                left: 0,
+              }}
+            >
+              <Button
+                p={2}
+                variant="ghost"
+                borderRadius="full"
+                onPress={() => selectCategory(null)}
+              >
+                <ArrowBackIcon size="lg" />
+              </Button>
+            </View>
+            <Heading
+              style={{
+                textAlign: "center",
+                textAlignVertical: "center",
+                position: "relative",
+              }}
+            >
+              {capitalize(selectedCategory, true)}
+            </Heading>
+          </View>
+        ),
+        paddingTop: 1,
+      }}
     >
       {listOptions.map((option) => {
         return selectedCategory == null ? (
           <Select.Item
             key={option}
-            label={option}
+            label={capitalize(option, true)}
             value={option}
             onPress={() => {
               selectCategory(option);
             }}
           />
         ) : (
-          <Select.Item key={option} label={option} value={option} />
+          <Select.Item
+            key={option}
+            label={capitalize(option, true)}
+            value={option}
+          />
         );
       })}
     </Select>
@@ -221,40 +283,35 @@ function ColorPickerSection(props) {
   );
 }
 
-function NewItemScreen({ navigation }) {
+function NewItemScreen({ navigation, route }) {
   const [image, setImage] = useState(null);
 
   const [formData, setData] = useState({});
 
   const form = [
     {
-      name: "Image",
-      component: <ImageSelecter />,
-    },
-    {
-      name: "Accessory",
-      component: (
-        <Checkbox
-          accessibilityLabel="Accessory"
-          onChange={(isSelected) =>
-            setData({ ...formData, accessory: isSelected })
-          }
-        />
-      ),
-      isRequired: true,
-      horizontal: true,
-    },
-    {
       name: "Category",
       component: (
         <CategoryPicker
-          accessory={formData.accessory}
+          type={route.params.type}
           setCategory={(category) =>
             setData({ ...formData, category: category })
           }
         />
       ),
       isRequired: true,
+    },
+    {
+      name: "Material",
+      component: (
+        <Select
+          onValueChange={(text) => setData({ ...formData, material: text })}
+        >
+          {materials.map((material) => (
+            <Select.Item key={material} label={material} value={material} />
+          ))}
+        </Select>
+      ),
     },
     {
       name: "Colors",
@@ -289,18 +346,6 @@ function NewItemScreen({ navigation }) {
         <Input onChangeText={(text) => setData({ ...formData, brand: text })} />
       ),
     },
-    {
-      name: "Material",
-      component: (
-        <Select
-          onValueChange={(text) => setData({ ...formData, material: text })}
-        >
-          {materials.map((material) => (
-            <Select.Item key={material} label={material} value={material} />
-          ))}
-        </Select>
-      ),
-    },
   ];
 
   const submit = async () => {
@@ -308,9 +353,22 @@ function NewItemScreen({ navigation }) {
     if (res == true) navigation.navigate("Wardrobe");
   };
 
+  useEffect(() => {
+    if (route?.params?.type) {
+      navigation.setOptions({
+        headerTitle:
+          "New " +
+          (route.params.type == "clothing"
+            ? "Clothing Item"
+            : capitalize(route.params.type)),
+      });
+    }
+  }, [route]);
+
   return (
     <ScrollView>
-      <VStack mx="3" space={2} paddingTop={3} paddingBottom={7}>
+      <ImageSelecter />
+      <VStack mx="3" space={2} paddingBottom={7}>
         {form.map((field) => {
           if (field.horizontal)
             return (

@@ -19,6 +19,10 @@ import {
   Modal,
   FormControl,
   Checkbox,
+  SmallCloseIcon,
+  Icon,
+  Image,
+  Badge,
 } from "native-base";
 import { useAuth } from "../contexts/Auth";
 
@@ -255,6 +259,92 @@ function SortBar(props) {
   );
 }
 
+function AddItemFab(props) {
+  const { navigation } = props;
+  const [open, setOpen] = useState(false);
+  const types = [
+    {
+      name: "Clothing",
+      image: require("../assets/icons/mens_clothing.png"),
+      onPress: () => {
+        navigation.navigate("NewItem", { type: "clothing" });
+      },
+    },
+    {
+      name: "Accessory",
+      image: require("../assets/icons/mens_accessory.png"),
+      onPress: () => {
+        navigation.navigate("NewItem", { type: "accessory" });
+      },
+    },
+    {
+      name: "Shoes",
+      image: require("../assets/icons/mens_shoes.png"),
+      onPress: () => {
+        navigation.navigate("NewItem", { type: "shoes" });
+      },
+    },
+  ];
+  return (
+    <VStack
+      style={{ zIndex: 2, position: "absolute", right: 25, bottom: 20 }}
+      alignItems={"flex-end"}
+      space={2}
+    >
+      <VStack space={2} style={{ zIndex: 2, position: "relative", right: -5 }}>
+        {open &&
+          types.map((type) => {
+            return (
+              <Button
+                borderRadius="full"
+                key={type.name}
+                p={3}
+                shadow={5}
+                onPress={type.onPress}
+              >
+                <Image
+                  style={{ width: 40, height: 40 }}
+                  resizeMode="contain"
+                  source={type.image}
+                  alt={"Add new " + type.name}
+                ></Image>
+                <Box
+                  borderRadius={"full"}
+                  backgroundColor={"white"}
+                  borderWidth={1}
+                  borderColor={"black"}
+                  style={{
+                    zIndex: 3,
+                    position: "absolute",
+                    bottom: -10,
+                    right: -10,
+                  }}
+                  p={1}
+                >
+                  <AddIcon color={"black"} />
+                </Box>
+              </Button>
+            );
+          })}
+      </VStack>
+      <Button
+        borderRadius={"full"}
+        shadow={5}
+        size="lg"
+        onPress={() => {
+          setOpen(!open);
+        }}
+      >
+        {open ? (
+          <SmallCloseIcon color="white" size="xl" />
+        ) : (
+          <AddIcon color="white" size="xl" />
+        )}
+      </Button>
+    </VStack>
+  );
+}
+
 function WardrobeScreen({ navigation }) {
   const [showSortModal, setShowSortModal] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
@@ -319,15 +409,7 @@ function WardrobeScreen({ navigation }) {
           <ClothingList value={filteredItemList} />
         </VStack>
       </ScrollView>
-      <Fab
-        renderInPortal={false}
-        shadow={2}
-        size="lg"
-        onPress={() => {
-          navigation.navigate("NewItem");
-        }}
-        icon={<AddIcon color="white" size="xl" />}
-      />
+      <AddItemFab navigation={navigation} />
     </View>
   );
 }
