@@ -11,78 +11,139 @@ import {
 } from "native-base";
 import { HeaderBackButton } from "@react-navigation/elements";
 import capitalize from "../utils/capitalize";
+import { Dimensions, StyleSheet } from "react-native";
+
+const { width } = Dimensions.get("window");
+
+const IMAGE_HEIGHT = 400;
+
+const styles = StyleSheet.create({
+  image: {
+    whole: {},
+    head: {
+      resizeMode: "cover",
+      maxHeight: IMAGE_HEIGHT,
+    },
+    torso: (armFocus) => ({
+      height: armFocus ? 1200 : 800,
+      width: armFocus ? 600 : 400,
+      top: armFocus ? 40 : 100,
+      right:
+        armFocus && (armFocus == "left" || armFocus == "right")
+          ? 120 * (armFocus == "right" ? 1 : -1)
+          : 0,
+    }),
+    legs: {
+      resizeMode: "stretch",
+      height: 800,
+      width: 400,
+      bottom: 150,
+    },
+    hand: (armFocus) => ({
+      resizeMode: "contain",
+      transform: [
+        { scaleX: (armFocus == "right" ? -1 : 1) * 0.8 },
+        { scaleY: 0.8 },
+      ],
+    }),
+  },
+  container: {
+    whole: {},
+    head: {},
+    torso: {
+      display: "flex",
+      justifyContent: "space-around",
+      alignItems: "center",
+      height: 400,
+      overflow: "hidden",
+    },
+    legs: {
+      display: "flex",
+      justifyContent: "space-around",
+      alignItems: "center",
+      height: 400,
+      overflow: "hidden",
+    },
+  },
+  button_container: {
+    thumb: {
+      position: "absolute",
+      left: (width * 3.75) / 5,
+      top: 0.45 * IMAGE_HEIGHT,
+      transform: [{ rotateZ: "-58deg" }, { scaleX: 5 }, { scaleY: 2.2 }],
+    },
+    index: {
+      alignItems: "center",
+      position: "absolute",
+      left: (width * 2.55) / 5,
+      top: IMAGE_HEIGHT * 0.225,
+      transform: [{ rotateZ: "90deg" }, { scaleX: 6 }, { scaleY: 1.9 }],
+    },
+    middle: {
+      position: "absolute",
+      left: (width * 1.875) / 5,
+      top: IMAGE_HEIGHT * 0.225,
+      transform: [{ rotateZ: "78deg" }, { scaleX: 6 }, { scaleY: 1.9 }],
+    },
+    ring: {
+      position: "absolute",
+      left: (width * 1.3) / 5,
+      top: IMAGE_HEIGHT * 0.275,
+      transform: [{ rotateZ: "65deg" }, { scaleX: 5.5 }, { scaleY: 1.9 }],
+    },
+    pinky: {
+      position: "absolute",
+      left: (width * 0.9) / 5,
+      top: IMAGE_HEIGHT * 0.465,
+      transform: [{ rotateZ: "45deg" }, { scaleX: 5 }, { scaleY: 1.9 }],
+    },
+  },
+});
+
+const imageCache = {
+  head: require("../assets/men_head.png"),
+  whole: require("../assets/bodytypes/men_inverted_triangle.png"),
+  hand: require("../assets/hand.png"),
+};
 
 function ModelImage(props) {
-  const { focus, armFocus } = props;
+  const { focus, armFocus, handFocus } = props;
   return (
     <View>
-      {focus == "whole" && (
-        <Image
-          source={require("../assets/bodytypes/men_inverted_triangle.png")}
-        />
-      )}
-      {focus == "head" && (
-        <Image
-          resizeMode="cover"
-          maxHeight="400"
-          source={require("../assets/men_head.png")}
-        />
-      )}
-      {focus == "torso" && (
-        <View
-          borderColor="black"
-          borderWidth="2"
-          style={{
-            display: "flex",
-            justifyContent: "space-around",
-            alignItems: "center",
-            height: 400,
-            overflow: "hidden",
-          }}
-        >
+      <View style={styles.container[focus]}>
+        {focus == "whole" && (
+          <Image style={styles.image.whole} source={imageCache.whole} />
+        )}
+        {focus == "head" && (
+          <Image style={styles.image.head} source={imageCache.head} />
+        )}
+        {focus == "torso" && !handFocus && (
           <Image
-            style={{
-              height: armFocus ? 1200 : 800,
-              width: armFocus ? 600 : 400,
-              top: armFocus ? 40 : 100,
-              right:
-                armFocus && (armFocus == "left" || armFocus == "right")
-                  ? 120 * (armFocus == "right" ? 1 : -1)
-                  : 0,
-            }}
-            source={require("../assets/bodytypes/men_inverted_triangle.png")}
+            style={styles.image.torso(armFocus)}
+            source={imageCache.whole}
           />
-        </View>
-      )}
-      {focus == "legs" && (
-        <View
-          borderColor="black"
-          borderWidth="2"
-          style={{
-            display: "flex",
-            justifyContent: "space-around",
-            alignItems: "center",
-            height: 400,
-            overflow: "hidden",
-          }}
-        >
-          <Image
-            style={{
-              resizeMode: "stretch",
-              height: 800,
-              width: 400,
-              bottom: 150,
-            }}
-            source={require("../assets/bodytypes/men_inverted_triangle.png")}
-          />
-        </View>
-      )}
+        )}
+        {focus == "torso" && handFocus && (
+          <Image style={styles.image.hand(armFocus)} source={imageCache.hand} />
+        )}
+        {focus == "legs" && (
+          <Image style={styles.image[focus]} source={imageCache.whole} />
+        )}
+      </View>
     </View>
   );
 }
 
 function ModelButtons(props) {
-  const { focus, setFocus, armFocus, setArmFocus, setSlot } = props;
+  const {
+    focus,
+    setFocus,
+    armFocus,
+    handFocus,
+    setHandFocus,
+    setArmFocus,
+    setSlot,
+  } = props;
 
   const WholeButtons = () => (
     <Box
@@ -147,9 +208,9 @@ function ModelButtons(props) {
         variant="outline"
         width="60%"
         flex={8}
-        onPress={() => setSlot("hat")}
+        onPress={() => setSlot("head")}
       >
-        <Text>Hat</Text>
+        <Text>Head</Text>
       </Button>
 
       <HStack justifyContent="space-between" width="70%" flex={6}>
@@ -279,7 +340,7 @@ function ModelButtons(props) {
           flex={3}
           variant="outline"
           onPress={() => {
-            setSlot(armFocus + " hand");
+            setHandFocus(true);
           }}
         >
           <Text>Hand</Text>
@@ -317,7 +378,7 @@ function ModelButtons(props) {
         width="50%"
         variant="outline"
         flex={8}
-        onPress={() => setSlot("pants")}
+        onPress={() => setSlot("legs")}
       >
         <Text>Pants</Text>
       </Button>
@@ -337,36 +398,84 @@ function ModelButtons(props) {
           <Text>Right Ankle</Text>
         </Button>
       </HStack>
-      <HStack flex={2}>
-        <Button variant="outline" onPress={() => setSlot("left foot")}>
-          <Text>Left Foot</Text>
-        </Button>
-        <Button variant="outline" onPress={() => setSlot("right foot")}>
-          <Text>Right Foot</Text>
+      <HStack flex={2} width="50%" justifyContent="space-between">
+        <Button flex={1} variant="outline" onPress={() => setSlot("feet")}>
+          <Text>Feet</Text>
         </Button>
       </HStack>
     </VStack>
   );
+  const HandButtons = () => (
+    <View
+      style={{
+        width: "100%",
+        position: "absolute",
+        zIndex: 2,
+        transform: [{ rotateY: armFocus == "right" ? "180deg" : "0deg" }],
+      }}
+    >
+      <View style={styles.button_container.thumb}>
+        <Button variant="ghost" onPress={() => setSlot("thumb")} />
+      </View>
+      <View style={styles.button_container.index}>
+        <Button variant="ghost" onPress={() => setSlot("index")} />
+      </View>
+      <View style={styles.button_container.middle}>
+        <Button variant="ghost" onPress={() => setSlot("middle")} />
+      </View>
+
+      <View style={styles.button_container.ring}>
+        <Button variant="ghost" onPress={() => setSlot("ring")} />
+      </View>
+      <View style={styles.button_container.pinky}>
+        <Button variant="ghost" onPress={() => setSlot("pinky")} />
+      </View>
+    </View>
+  );
 
   if (focus == "whole") return <WholeButtons />;
   if (focus == "head") return <HeadButtons />;
-  if (focus == "torso") return armFocus ? <ArmButtons /> : <TorsoButtons />;
+  if (focus == "torso")
+    return armFocus ? (
+      handFocus ? (
+        <HandButtons />
+      ) : (
+        <ArmButtons />
+      )
+    ) : (
+      <TorsoButtons />
+    );
   if (focus == "legs") return <LegButtons />;
 }
 
 export default function Model(props) {
   const [focus, setFocus] = useState("whole");
   const [armFocus, setArmFocus] = useState();
+  const [handFocus, setHandFocus] = useState(false);
+
+  const goBack = () => {
+    if (handFocus) {
+      setHandFocus(false);
+      return;
+    }
+    if (armFocus) {
+      setArmFocus(undefined);
+      return;
+    }
+    setFocus("whole");
+  };
 
   useEffect(() => {
     if (focus != "torso") setArmFocus(undefined);
     if (focus != "whole") {
       props.navigation.setOptions({
-        headerLeft: () => (
-          <HeaderBackButton onPress={() => setFocus("whole")} />
-        ),
+        headerLeft: () => <HeaderBackButton onPress={goBack} />,
         headerTitle: armFocus
-          ? capitalize(focus) + " > " + capitalize(armFocus) + " Arm"
+          ? capitalize(focus) +
+            " > " +
+            capitalize(armFocus) +
+            " Arm" +
+            (handFocus ? " > " + "Hand" : "")
           : focus.charAt(0).toUpperCase() + focus.slice(1),
       });
     } else {
@@ -377,17 +486,19 @@ export default function Model(props) {
         headerTitle: "New Outfit",
       });
     }
-  }, [focus]);
+  }, [focus, armFocus, handFocus]);
 
   return (
     <Center>
       <VStack alignItems="center">
-        <ModelImage focus={focus} armFocus={armFocus} />
+        <ModelImage focus={focus} armFocus={armFocus} handFocus={handFocus} />
         <ModelButtons
           focus={focus}
           setFocus={setFocus}
           armFocus={armFocus}
+          handFocus={handFocus}
           setArmFocus={setArmFocus}
+          setHandFocus={setHandFocus}
           setSlot={props.setSlot}
         />
       </VStack>

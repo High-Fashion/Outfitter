@@ -21,8 +21,10 @@ const userSchema = new Schema({
   preferences: {
     ratings: [{ type: Schema.Types.ObjectId, ref: "Rating" }],
   },
-  wardrobe: { type: Schema.Types.ObjectId, ref: "Wardrobe" },
+  wardrobe: { type: Schema.Types.ObjectId, ref: "Wardrobe", autopopulate: true },
 });
+
+userSchema.plugin(require("mongoose-autopopulate"))
 
 userSchema.set("toJSON", {
   virtuals: true,

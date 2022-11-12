@@ -368,7 +368,7 @@ function NewItemScreen({ navigation, route }) {
   return (
     <ScrollView>
       <ImageSelecter />
-      <VStack mx="3" space={2} paddingBottom={7}>
+      <VStack mx={5} space={2} paddingBottom={7}>
         {form.map((field) => {
           if (field.horizontal)
             return (

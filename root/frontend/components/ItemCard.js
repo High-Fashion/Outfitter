@@ -29,15 +29,15 @@ export default function ItemCard(props) {
   return (
     <View>
       <VStack alignItems="center">
-        <View style={styles.card}>
+        {props.item.image && <View style={styles.card}>
           <Image
             source={{ uri: props.item.image }}
             style={styles.cardImage}
             resizeMode="cover"
             alt="No image..."
           ></Image>
-        </View>
-        <View style={styles.cardDescription}>
+        </View>}
+        <View style={styles.cardDescription(props)}>
           <VStack space={2} alignItems="center">
             <Text numberOfLines={1} style={styles.cardtitle}>
               {getText(props.item)}
@@ -98,21 +98,22 @@ const styles = StyleSheet.create({
     marginTop: 10,
     //fontWeight: "bold",
   },
-  cardDescription: {
+  cardDescription: props => ({
     height: 80,
     alignItems: "center",
     fontSize: 20,
     color: "#478bb5",
     width: CARD_WIDTH,
+    borderTopLeftRadius: props.item.image ? 0 : 15,
+    borderTopRightRadius: props.item.image ? 0 : 15,
     borderBottomLeftRadius: 15,
     borderBottomRightRadius: 15,
     backgroundColor: "#aed0e6",
-    marginBottom: 10,
     borderWidth: 2,
     borderColor: "#102f42",
     marginLeft: 20,
     marginRight: 20,
-  },
+  }),
 
   button1: {
     borderWidth: 1,

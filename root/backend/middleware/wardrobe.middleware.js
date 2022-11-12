@@ -48,3 +48,11 @@ exports.validateUpdateItem = (req, res, next) => {
   }
   next();
 };
+
+exports.validateCreateOutfit = (req, res, next) => {
+  next();
+}
+
+exports.validateUpdateOutfit = (req, res, next) => {
+  next();
+};

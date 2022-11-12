@@ -19,6 +19,7 @@ const userRouter = require("./routes/user.routes");
 const user_controller = require("./controllers/user.controller");
 const wardrobeRouter = require("./routes/wardrobe.routes");
 const itemRouter = require("./routes/item.routes");
+const outfitRouter = require("./routes/outfit.routes");
 
 // MongoDB
 mongoose.connect(source);
@@ -64,6 +65,7 @@ app.post("/signout", auth_controller.signout);
 app.use("/users", userRouter);
 app.use("/wardrobe", wardrobeRouter);
 app.use("/item", itemRouter);
+app.use("/outfit", outfitRouter);
 
 app.listen(PORT, () => {
   console.log(`Successfully served on port: ${PORT}.`);

@@ -17,8 +17,10 @@ export default function ClothingList(props) {
       </VStack>
     );
 
+  const CARD_SPACING = 3
+  
   return (
-    <VStack space={3}>
+    <VStack space={CARD_SPACING} mt={CARD_SPACING}>
       {props.select ? (
         <Checkbox.Group
           value={props.selected}
@@ -42,14 +44,14 @@ export default function ClothingList(props) {
       ) : (
         props.value.map((item, index) => {
           return (
-            <Box key={item.name}>
+            <VStack space={CARD_SPACING} key={item.name}>
               {index != 0 && <Divider />}
               <ItemCard
                 hideButtons={props.hideButtons}
                 key={item.id}
                 item={item}
               />
-            </Box>
+            </VStack>
           );
         })
       )}

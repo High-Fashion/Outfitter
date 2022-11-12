@@ -14,7 +14,7 @@ import { useAuth } from "../contexts/Auth";
 import ClothingList from "../components/ClothingList";
 import Model from "../components/Model";
 import capitalize from "../utils/capitalize";
-
+import { addOutfit } from "../services/wardrobeService";
 const clothingSlots = require("../assets/clothing_slots.json");
 
 function ItemSearchModal(props) {
@@ -111,8 +111,17 @@ function SlotModal(props) {
   );
 }
 
+function depopulate(outfit) {
+  var newOutfit = {}
+  Object.keys(outfit).map(slot => {
+    var newSlot = outfit[slot].map(item => item._id)
+    newOutfit[slot] = newSlot;
+  })
+  return newOutfit
+}
+
 function NewOutfitScreen({ navigation, route }) {
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
   const [outfit, setOutfit] = useState({});
   const [slot, setSlot] = useState();
 
@@ -128,7 +137,13 @@ function NewOutfitScreen({ navigation, route }) {
     setOutfit({ ...outfit, [slot]: outfit[slot].filter((i) => i != item) });
   };
 
-  const submit = async () => {};
+  const submit = async () => {
+    var res = await addOutfit(depopulate(outfit));
+    if (res == true) {
+      navigation.navigate("Outfits");
+      refreshUser();
+    };
+  };
 
   return (
     <ScrollView>

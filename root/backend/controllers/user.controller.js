@@ -2,12 +2,15 @@ const User = require("../models/user");
 
 exports.get = (req, res) => {
   User.findById(req.user.id)
-    .populate({
-      path: "wardrobe",
-      populate: {
-        path: "items",
-      },
-    })
+    // .populate({
+    //   path: "wardrobe",
+    //   populate: {
+    //     path: "items",
+    //   },
+    //   populate: {
+    //     path: "outfits",
+    //   },
+    // })
     .then((user) => {
       res.json(user);
     });

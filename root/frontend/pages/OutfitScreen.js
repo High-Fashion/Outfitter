@@ -18,6 +18,8 @@ import {
 } from "native-base";
 
 import { React, useState } from "react";
+import OutfitCard from "../components/OutfitCard";
+import { useAuth } from "../contexts/Auth";
 
 function SearchBarArea(props) {
   return (
@@ -189,13 +191,25 @@ function SortBar(props) {
   );
 }
 
+function OutfitList(props) {
+  return (
+    <VStack>
+      {props.outfits.map(outfit => {
+        return <OutfitCard outfit={outfit } />
+      })}
+    </VStack>
+  )
+}
+
 function OutfitScreen({ navigation }) {
+  const { user } = useAuth();
   return (
     <View flex={1}>
       <ScrollView>
         <VStack space={1} paddingTop={1} w="100%">
           <SearchBarArea />
           <SortBar />
+          <OutfitList outfits={user.wardrobe.outfits } />
         </VStack>
       </ScrollView>
       <Fab
