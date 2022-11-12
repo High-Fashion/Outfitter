@@ -67,9 +67,7 @@ function SignInScreen({ navigation }) {
             </Stack>
           </Stack>
         </FormControl>
-        <Button onPress={() => submit()}>
-          <Text>Sign In</Text>
-        </Button>
+        <Button onPress={() => submit()}>Sign In</Button>
         <Divider />
         <Text>Dont have an account?</Text>
         <Button
@@ -77,7 +75,7 @@ function SignInScreen({ navigation }) {
             navigation.navigate("Sign Up");
           }}
         >
-          <Text>Sign Up</Text>
+          Sign Up
         </Button>
       </VStack>
     </ScrollView>

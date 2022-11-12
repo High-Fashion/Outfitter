@@ -364,9 +364,7 @@ function SignUpScreen({ navigation }) {
             </Box>
           </Box>
           <Box>
-            <Button onPress={() => submit()}>
-              <Text>Sign Up</Text>
-            </Button>
+            <Button onPress={() => submit()}>Sign Up</Button>
             <Divider />
             <Text>Already have an account?</Text>
             <Button
@@ -374,7 +372,7 @@ function SignUpScreen({ navigation }) {
                 navigation.navigate("Sign In");
               }}
             >
-              <Text>Sign In</Text>
+              Sign In
             </Button>
           </Box>
         </Stack>

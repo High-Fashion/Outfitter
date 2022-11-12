@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import {
-  Fab,
-  Input,
-  SearchIcon,
   VStack,
   HStack,
   Heading,
@@ -13,17 +10,15 @@ import {
   Button,
   Divider,
   ScrollView,
-  Center,
   CloseIcon,
   AddIcon,
   Modal,
   FormControl,
   Checkbox,
   SmallCloseIcon,
-  Icon,
   Image,
-  Badge,
 } from "native-base";
+import SearchBar from "../components/SearchBar";
 import { useAuth } from "../contexts/Auth";
 
 import ClothingList from "../components/ClothingList";
@@ -139,35 +134,6 @@ function getItemString(item) {
   return result.toUpperCase();
 }
 
-function SearchBarArea(props) {
-  return (
-    <>
-      <HStack alignItems="center" space={1} padding={1}>
-        <Input
-          flex={6}
-          placeholder="Search"
-          size="md"
-          borderRadius="10"
-          py="1"
-          px="2"
-          InputLeftElement={
-            <Center padding={1}>
-              <SearchIcon />
-            </Center>
-          }
-          value={props.searchQuery}
-          onChangeText={(query) => props.setSearchQuery(query)}
-        />
-        <View flex={1}>
-          <Button onPress={() => props.open()} borderRadius="md">
-            <Text>Filter</Text>
-          </Button>
-        </View>
-      </HStack>
-    </>
-  );
-}
-
 function SortOptionsModal(props) {
   function updateSortOptions() {
     props.close();
@@ -253,7 +219,7 @@ function SortBar(props) {
         })}
       </HStack>
       <Button borderRadius="lg" onPress={() => props.open()}>
-        <Text>Sort</Text>
+        Sort
       </Button>
     </HStack>
   );
@@ -396,7 +362,7 @@ function WardrobeScreen({ navigation }) {
         <VStack space={1} paddingTop={1} paddingBottom={10} w="100%">
           <TypeSelector />
           <Divider />
-          <SearchBarArea
+          <SearchBar
             open={() => setShowFilterModal(true)}
             searchQuery={searchQuery}
             setSearchQuery={setSearchQuery}

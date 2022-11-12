@@ -1,12 +1,17 @@
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  createNavigationContainerRef,
+  NavigationContainer,
+  useNavigationContainerRef,
+} from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import { Text, HamburgerIcon, Pressable, Center } from "native-base";
+import { View } from "native-base";
 
 import SignUpScreen from "./pages/SignUpScreen.js";
 import SignInScreen from "./pages/SignInScreen.js";
-import HomeScreen from "./pages/HomeScreen.js";
 import * as SplashScreen from "expo-splash-screen";
+import NewOutfitScreen from "./pages/NewOutfitScreen.js";
+import NewItemScreen from "./pages/NewItemScreen.js";
 
 import {
   BodyShape,
@@ -20,115 +25,57 @@ import { useAuth } from "./contexts/Auth";
 import { useEffect, useState, useCallback } from "react";
 import axiosInstance from "./utils/axiosInstance";
 import config from "./config";
+import { Keyboard } from "react-native";
+import Footer from "./components/Footer.js";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-function AuthStack(props) {
-  const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator();
 
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="Sign Up" component={SignUpScreen} />
-      <Stack.Screen name="Sign In" component={SignInScreen} />
-    </Stack.Navigator>
+//SetupStack
+const finishSetup = async (data) => {
+  const response = await axiosInstance.post(
+    config.API_URL + "/wardrobe/create",
+    data
   );
-}
+  if (response.status == 200) {
+    return true;
+  }
+};
 
-function SetupStack(props) {
-  const Stack = createNativeStackNavigator();
-
-  const finishSetup = async (data) => {
-    const response = await axiosInstance.post(
-      config.API_URL + "/wardrobe/create",
-      data
-    );
-    if (response.status == 200) {
-      return true;
-    }
-  };
-
-  return (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Setup"
-        component={SetupScreen}
-        initialParams={{ finish: (data) => finishSetup(data) }}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Stack.Screen
-        name="Wardrobe Settings"
-        component={WardrobeSettings}
-        options={{ headerShown: true }}
-      />
-      <Stack.Screen
-        name="Body Shape"
-        component={BodyShape}
-        options={{ headerShown: true }}
-      />
-      <Stack.Screen
-        name="Style Quiz"
-        component={StyleQuiz}
-        options={{ headerShown: true }}
-      />
-      <Stack.Screen
-        name="Privacy Settings"
-        component={PrivacySettings}
-        options={{ headerShown: true }}
-      />
-    </Stack.Navigator>
-  );
-}
-
-function AppStack(props) {
-  const Stack = createNativeStackNavigator();
-
-  const { user, signOut } = useAuth();
-  const [isSetup, setIsSetup] = useState(user.wardrobe != null);
+export default function Router() {
+  const [isSetup, setIsSetup] = useState(false);
+  const [appIsReady, setAppIsReady] = useState(false);
+  const [navReady, setNavReady] = useState(false);
+  const { signedIn, refreshUser, getTokens, user, signOut } = useAuth();
 
   useEffect(() => {
+    if (!appIsReady) return;
     if (user.wardrobe != null) {
       setIsSetup(true);
     }
-  }, [user]);
+  }, [user, appIsReady]);
 
-  return isSetup ? (
-    <Stack.Navigator>
-      <Stack.Screen
-        name="Home"
-        component={HomeScreen}
-        options={{
-          title: "Outfitter",
-          headerTitleAlign: "center",
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
-          headerStyle: {
-            backgroundColor: "#1e40af",
-          },
-          headerTintColor: "#fff",
-          headerTitleStyle: {
-            fontWeight: "bold",
-          },
-          headerLeft: () => <></>,
-          headerRight: () => (
-            <Pressable>
-              <HamburgerIcon
-                size="md"
-                color="white"
-                onPress={() => signOut()}
-              />
-            </Pressable>
-          ),
-        }}
-      />
-    </Stack.Navigator>
-  ) : (
-    <SetupStack />
-  );
-}
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        setKeyboardVisible(true); // or some other action
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setKeyboardVisible(false); // or some other action
+      }
+    );
 
-export default function Router() {
-  const { signedIn, refreshUser, getTokens } = useAuth();
-
-  const [appIsReady, setAppIsReady] = useState(false);
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
 
   useEffect(() => {
     async function prepare() {
@@ -169,9 +116,107 @@ export default function Router() {
     return null;
   }
 
+  //AppStack
+  // <Stack.Group>
+  //   <Stack.Screen
+  //     name="Home"
+  //     component={HomeScreen}
+  //     options={{
+  //       title: "Outfitter",
+  //       headerTitleAlign: "center",
+
+  //       headerStyle: {
+  //         backgroundColor: "#1e40af",
+  //       },
+  //       headerTintColor: "#fff",
+  //       headerTitleStyle: {
+  //         fontWeight: "bold",
+  //       },
+  //       headerLeft: () => <></>,
+  //       headerRight: () => (
+  //         <Pressable>
+  //           <HamburgerIcon
+  //             size="md"
+  //             color="white"
+  //             onPress={() => signOut()}
+  //           />
+  //         </Pressable>
+  //       ),
+  //     }}
+  //   />
+  // </Stack.Group>
+
   return (
-    <NavigationContainer>
-      {signedIn ? <AppStack /> : <AuthStack />}
-    </NavigationContainer>
+    <View flex={1}>
+      <View flex={1}>
+        <SafeAreaView flex={1}>
+          <NavigationContainer>
+            <Stack.Navigator>
+              {signedIn ? (
+                isSetup ? (
+                  <Stack.Group>
+                    <Stack.Screen
+                      name="Root"
+                      component={Footer}
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                      name="NewItem"
+                      component={NewItemScreen}
+                      options={{ title: "New Item" }}
+                    />
+                    <Stack.Screen
+                      name="NewOutfit"
+                      component={NewOutfitScreen}
+                      options={({ navigation, route }) => ({
+                        headerTitle: route?.params?.title
+                          ? route.params.title
+                          : "New Outfit",
+                      })}
+                    />
+                  </Stack.Group>
+                ) : (
+                  <Stack.Group>
+                    <Stack.Screen
+                      name="Setup"
+                      component={SetupScreen}
+                      initialParams={{ finish: (data) => finishSetup(data) }}
+                      options={{
+                        headerShown: false,
+                      }}
+                    />
+                    <Stack.Screen
+                      name="Wardrobe Settings"
+                      component={WardrobeSettings}
+                      options={{ headerShown: true }}
+                    />
+                    <Stack.Screen
+                      name="Body Shape"
+                      component={BodyShape}
+                      options={{ headerShown: true }}
+                    />
+                    <Stack.Screen
+                      name="Style Quiz"
+                      component={StyleQuiz}
+                      options={{ headerShown: true }}
+                    />
+                    <Stack.Screen
+                      name="Privacy Settings"
+                      component={PrivacySettings}
+                      options={{ headerShown: true }}
+                    />
+                  </Stack.Group>
+                )
+              ) : (
+                <Stack.Group>
+                  <Stack.Screen name="Sign Up" component={SignUpScreen} />
+                  <Stack.Screen name="Sign In" component={SignInScreen} />
+                </Stack.Group>
+              )}
+            </Stack.Navigator>
+          </NavigationContainer>
+        </SafeAreaView>
+      </View>
+    </View>
   );
 }

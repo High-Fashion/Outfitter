@@ -98,9 +98,8 @@ export default function OutfitCard(props) {
           borderColor="blueGray.900"
           borderRightWidth={1}
           flex={1}
-          onPress={() => remove(outfit._id)}
         >
-          <Text>Edit</Text>
+          Edit
         </Button>
         <Button
           bgColor="blueGray.600"
@@ -111,7 +110,7 @@ export default function OutfitCard(props) {
           borderLeftRadius={0}
           onPress={() => remove(outfit._id)}
         >
-          <Text>Delete</Text>
+          Delete
         </Button>
       </HStack>
     </VStack>

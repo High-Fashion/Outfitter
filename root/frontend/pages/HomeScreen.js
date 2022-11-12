@@ -1,211 +1,87 @@
 import React, { Component, useEffect, useState } from "react";
 
 import {
-  NavigationContainer,
-  useNavigationContainerRef,
-} from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import WardrobeScreen from "./WardrobeScreen.js";
-import MediaScreen from "./MediaScreen";
-import OutfitScreen from "./OutfitScreen";
-import NewOutfitScreen from "./NewOutfitScreen.js";
-import NewItemScreen from "./NewItemScreen.js";
-import QuizScreen from "./QuizScreen.js";
-import CategoryListScreen from "./CategoryListScreen.jsx";
-import ItemListScreen from "./ItemListScreen.jsx";
-
-import {
-  Text,
-  HStack,
-  Box,
-  Pressable,
   Center,
-  SunIcon,
-  MoonIcon,
-  PlayIcon,
+  HStack,
+  Icon,
+  IconButton,
+  Text,
   View,
-  QuestionIcon,
+  VStack,
 } from "native-base";
-import axiosInstance from "../utils/axiosInstance.js";
 import { useAuth } from "../contexts/Auth";
-import config from "../config";
-import { Keyboard } from "react-native";
+import SearchBar from "../components/SearchBar";
+import { MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
+import { Dimensions } from "react-native";
 
-function Footer(props) {
-  const { navigationRef, show } = props;
-  const [selected, setSelected] = useState(0);
-  const screens = {
-    0: "Wardrobe",
-    1: "Media",
-    2: "Outfits",
-    3: "Quiz",
-  };
-  function selectScreen(number) {
-    setSelected(number);
-    if (navigationRef.isReady()) {
-      navigationRef.navigate(screens[number]);
-    }
-  }
-  if (show == false) return <></>;
+function FollowTab(props) {
   return (
-    <Box bg="white" width="100%" alignSelf="center">
-      <Center flex={1}></Center>
-      <HStack bg="indigo.600" alignItems="center" safeAreaBottom shadow={6}>
-        <Pressable
-          cursor="pointer"
-          opacity={selected === 0 ? 1 : 0.5}
-          py="3"
-          flex={1}
-          onPress={() => selectScreen(0)}
-        >
-          <Center>
-            <SunIcon mb="1" color="white" size="sm" />
-            <Text color="white" fontSize="12">
-              Wardrobe
-            </Text>
-          </Center>
-        </Pressable>
-        <Pressable
-          cursor="pointer"
-          opacity={selected === 1 ? 1 : 0.5}
-          py="2"
-          flex={1}
-          onPress={() => selectScreen(1)}
-        >
-          <Center>
-            <PlayIcon mb="1" color="white" size="sm" />
-            <Text color="white" fontSize="12">
-              Media
-            </Text>
-          </Center>
-        </Pressable>
-        <Pressable
-          cursor="pointer"
-          opacity={selected === 2 ? 1 : 0.6}
-          py="2"
-          flex={1}
-          onPress={() => selectScreen(2)}
-        >
-          <Center>
-            <MoonIcon mb="1" color="white" size="sm" />
-            <Text color="white" fontSize="12">
-              Outfits
-            </Text>
-          </Center>
-        </Pressable>
-        <Pressable
-          cursor="pointer"
-          opacity={selected === 3 ? 1 : 0.5}
-          py="2"
-          flex={1}
-          onPress={() => selectScreen(3)}
-        >
-          <Center>
-            <QuestionIcon mb="1" color="white" size="sm" />
-            <Text color="white" fontSize="12">
-              Quiz
-            </Text>
-          </Center>
-        </Pressable>
-      </HStack>
-    </Box>
+    <Center mx={10}>
+      <Text textAlign={"center"}>
+        Looks like you aren{"'"}t following anyone. Try searching above for
+        people to follow or check out the public posts by swiping right.
+      </Text>
+    </Center>
   );
 }
 
-const Stack = createNativeStackNavigator();
+function PublicTab(props) {
+  return (
+    <Center>
+      <Text>Nothing here yet.</Text>
+    </Center>
+  );
+}
+
+const { width } = Dimensions.get("window");
 
 function HomeScreen() {
-  const navigationRef = useNavigationContainerRef();
   const { user } = useAuth();
-  const [isSetup, setIsSetup] = useState(user.wardrobe != null);
-
-  const initialRouteName = isSetup ? "Wardrobe" : "Setup";
-
-  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      () => {
-        setKeyboardVisible(true); // or some other action
-      }
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => {
-        setKeyboardVisible(false); // or some other action
-      }
-    );
-
-    return () => {
-      keyboardDidHideListener.remove();
-      keyboardDidShowListener.remove();
-    };
-  }, []);
-
+  const [view, setView] = useState("follow");
   return (
-    <View flex={1}>
-      <View flex={1} my={0}>
-        <NavigationContainer ref={navigationRef} independent={true}>
-          <Stack.Navigator initialRouteName={initialRouteName}>
-            <Stack.Group>
-              <Stack.Group>
-                <Stack.Screen
-                  name="Wardrobe"
-                  component={WardrobeScreen}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="NewItem"
-                  component={NewItemScreen}
-                  options={{ title: "New Item" }}
-                />
-                <Stack.Group screenOptions={{ presentation: "modal" }}>
-                  <Stack.Screen
-                    name="CategoryList"
-                    component={CategoryListScreen}
-                    options={{ title: "Clothing Types" }}
-                  />
-                  <Stack.Screen
-                    name="ItemList"
-                    component={ItemListScreen}
-                    options={({ route }) => ({ title: route.params.name })}
-                  />
-                </Stack.Group>
-              </Stack.Group>
-              <Stack.Screen
-                name="Outfits"
-                component={OutfitScreen}
-                options={{ headerShown: false }}
+    <VStack flex={1}>
+      <SearchBar hideFilter />
+      <HStack paddingBottom={0.5} justifyContent={"space-evenly"} width={width}>
+        <View
+          borderBottomWidth={view == "follow" ? 1 : 0}
+          borderColor="black"
+          width={width / 2}
+        >
+          <IconButton
+            onPress={() => setView("follow")}
+            borderRadius={"full"}
+            icon={
+              <Icon
+                size="xl"
+                color={view == "grid" ? "indigo.900" : "black"}
+                as={<FontAwesome5 name="user-friends" />}
               />
-              <Stack.Screen
-                name="NewOutfit"
-                component={NewOutfitScreen}
-                options={({ navigation, route }) => ({
-                  headerTitle: route?.params?.title
-                    ? route.params.title
-                    : "New Outfit",
-                })}
+            }
+          />
+        </View>
+        <View
+          borderBottomWidth={view == "public" ? 1 : 0}
+          borderColor="black"
+          width={width / 2}
+        >
+          <IconButton
+            onPress={() => setView("public")}
+            borderRadius={"full"}
+            icon={
+              <Icon
+                size="xl"
+                color={view == "wardrobe" ? "indigo.900" : "black"}
+                as={<MaterialIcons name="public" />}
               />
-              <Stack.Screen
-                name="Media"
-                component={MediaScreen}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="Quiz"
-                component={QuizScreen}
-                options={{ headerShown: false }}
-              />
-            </Stack.Group>
-          </Stack.Navigator>
-        </NavigationContainer>
-      </View>
-      <Footer
-        show={isSetup && !isKeyboardVisible}
-        navigationRef={navigationRef}
-      />
-    </View>
+            }
+          />
+        </View>
+      </HStack>
+      <VStack flex={1} justifyContent={"space-around"}>
+        {view == "follow" && <FollowTab />}
+        {view == "public" && <PublicTab />}
+      </VStack>
+    </VStack>
   );
 }
 

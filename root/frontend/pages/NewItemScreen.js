@@ -275,9 +275,7 @@ function ColorPickerSection(props) {
           )
       )}
       {length < 3 && (
-        <Button onPress={() => setLength(length + 1)}>
-          <Text>Add Color</Text>
-        </Button>
+        <Button onPress={() => setLength(length + 1)}>Add Color</Button>
       )}
     </VStack>
   );
@@ -399,9 +397,7 @@ function NewItemScreen({ navigation, route }) {
               </FormControl>
             );
         })}
-        <Button onPress={() => submit()}>
-          <Text>Submit</Text>
-        </Button>
+        <Button onPress={() => submit()}>Submit</Button>
       </VStack>
     </ScrollView>
   );

@@ -38,9 +38,7 @@ function ItemSearchModal(props) {
         </Modal.Body>
         <Modal.Footer>
           <HStack flex="1" justifyContent="space-between">
-            <Button onPress={() => setSelected([])}>
-              <Text>Clear</Text>
-            </Button>
+            <Button onPress={() => setSelected([])}>Clear</Button>
             <Button
               onPress={() => {
                 selected.map((s) => {
@@ -50,7 +48,7 @@ function ItemSearchModal(props) {
                 props.close();
               }}
             >
-              <Text>Add Selected Items</Text>
+              Add Selected Items
             </Button>
           </HStack>
         </Modal.Footer>
@@ -97,11 +95,9 @@ function SlotModal(props) {
           </Modal.Body>
           <Modal.Footer>
             <HStack flex={1} justifyContent="space-between">
-              <Button onPress={clear}>
-                <Text>Clear</Text>
-              </Button>
+              <Button onPress={clear}>Clear</Button>
               <Button onPress={() => setOpenSearch(true)}>
-                <Text>{"Add item to " + props.slot}</Text>
+                {"Add item to " + props.slot}
               </Button>
             </HStack>
           </Modal.Footer>
@@ -112,12 +108,12 @@ function SlotModal(props) {
 }
 
 function depopulate(outfit) {
-  var newOutfit = {}
-  Object.keys(outfit).map(slot => {
-    var newSlot = outfit[slot].map(item => item._id)
+  var newOutfit = {};
+  Object.keys(outfit).map((slot) => {
+    var newSlot = outfit[slot].map((item) => item._id);
     newOutfit[slot] = newSlot;
-  })
-  return newOutfit
+  });
+  return newOutfit;
 }
 
 function NewOutfitScreen({ navigation, route }) {
@@ -142,7 +138,7 @@ function NewOutfitScreen({ navigation, route }) {
     if (res == true) {
       navigation.navigate("Outfits");
       refreshUser();
-    };
+    }
   };
 
   return (
@@ -159,9 +155,7 @@ function NewOutfitScreen({ navigation, route }) {
       )}
       <View>
         <Model setSlot={setSlot} navigation={navigation} />
-        <Button onPress={() => submit()}>
-          <Text>Submit</Text>
-        </Button>
+        <Button onPress={() => submit()}>Submit</Button>
       </View>
     </ScrollView>
   );

@@ -16,37 +16,11 @@ import {
   Center,
   Box,
 } from "native-base";
+import SearchBar from "../components/SearchBar";
 
 import { React, useState } from "react";
 import OutfitCard from "../components/OutfitCard";
 import { useAuth } from "../contexts/Auth";
-
-function SearchBarArea(props) {
-  return (
-    <HStack alignItems="center" space={1} padding={1}>
-      <Input
-        flex={6}
-        placeholder="Search"
-        size="md"
-        borderRadius="10"
-        py="1"
-        px="2"
-        InputLeftElement={
-          <Center padding={1}>
-            <SearchIcon />
-          </Center>
-        }
-        value={props.searchQuery}
-        onChangeText={(query) => props.setSearchQuery(query)}
-      />
-      <View flex={1}>
-        <Button onPress={() => props.open()} borderRadius="md">
-          <Text>Filter</Text>
-        </Button>
-      </View>
-    </HStack>
-  );
-}
 
 function FilterOptionsModal(props) {
   function updateFilterOptions() {
@@ -185,7 +159,7 @@ function SortBar(props) {
         })}
       </HStack>
       <Button borderRadius="lg" onPress={() => props.open()}>
-        <Text>Sort</Text>
+        Sort
       </Button>
     </HStack>
   );
@@ -194,11 +168,11 @@ function SortBar(props) {
 function OutfitList(props) {
   return (
     <VStack>
-      {props.outfits.map(outfit => {
-        return <OutfitCard outfit={outfit } />
+      {props.outfits.map((outfit) => {
+        return <OutfitCard outfit={outfit} />;
       })}
     </VStack>
-  )
+  );
 }
 
 function OutfitScreen({ navigation }) {
@@ -207,9 +181,9 @@ function OutfitScreen({ navigation }) {
     <View flex={1}>
       <ScrollView>
         <VStack space={1} paddingTop={1} w="100%">
-          <SearchBarArea />
+          <SearchBar />
           <SortBar />
-          <OutfitList outfits={user.wardrobe.outfits } />
+          <OutfitList outfits={user.wardrobe.outfits} />
         </VStack>
       </ScrollView>
       <Fab

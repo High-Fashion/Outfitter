@@ -81,7 +81,7 @@ export function WardrobeSettings({ route }) {
           isDisabled={!(mens || womens)}
           onPress={() => route.params.complete(getList())}
         >
-          <Text>Submit</Text>
+          Submit
         </Button>
       </VStack>
     </ScrollView>
@@ -151,9 +151,7 @@ export function StyleQuiz({ route }) {
         value={currentInput}
         onChangeText={(text) => updateValue(text)}
       />
-      <Button onPress={() => complete(styles)}>
-        <Text>Submit</Text>
-      </Button>
+      <Button onPress={() => complete(styles)}>Submit</Button>
     </VStack>
   );
 }
@@ -308,9 +306,7 @@ export function BodyShape({ navigation }) {
                           );
                         })}
                       <Center paddingTop="2" paddingBottom="2">
-                        <Button>
-                          <Text>Select</Text>
-                        </Button>
+                        <Button>Select</Button>
                       </Center>
                     </VStack>
                   </VStack>
@@ -328,9 +324,7 @@ export function PrivacySettings({ navigation }) {
   return (
     <VStack>
       <Text>PrivacySettings</Text>
-      <Button>
-        <Text>Complete</Text>
-      </Button>
+      <Button>Complete</Button>
     </VStack>
   );
 }
@@ -471,7 +465,7 @@ export function SetupScreen({ navigation: { navigate }, route }) {
           finishSetup();
         }}
       >
-        <Text>Finish</Text>
+        Finish
       </Button>
     </VStack>
   );
