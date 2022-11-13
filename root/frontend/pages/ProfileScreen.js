@@ -28,6 +28,8 @@ import { Dimensions } from "react-native";
 import { useState } from "react";
 
 function SettingsActionsheet(props) {
+  const { signOut } = useAuth();
+
   return (
     <Actionsheet isOpen={props.open} onClose={props.close}>
       <Actionsheet.Content _text={{ alignSelf: "flex-start" }}>
@@ -36,6 +38,7 @@ function SettingsActionsheet(props) {
         <Actionsheet.Item>Body Shape</Actionsheet.Item>
         <Actionsheet.Item>Styles</Actionsheet.Item>
         <Actionsheet.Item>Dark Mode</Actionsheet.Item>
+        <Actionsheet.Item onPress={signOut}>Log Out</Actionsheet.Item>
       </Actionsheet.Content>
     </Actionsheet>
   );

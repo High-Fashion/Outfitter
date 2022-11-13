@@ -33,8 +33,8 @@ const Tab = createBottomTabNavigator();
 export default function Footer() {
   return (
     <Tab.Navigator
-      tabBarOptions={{
-        showLabel: false,
+      screenOptions={{
+        tabBarShowLabel: false,
       }}
     >
       <Tab.Screen

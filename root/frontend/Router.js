@@ -50,7 +50,7 @@ export default function Router() {
 
   useEffect(() => {
     if (!appIsReady) return;
-    if (user.wardrobe != null) {
+    if (user?.wardrobe) {
       setIsSetup(true);
     }
   }, [user, appIsReady]);
