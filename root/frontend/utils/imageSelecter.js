@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Image, View, HStack } from 'native-base';
-import * as ExpoImagePicker from 'expo-image-picker';
+import * as ImagePicker from 'expo-image-picker';
 
 
 export default function ImageSelecter() {
   const [image, setImage] = useState(null);
 
   const pickImage = async () => {
-    let result = await ExpoImagePicker.launchImageLibraryAsync({
-      mediaTypes: ExpoImagePicker.MediaTypeOptions.Images,
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
@@ -22,7 +22,7 @@ export default function ImageSelecter() {
   };
 
   const takePicture = async () => {
-    let result = await ExpoImagePicker.launchCameraAsync()
+    let result = await ImagePicker.launchCameraAsync()
 
     if (!result.cancelled) {
       setImage(result.uri);

@@ -11,6 +11,14 @@ import OutfitScreen from "./OutfitScreen";
 import NewItemScreen from "./NewItemScreen.js";
 import CategoryListScreen from "./CategoryListScreen.jsx";
 import ItemListScreen from "./ItemListScreen.jsx";
+import  StyleQuiz  from "./StyleQuiz";
+import {
+  Measurements,
+  SetupScreen,
+  WardrobeSettings,
+  PrivacySettings,
+  StyleQuiz,
+} from "./SetupScreen.js";
 
 import {
   Text,
@@ -23,9 +31,6 @@ import {
   PlayIcon,
   View,
 } from "native-base";
-import axiosInstance from "../utils/axiosInstance.js";
-import { useAuth } from "../contexts/Auth";
-import config from "../config";
 
 function Footer(props) {
   const { navigationRef, show } = props;
@@ -97,9 +102,7 @@ const Stack = createNativeStackNavigator();
 
 function HomeScreen() {
   const navigationRef = useNavigationContainerRef();
-  const { user } = useAuth();
-  const [isSetup, setIsSetup] = useState(user.wardrobe != null);
-
+  const [isSetup, setIsSetup] = useState(true);
   const initialRouteName = isSetup ? "Media" : "Setup";
 
   return (
@@ -141,6 +144,36 @@ function HomeScreen() {
                 name="Media"
                 component={MediaScreen}
                 options={{ headerShown: false }}
+              />
+            </Stack.Group>
+            <Stack.Group>
+              <Stack.Screen
+                name="Setup"
+                component={SetupScreen}
+                initialParams={{ finish: () => setIsSetup(true) }}
+                options={{
+                  headerShown: false,
+                }}
+              />
+              <Stack.Screen
+                name="Wardrobe Settings"
+                component={WardrobeSettings}
+                options={{ headerShown: true }}
+              />
+              <Stack.Screen
+                name="Measurements"
+                component={Measurements}
+                options={{ headerShown: true }}
+              />
+              <Stack.Screen
+                name="Style Quiz"
+                component={StyleQuiz}
+                options={{ headerShown: true }}
+              />
+              <Stack.Screen
+                name="Privacy Settings"
+                component={PrivacySettings}
+                options={{ headerShown: true }}
               />
             </Stack.Group>
           </Stack.Navigator>
