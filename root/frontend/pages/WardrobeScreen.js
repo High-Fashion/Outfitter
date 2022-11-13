@@ -24,13 +24,10 @@ import {
 } from "native-base";
 import { useAuth } from "../contexts/Auth";
 import { SetupScreen } from "./SetupScreen";
-import Card from "../components/card";
 import { Dimensions, StyleSheet, TouchableOpacity } from "react-native";
 
-const { width, height } = Dimensions.get("window");
-const CARD_HEIGHT = 200;
+const { width} = Dimensions.get("window");
 const CARD_WIDTH = width-50;
-const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
 
 
 function TypeSelector() {
@@ -315,44 +312,6 @@ function ItemCard(props) {
       </VStack>
     </View>
   )
-
-  /*
-  return (
-    <VStack alignItems="center">
-      {props.item?.image && (
-        <HStack marginBottom={-20} width="100%">
-          <Image
-            source={{
-              uri: props.item.image,
-            }}
-            alt="Alternate Text"
-            size="2xl"
-          />
-        </HStack>
-      )}
-      <HStack space={3}>
-        <VStack space={3} flex={1}>
-          <Text>
-            {props.item.colors.primary} {props.item.material} {props.item.brand}{" "}
-            {props.item.category}
-          </Text>
-          <HStack
-            space={1}
-            paddingX={1}
-            justifyContent="space-between"
-            flex={1}
-          >
-            <Button flex={2}>
-              <Text>Edit</Text>
-            </Button>
-            <Button flex={1}>
-              <Text>Delete</Text>
-            </Button>
-          </HStack>
-        </VStack>
-      </HStack>
-    </VStack>
-  );*/
 }
 
 function ClothingList(props) {
@@ -526,6 +485,4 @@ const styles = StyleSheet.create({
     backgroundColor: '#478bb5',
     borderRadius: 40,
   }
-
-
 })
