@@ -1,10 +1,16 @@
 import React, { Component, useEffect, useState } from "react";
 
 import {
+  Button,
   Center,
+  CloseIcon,
+  DeleteIcon,
+  Heading,
   HStack,
   Icon,
   IconButton,
+  ScrollView,
+  Spinner,
   Text,
   View,
   VStack,
@@ -12,7 +18,11 @@ import {
 import { useAuth } from "../contexts/Auth";
 import SearchBar from "../components/SearchBar";
 import { MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
-import { Dimensions } from "react-native";
+import { Dimensions, Keyboard, Pressable } from "react-native";
+import Avatar from "../components/Avatar";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getUsers } from "../services/userService";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 function FollowTab(props) {
   return (
@@ -35,12 +45,11 @@ function PublicTab(props) {
 
 const { width } = Dimensions.get("window");
 
-function HomeScreen() {
-  const { user } = useAuth();
+function Media(props) {
   const [view, setView] = useState("follow");
+
   return (
-    <VStack flex={1}>
-      <SearchBar hideFilter />
+    <View>
       <HStack paddingBottom={0.5} justifyContent={"space-evenly"} width={width}>
         <View
           borderBottomWidth={view == "follow" ? 1 : 0}
@@ -81,7 +90,123 @@ function HomeScreen() {
         {view == "follow" && <FollowTab />}
         {view == "public" && <PublicTab />}
       </VStack>
-    </VStack>
+    </View>
+  );
+}
+
+function UserCard(props) {
+  const { user, username } = props;
+  return (
+    <HStack>
+      <Avatar />
+      <VStack>
+        <Text>{user ? user.username : username ? username : ""}</Text>
+        {user && (
+          <Text>
+            {user.firstName} {user.lastName}
+          </Text>
+        )}
+      </VStack>
+      {props.recent && (
+        <IconButton
+          onPress={() =>
+            removeRecentSearch(user ? user.username : username ? username : "")
+          }
+          icon={<CloseIcon />}
+        />
+      )}
+    </HStack>
+  );
+}
+
+function SearchResults(props) {
+  function openUser(user) {
+    props.navigate("Home", { screen: "UserProfile", params: { user: user } });
+  }
+
+  return (
+    <ScrollView keyboardShouldPersistTaps="handled">
+      <VStack>
+        {props.list.map((user) => (
+          <Pressable key={user.username} onPress={() => openUser(user)}>
+            <UserCard user={user} />
+          </Pressable>
+        ))}
+      </VStack>
+    </ScrollView>
+  );
+}
+
+function HomeScreen({ navigation }) {
+  const { user } = useAuth();
+  const [userList, setUserList] = useState([]);
+  const [filteredUserList, setFilteredUserList] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    async function get() {
+      const users = await getUsers();
+      if (users !== null) {
+        setUserList(users);
+      }
+    }
+    get();
+  }, []);
+
+  useEffect(() => {
+    setFilteredUserList(
+      userList.filter((u) => {
+        if (u.username == user.username) return false;
+        if (searchQuery == "") return true;
+        return (
+          String(u.firstName + " " + u.lastName).includes(searchQuery) ||
+          u.username.includes(searchQuery)
+        );
+      })
+    );
+  }, [searchQuery]);
+
+  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      () => {
+        setKeyboardVisible(true); // or some other action
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setKeyboardVisible(false); // or some other action
+      }
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
+  }, []);
+
+  return (
+    <SafeAreaView flex={1}>
+      <VStack flex={1}>
+        <SearchBar
+          hideFilter
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+        />
+        {isKeyboardVisible ? (
+          <SearchResults
+            navigate={navigation.navigate}
+            list={filteredUserList}
+            searchQuery={searchQuery}
+          />
+        ) : (
+          <Media followPosts={[]} publicPosts={[]} />
+        )}
+      </VStack>
+    </SafeAreaView>
   );
 }
 

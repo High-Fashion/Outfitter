@@ -17,7 +17,7 @@ import { useAuth } from "../contexts/Auth";
 import WardrobeScreen from "../pages/WardrobeScreen.js";
 import HomeScreen from "../pages/HomeScreen.js";
 import OutfitScreen from "../pages/OutfitScreen.js";
-import ProfileScreen from "../pages/ProfileScreen.js";
+import { ProfileHeader, ProfileScreen } from "../pages/ProfileScreen.js";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
@@ -28,6 +28,21 @@ import {
 } from "@expo/vector-icons";
 import Avatar from "./Avatar";
 
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+const Stack = createNativeStackNavigator();
+function HomeScreenNav() {
+  return (
+    <Stack.Navigator initialRouteName="Home">
+      <Stack.Screen
+        name="HomeScreen"
+        component={HomeScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen name="UserProfile" component={ProfileScreen} />
+    </Stack.Navigator>
+  );
+}
+
 const Tab = createBottomTabNavigator();
 
 export default function Footer() {
@@ -35,6 +50,7 @@ export default function Footer() {
     <Tab.Navigator
       screenOptions={{
         tabBarShowLabel: false,
+        tabBarHideOnKeyboard: true,
       }}
     >
       <Tab.Screen
@@ -61,7 +77,7 @@ export default function Footer() {
       />
       <Tab.Screen
         name="Home"
-        component={HomeScreen}
+        component={HomeScreenNav}
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => {
@@ -103,7 +119,6 @@ export default function Footer() {
         name="Profile"
         component={ProfileScreen}
         options={{
-          headerShown: false,
           tabBarIcon: ({ focused }) => {
             return (
               <Avatar

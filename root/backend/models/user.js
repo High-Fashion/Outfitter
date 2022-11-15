@@ -1,13 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const ratingSchema = new Schema({
-  outfit: { type: Schema.Types.ObjectId, ref: "Outfit" },
-  score: Number,
-});
-
-const measurementSchema = new Schema({});
-
 const userSchema = new Schema({
   email: { type: String, unique: true, required: true },
   firstName: { type: String, required: true },
@@ -18,13 +11,22 @@ const userSchema = new Schema({
   role: { type: String, required: true, default: "User" },
   created: { type: Date, default: Date.now },
   measurements: [{ type: Schema.Types.ObjectId, ref: "Measurement" }],
-  preferences: {
-    ratings: [{ type: Schema.Types.ObjectId, ref: "Rating" }],
+  ratings: [{ type: Schema.Types.ObjectId, ref: "Rating" }],
+  wardrobe: {
+    type: Schema.Types.ObjectId,
+    ref: "Wardrobe",
+    autopopulate: true,
   },
-  wardrobe: { type: Schema.Types.ObjectId, ref: "Wardrobe", autopopulate: true },
+  posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
+  followers: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  following: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  recievedRequests: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  sentRequests: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  private: { type: Boolean, required: true, default: false },
+  hideWardrobe: { type: Boolean, required: true, default: true },
 });
 
-userSchema.plugin(require("mongoose-autopopulate"))
+userSchema.plugin(require("mongoose-autopopulate"));
 
 userSchema.set("toJSON", {
   virtuals: true,

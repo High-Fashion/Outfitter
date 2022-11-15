@@ -1,14 +1,25 @@
-import { Button, Center, HStack, Input, SearchIcon, View } from "native-base";
+import {
+  Button,
+  Center,
+  HStack,
+  Input,
+  SearchIcon,
+  View,
+  VStack,
+} from "native-base";
 
 export default function SearchBar(props) {
   return (
     <>
-      <HStack alignItems="center" space={1} padding={1}>
+      <HStack
+        style={{ position: "relative", zIndex: 2 }}
+        alignItems="center"
+        space={1}
+      >
         <Input
           flex={6}
           placeholder="Search"
           size="md"
-          borderRadius="10"
           py="1"
           px="2"
           InputLeftElement={
@@ -18,6 +29,14 @@ export default function SearchBar(props) {
           }
           value={props.searchQuery}
           onChangeText={(query) => props.setSearchQuery(query)}
+          _stack={{
+            borderTopRadius: 10,
+            borderBottomRadius: 10,
+          }}
+          style={{
+            borderTopRadius: 10,
+            borderBottomRadius: 10,
+          }}
         />
         {!props.hideFilter && (
           <View flex={1}>

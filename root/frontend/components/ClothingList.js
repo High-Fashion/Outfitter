@@ -17,8 +17,8 @@ export default function ClothingList(props) {
       </VStack>
     );
 
-  const CARD_SPACING = 3
-  
+  const CARD_SPACING = 3;
+
   return (
     <VStack space={CARD_SPACING} mt={CARD_SPACING}>
       {props.select ? (
@@ -29,7 +29,7 @@ export default function ClothingList(props) {
         >
           {props.value.map((item) => {
             return (
-              <HStack key={item.name} alignItems="center">
+              <HStack key={item.id} alignItems="center">
                 <Checkbox value={item} />
                 <ItemCard
                   hideButtons={props.hideButtons}
@@ -44,7 +44,7 @@ export default function ClothingList(props) {
       ) : (
         props.value.map((item, index) => {
           return (
-            <VStack space={CARD_SPACING} key={item.name}>
+            <VStack space={CARD_SPACING} key={item.id}>
               {index != 0 && <Divider />}
               <ItemCard
                 hideButtons={props.hideButtons}

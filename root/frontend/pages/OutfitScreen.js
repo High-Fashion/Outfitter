@@ -21,6 +21,7 @@ import SearchBar from "../components/SearchBar";
 import { React, useState } from "react";
 import OutfitCard from "../components/OutfitCard";
 import { useAuth } from "../contexts/Auth";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 function FilterOptionsModal(props) {
   function updateFilterOptions() {
@@ -178,7 +179,7 @@ function OutfitList(props) {
 function OutfitScreen({ navigation }) {
   const { user } = useAuth();
   return (
-    <View flex={1}>
+    <SafeAreaView flex={1}>
       <ScrollView>
         <VStack space={1} paddingTop={1} w="100%">
           <SearchBar />
@@ -195,7 +196,7 @@ function OutfitScreen({ navigation }) {
         }}
         icon={<AddIcon color="white" size="xl" />}
       />
-    </View>
+    </SafeAreaView>
   );
 }
 

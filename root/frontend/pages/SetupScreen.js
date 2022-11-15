@@ -18,6 +18,11 @@ import {
   Box,
 } from "native-base";
 import { useAuth } from "../contexts/Auth";
+import { LogBox } from "react-native";
+
+LogBox.ignoreLogs([
+  "Non-serializable values were found in the navigation state",
+]);
 
 export function WardrobeSettings({ route }) {
   const { gender } = route.params;

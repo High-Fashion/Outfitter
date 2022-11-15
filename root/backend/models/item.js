@@ -14,7 +14,6 @@ const schema = new Schema({
   pattern: String,
   material: String,
   fit: String, //tight, well, loose
-  category: String,
 });
 
 schema.set("toJSON", {

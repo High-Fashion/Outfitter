@@ -22,6 +22,7 @@ import SearchBar from "../components/SearchBar";
 import { useAuth } from "../contexts/Auth";
 
 import ClothingList from "../components/ClothingList";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 function TypeSelector() {
   const [selected, setSelected] = useState("clothing");
@@ -349,7 +350,7 @@ function WardrobeScreen({ navigation }) {
   }, [itemList, searchQuery]);
 
   return (
-    <View flex={1}>
+    <SafeAreaView flex={1}>
       <SortOptionsModal
         show={showSortModal}
         close={() => setShowSortModal(false)}
@@ -376,7 +377,7 @@ function WardrobeScreen({ navigation }) {
         </VStack>
       </ScrollView>
       <AddItemFab navigation={navigation} />
-    </View>
+    </SafeAreaView>
   );
 }
 export default WardrobeScreen;

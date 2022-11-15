@@ -6,5 +6,6 @@ router.get("/", user_controller.readAll);
 router.get("/:id", user_controller.readOne);
 router.put("/:id", user_controller.updateOne);
 router.delete("/:id", user_controller.deleteOne);
+router.post("/follow/:id", user_controller.follow);
 
 module.exports = router;
