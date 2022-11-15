@@ -317,7 +317,6 @@ function WardrobeScreen({ navigation }) {
   const [searchQuery, setSearchQuery] = useState("");
   const { user, refreshUser } = useAuth();
   const isFocused = useIsFocused();
-
   const [itemList, setItemList] = useState(user.wardrobe.items);
   const [filteredItemList, setFilteredItemList] = useState(itemList);
 
