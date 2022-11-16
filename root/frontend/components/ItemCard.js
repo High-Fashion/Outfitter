@@ -1,6 +1,7 @@
-import { HStack, Image, Text, View, VStack } from "native-base";
+import { HStack, Image, Text, View, VStack, Button } from "native-base";
 
 import { Dimensions, StyleSheet, TouchableOpacity } from "react-native";
+import { useNavigation } from '@react-navigation/native';
 
 const { width, height } = Dimensions.get("window");
 const CARD_HEIGHT = 200;
@@ -8,6 +9,7 @@ const CARD_WIDTH = width - 50;
 const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
 
 export default function ItemCard(props) {
+  const navigation = useNavigation()
   const getText = (item) => {
     var text = "";
     if (item.colors) {
@@ -38,6 +40,16 @@ export default function ItemCard(props) {
           ></Image>
         </View>}
         <View style={styles.cardDescription(props)}>
+          <HStack justifyContent={"flex-start"}>
+          {/* <View flexDirection={"row"} alignItems={"flex-end"} backgroundColor={"gray"}> */}
+            <Button size="md" variant="ghost" onPress={() => 
+              // {console.log("PRESSED", props.item)}}>
+              // {console.log(props.item["material"])}}>
+              {navigation.navigate("EditItem", {type: "clothing", item: props.item})}}>
+              ...
+            </Button>
+          {/* </View> */}
+          </HStack>
           <VStack space={2} alignItems="center">
             <Text numberOfLines={1} style={styles.cardtitle}>
               {getText(props.item)}
@@ -136,4 +148,8 @@ const styles = StyleSheet.create({
     backgroundColor: "#478bb5",
     borderRadius: 40,
   },
+  // editButton: {
+  //   top: 0,
+  //   right: 0,
+  // },
 });
