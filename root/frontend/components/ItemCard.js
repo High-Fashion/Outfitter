@@ -1,11 +1,19 @@
-import { HStack, Image, Text, View, VStack } from "native-base";
+import { Button, HStack, Image, Text, View, VStack } from "native-base";
 
 import { Dimensions, StyleSheet, TouchableOpacity } from "react-native";
+
+import React, { Component } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faTag, faShirt, faPalette } from '@fortawesome/free-solid-svg-icons'
+
 
 const { width, height } = Dimensions.get("window");
 const CARD_HEIGHT = 200;
 const CARD_WIDTH = width - 50;
 const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
+
+
+
 
 export default function ItemCard(props) {
   const getText = (item) => {
@@ -43,23 +51,29 @@ export default function ItemCard(props) {
               {getText(props.item)}
             </Text>
             {(!props.hideButtons || props.hideButtons == false) && (
-              <HStack space={2}>
-                <TouchableOpacity
+              <HStack>
+                <Button
                   onPress={() => {}}
-                  style={[styles.button1, {}]}
+                  style={[styles.button1]}
                 >
-                  <Text textAlign="center" lineHeight={30}>
-                    Item Details
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
+                  <HStack>
+                  <FontAwesomeIcon
+                   icon={faTag}
+                   style={styles.icons} />
+                  <Text style={styles.iconsDescription}>{props.item.brand}</Text>
+                  </HStack>
+                </Button>
+                <Button
                   onPress={() => {}}
-                  style={[styles.button2, {}]}
+                  style={[styles.button1]}
                 >
-                  <Text textAlign="center" lineHeight={30} fontSize={12}>
-                    Delete Item
-                  </Text>
-                </TouchableOpacity>
+                  <HStack>
+                  <FontAwesomeIcon
+                   icon={faPalette}
+                   style={styles.icons} />
+                  <Text style={styles.iconsDescription}>{props.item.colors.primary}/{props.item.colors.secondary}</Text>
+                  </HStack>
+                </Button>
               </HStack>
             )}
           </VStack>
@@ -68,6 +82,8 @@ export default function ItemCard(props) {
     </View>
   );
 }
+
+
 
 const styles = StyleSheet.create({
   container: {
@@ -116,11 +132,11 @@ const styles = StyleSheet.create({
   }),
 
   button1: {
+    width: "fit-content",
+    height: 25,
     borderWidth: 1,
     marginLeft: 10,
     marginRight: 10,
-    width: 250,
-    height: 33,
     borderColor: "#102f42",
     backgroundColor: "#478bb5",
     borderRadius: 40,
@@ -136,4 +152,21 @@ const styles = StyleSheet.create({
     backgroundColor: "#478bb5",
     borderRadius: 40,
   },
+
+  icons: {
+    borderWidth: 1,
+    marginLeft: 10,
+    marginRight: 10,
+    width: "fit-content",
+    height: 33,
+    borderColor: "#102f42",
+    backgroundColor: "#478bb5",
+    borderRadius: 40,
+  },
+
+  iconsDescription: {
+    marginRight: 7,
+    marginTop: -3,
+  },
+
 });
