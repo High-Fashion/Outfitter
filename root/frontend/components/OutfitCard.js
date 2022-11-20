@@ -1,3 +1,4 @@
+import {useState, useEffect} from "react"
 import {
   Button,
   FlatList,
@@ -6,8 +7,10 @@ import {
   Text,
   View,
   VStack,
+  Modal,
+  IconButton
 } from "native-base";
-
+import { AntDesign } from '@expo/vector-icons'; 
 import { Dimensions, StyleSheet, TouchableOpacity } from "react-native";
 import { useAuth } from "../contexts/Auth";
 import { deleteOutfit } from "../services/wardrobeService";
@@ -49,9 +52,71 @@ const getText = (item) => {
   return text;
 };
 
+function RatingModal(props){
+  return(
+    <Modal>
+
+    </Modal>
+  );
+}
+
+const StarRating = (props) => {
+  return(
+    <HStack p={1} alignItems="center" justifyContent="space-between">
+        <View style={{ flex: 1, alignItems: "center" }}>
+          <View style={{ flex: 5, flexDirection: "row" }}>
+            <IconButton
+              p={1}
+              icon={props.rating >= 1? <AntDesign name="star" size={24} color="black" /> :
+               <AntDesign name="staro" size={24} color="black" />}
+               onPress={() => props.setRating(1)}
+            />
+            <IconButton
+              p={1}
+              icon={props.rating >= 2? <AntDesign name="star" size={24} color="black" /> :
+               <AntDesign name="staro" size={24} color="black" />}
+               onPress={() => props.setRating(2)}
+            />
+            <IconButton
+              p={1}
+              icon={props.rating >= 3? <AntDesign name="star" size={24} color="black" /> :
+               <AntDesign name="staro" size={24} color="black" />}
+               onPress={() => props.setRating(3)}
+            />
+            <IconButton
+              p={1}
+              icon={props.rating >= 4? <AntDesign name="star" size={24} color="black" /> :
+               <AntDesign name="staro" size={24} color="black" />}
+               onPress={() => props.setRating(4)}
+            />
+            <IconButton
+              p={1}
+              icon={props.rating >= 5? <AntDesign name="star" size={24} color="black" /> :
+               <AntDesign name="staro" size={24} color="black" />}
+               onPress={() => props.setRating(5)}
+            />
+              <Button
+            bgColor="blueGray.600"
+            borderWidth="2"
+            borderLeftWidth={2}
+            borderColor="blueGray.900"
+            flex={1}
+            borderLeftRadius={0}
+          >
+            Rate
+          </Button>
+          </View>
+        </View>
+      </HStack>
+  );
+}
+
 export default function OutfitCard(props) {
+  const [rating, setRating] = useState(0);
   const outfit = flattenObj(props.outfit);
   const { refreshUser } = useAuth();
+  
+  
   const remove = async (id) => {
     const response = await deleteOutfit(id);
     if (response) {
@@ -90,6 +155,9 @@ export default function OutfitCard(props) {
           </HStack>
         );
       })}
+      <StarRating 
+      rating={rating} 
+      setRating={setRating}/>
       <HStack space="0">
         <Button
           borderRightRadius={0}
@@ -118,6 +186,10 @@ export default function OutfitCard(props) {
 }
 
 const styles = StyleSheet.create({
+  star: {
+    height: 40,
+    width: 40,
+  },
   card: {
     borderWidth: 1,
     borderColor: "black",
