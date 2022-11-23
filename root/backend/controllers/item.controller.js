@@ -5,8 +5,7 @@ exports.create = (req, res) => {
   console.log("CREATE OBJECT");
   // Create a item
   const item = new Item({
-    accessory: req.body.accessory,
-    slot: [req.body.slot], //list of slots the item occupies/covers
+    type: req.body.type, //clothing, accessory, shoes
     brand: req.body.brand,
     size: req.body.size,
     colors: req.body.colors,
@@ -15,6 +14,7 @@ exports.create = (req, res) => {
     fit: req.body.fit, //tight, well, loose
     category: req.body.category,
     wardrobe: req.user.wardrobe,
+    subcategories: req.body.subcategories, // jeans => mom, distressed, high waisted
   });
 
   // Save

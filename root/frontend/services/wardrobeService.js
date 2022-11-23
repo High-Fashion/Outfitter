@@ -12,32 +12,44 @@ function getAccessories() {}
 
 async function addItem(item) {
   console.log("adding ", item);
-  const response = await axiosInstance.post(
-    config.API_URL + "/item/create",
-    item
-  );
-  console.log(response.data);
-  return response.status == 200;
+  return await axiosInstance
+    .post(config.API_URL + "/item/create", item)
+    .then((res) => {
+      console.log("res", res);
+      return res.status == 200;
+    })
+    .catch((err) => {
+      console.log("err", err);
+      return false;
+    });
 }
 
 async function editItem(item, id) {
-  console.log("editing ITEM", item)
-  console.log("ID is: " , id)
-  // console.log("editing item with id: ", item["id"]);
-  const response = await axiosInstance.put(
-    config.API_URL + "/item/" + id,
-  );
-  console.log(response.data);
-  return response.status == 200;
+  console.log("editing ", item);
+  return await axiosInstance
+    .put(config.API_URL + "/item/" + id, item)
+    .then((res) => {
+      console.log("res", res);
+      return res.status == 200;
+    })
+    .catch((err) => {
+      console.log("err", err);
+      return false;
+    });
 }
 
 async function deleteItem(id) {
   console.log("deleting item", id);
-  const response = await axiosInstance.delete(
-    config.API_URL + "/item/" + id,
-  );
-  console.log(response.data);
-  return response.status == 200;
+  return await axiosInstance
+    .delete(config.API_URL + "/item/" + id)
+    .then((res) => {
+      console.log("res", res);
+      return res.status == 200;
+    })
+    .catch((err) => {
+      console.log("err", err);
+      return false;
+    });
 }
 
 function getOutfits() {}
@@ -54,9 +66,7 @@ async function addOutfit(outfit) {
 
 async function deleteOutfit(id) {
   console.log("deleting outfit", id);
-  const response = await axiosInstance.delete(
-    config.API_URL + "/outfit/" + id,
-  );
+  const response = await axiosInstance.delete(config.API_URL + "/outfit/" + id);
   console.log(response.data);
   return response.status == 200;
 }

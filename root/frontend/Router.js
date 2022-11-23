@@ -11,8 +11,7 @@ import SignUpScreen from "./pages/SignUpScreen.js";
 import SignInScreen from "./pages/SignInScreen.js";
 import * as SplashScreen from "expo-splash-screen";
 import NewOutfitScreen from "./pages/NewOutfitScreen.js";
-import NewItemScreen from "./pages/NewItemScreen.js";
-import EditItemScreen from "./pages/EditItemScreen.js";
+import ItemScreen from "./pages/ItemScreen.js";
 
 import {
   BodyShape,
@@ -116,109 +115,74 @@ export default function Router() {
     return null;
   }
 
-  //AppStack
-  // <Stack.Group>
-  //   <Stack.Screen
-  //     name="Home"
-  //     component={HomeScreen}
-  //     options={{
-  //       title: "Outfitter",
-  //       headerTitleAlign: "center",
-
-  //       headerStyle: {
-  //         backgroundColor: "#1e40af",
-  //       },
-  //       headerTintColor: "#fff",
-  //       headerTitleStyle: {
-  //         fontWeight: "bold",
-  //       },
-  //       headerLeft: () => <></>,
-  //       headerRight: () => (
-  //         <Pressable>
-  //           <HamburgerIcon
-  //             size="md"
-  //             color="white"
-  //             onPress={() => signOut()}
-  //           />
-  //         </Pressable>
-  //       ),
-  //     }}
-  //   />
-  // </Stack.Group>
-
   return (
     <View flex={1}>
       <View flex={1}>
-          <NavigationContainer>
-            <Stack.Navigator>
-              {signedIn ? (
-                isSetup ? (
-                  <Stack.Group>
-                    <Stack.Screen
-                      name="Root"
-                      component={Footer}
-                      options={{ headerShown: false }}
-                    />
-                    <Stack.Screen
-                      name="NewItem"
-                      component={NewItemScreen}
-                      options={{ title: "New Item" }}
-                    />
-                    <Stack.Screen
-                      name="EditItem"
-                      component={EditItemScreen}
-                      options={{ title: "Editing" }}
-                    />
-                    <Stack.Screen
-                      name="NewOutfit"
-                      component={NewOutfitScreen}
-                      options={({ navigation, route }) => ({
-                        headerTitle: route?.params?.title
-                          ? route.params.title
-                          : "New Outfit",
-                      })}
-                    />
-                  </Stack.Group>
-                ) : (
-                  <Stack.Group>
-                    <Stack.Screen
-                      name="Setup"
-                      component={SetupScreen}
-                      initialParams={{ finish: (data) => finishSetup(data) }}
-                      options={{
-                        headerShown: false,
-                      }}
-                    />
-                    <Stack.Screen
-                      name="Wardrobe Settings"
-                      component={WardrobeSettings}
-                      options={{ headerShown: true }}
-                    />
-                    <Stack.Screen
-                      name="Body Shape"
-                      component={BodyShape}
-                      options={{ headerShown: true }}
-                    />
-                    <Stack.Screen
-                      name="Style Quiz"
-                      component={StyleQuiz}
-                      options={{ headerShown: true }}
-                    />
-                    <Stack.Screen
-                      name="Privacy Settings"
-                      component={PrivacySettings}
-                      options={{ headerShown: true }}
-                    />
-                  </Stack.Group>
-                )
+        <NavigationContainer>
+          <Stack.Navigator>
+            {signedIn ? (
+              isSetup ? (
+                <Stack.Group>
+                  <Stack.Screen
+                    name="Root"
+                    component={Footer}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="Item"
+                    component={ItemScreen}
+                    options={{ title: "Editing" }}
+                  />
+                  <Stack.Screen
+                    name="NewOutfit"
+                    component={NewOutfitScreen}
+                    options={({ navigation, route }) => ({
+                      headerTitle: route?.params?.title
+                        ? route.params.title
+                        : "New Outfit",
+                    })}
+                  />
+                </Stack.Group>
               ) : (
                 <Stack.Group>
-                  <Stack.Screen name="Sign Up" component={SignUpScreen} />
-                  <Stack.Screen name="Sign In" component={SignInScreen} />
+                  <Stack.Screen
+                    name="Setup"
+                    component={SetupScreen}
+                    initialParams={{ finish: (data) => finishSetup(data) }}
+                    options={{
+                      headerShown: false,
+                    }}
+                  />
+                  <Stack.Screen
+                    name="Wardrobe Settings"
+                    component={WardrobeSettings}
+                    options={{ headerShown: true }}
+                  />
+                  <Stack.Screen
+                    name="Body Shape"
+                    component={BodyShape}
+                    options={{ headerShown: true }}
+                  />
+                  <Stack.Screen
+                    name="Style Quiz"
+                    component={StyleQuiz}
+                    options={{ headerShown: true }}
+                  />
+                  <Stack.Screen
+                    name="Privacy Settings"
+                    component={PrivacySettings}
+                    options={{ headerShown: true }}
+                  />
                 </Stack.Group>
-              )}
-            </Stack.Navigator>
-          </NavigationContainer>
+              )
+            ) : (
+              <Stack.Group>
+                <Stack.Screen name="Sign Up" component={SignUpScreen} />
+                <Stack.Screen name="Sign In" component={SignInScreen} />
+              </Stack.Group>
+            )}
+          </Stack.Navigator>
+        </NavigationContainer>
       </View>
     </View>
   );
