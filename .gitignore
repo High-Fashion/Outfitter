@@ -3,3 +3,8 @@ root/backend/.env
 root/backend/package-lock.json
 root/frontend/package-lock.json
 root/frontend/.env
+root/backend/python/ml_env
+root/backend/python/__pycache__
+root/backend/python/.vscode
+root/backend/python/test
+root/backend/python/*.json

@@ -1,0 +1,8 @@
+python3 -m venv ENV_NAME
+
+#linux/max
+    source ENV_NAME/bin/activate
+#windows
+    ENV_NAME\Scripts\activate.bat
+
+pip install -r requirements.txt

@@ -11,7 +11,7 @@ import SignUpScreen from "./pages/SignUpScreen.js";
 import SignInScreen from "./pages/SignInScreen.js";
 import * as SplashScreen from "expo-splash-screen";
 import NewOutfitScreen from "./pages/NewOutfitScreen.js";
-import NewItemScreen from "./pages/NewItemScreen.js";
+import ItemScreen from "./pages/ItemScreen.js";
 
 import {
   BodyShape,
@@ -115,36 +115,6 @@ export default function Router() {
     return null;
   }
 
-  //AppStack
-  // <Stack.Group>
-  //   <Stack.Screen
-  //     name="Home"
-  //     component={HomeScreen}
-  //     options={{
-  //       title: "Outfitter",
-  //       headerTitleAlign: "center",
-
-  //       headerStyle: {
-  //         backgroundColor: "#1e40af",
-  //       },
-  //       headerTintColor: "#fff",
-  //       headerTitleStyle: {
-  //         fontWeight: "bold",
-  //       },
-  //       headerLeft: () => <></>,
-  //       headerRight: () => (
-  //         <Pressable>
-  //           <HamburgerIcon
-  //             size="md"
-  //             color="white"
-  //             onPress={() => signOut()}
-  //           />
-  //         </Pressable>
-  //       ),
-  //     }}
-  //   />
-  // </Stack.Group>
-
   return (
     <View flex={1}>
       <View flex={1}>
@@ -159,9 +129,9 @@ export default function Router() {
                     options={{ headerShown: false }}
                   />
                   <Stack.Screen
-                    name="NewItem"
-                    component={NewItemScreen}
-                    options={{ title: "New Item" }}
+                    name="Item"
+                    component={ItemScreen}
+                    options={{ title: "Editing" }}
                   />
                   <Stack.Screen
                     name="NewOutfit"

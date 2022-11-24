@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const schema = new Schema({
+  name: { type: String, required: false },
   type: String, //clothing, accessory, shoes
   category: String, //jeans, baseball cap, boots.
   subcategories: [String], // jeans => mom, distressed, high waisted

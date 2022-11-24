@@ -23,6 +23,7 @@ import { useAuth } from "../contexts/Auth";
 
 import ClothingList from "../components/ClothingList";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { TouchableWithoutFeedback } from "react-native";
 
 function TypeSelector() {
   const [selected, setSelected] = useState("clothing");
@@ -228,27 +229,40 @@ function SortBar(props) {
 
 function AddItemFab(props) {
   const { navigation } = props;
-  const [open, setOpen] = useState(false);
   const types = [
     {
-      name: "Clothing",
+      name: "Top",
       image: require("../assets/icons/mens_clothing.png"),
       onPress: () => {
-        navigation.navigate("NewItem", { type: "clothing" });
+        navigation.navigate("Item", { type: "top" });
+      },
+    },
+    {
+      name: "Bottoms",
+      image: require("../assets/icons/mens_clothing.png"),
+      onPress: () => {
+        navigation.navigate("Item", { type: "bottoms" });
+      },
+    },
+    {
+      name: "One Piece",
+      image: require("../assets/icons/mens_clothing.png"),
+      onPress: () => {
+        navigation.navigate("Item", { type: "one_piece" });
       },
     },
     {
       name: "Accessory",
       image: require("../assets/icons/mens_accessory.png"),
       onPress: () => {
-        navigation.navigate("NewItem", { type: "accessory" });
+        navigation.navigate("Item", { type: "accessory" });
       },
     },
     {
       name: "Shoes",
       image: require("../assets/icons/mens_shoes.png"),
       onPress: () => {
-        navigation.navigate("NewItem", { type: "shoes" });
+        navigation.navigate("Item", { type: "shoes" });
       },
     },
   ];
@@ -259,7 +273,7 @@ function AddItemFab(props) {
       space={2}
     >
       <VStack space={2} style={{ zIndex: 2, position: "relative", right: -5 }}>
-        {open &&
+        {props.open &&
           types.map((type) => {
             return (
               <Button
@@ -299,10 +313,10 @@ function AddItemFab(props) {
         shadow={5}
         size="lg"
         onPress={() => {
-          setOpen(!open);
+          props.setOpen(!props.open);
         }}
       >
-        {open ? (
+        {props.open ? (
           <SmallCloseIcon color="white" size="xl" />
         ) : (
           <AddIcon color="white" size="xl" />
@@ -315,6 +329,7 @@ function AddItemFab(props) {
 function WardrobeScreen({ navigation }) {
   const [showSortModal, setShowSortModal] = useState(false);
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const [showFAB, setShowFAB] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const { user, refreshUser } = useAuth();
   const isFocused = useIsFocused();
@@ -349,6 +364,12 @@ function WardrobeScreen({ navigation }) {
     setFilteredItemList(newItems);
   }, [itemList, searchQuery]);
 
+  function removeItem(item) {
+    newlist = filteredItemList;
+    newlist.filter((i) => i._id != item._id);
+    setFilteredItemList(newlist);
+  }
+
   return (
     <SafeAreaView flex={1}>
       <SortOptionsModal
@@ -359,7 +380,7 @@ function WardrobeScreen({ navigation }) {
         show={showFilterModal}
         close={() => setShowFilterModal(false)}
       />
-      <ScrollView>
+      <ScrollView onTouchStart={() => setShowFAB(false)}>
         <VStack space={1} paddingTop={1} paddingBottom={10} w="100%">
           <TypeSelector />
           <Divider />
@@ -373,10 +394,15 @@ function WardrobeScreen({ navigation }) {
           <Divider />
           <Text>{searchQuery}</Text>
           <SortBar open={() => setShowSortModal(true)} />
-          <ClothingList value={filteredItemList} />
+          <ClothingList removeItem={removeItem} value={filteredItemList} />
         </VStack>
       </ScrollView>
-      <AddItemFab navigation={navigation} />
+      <AddItemFab
+        flex="1"
+        open={showFAB}
+        setOpen={setShowFAB}
+        navigation={navigation}
+      />
     </SafeAreaView>
   );
 }

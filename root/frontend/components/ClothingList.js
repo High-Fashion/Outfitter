@@ -36,7 +36,6 @@ export default function ClothingList(props) {
                   key={item.id}
                   item={item}
                 />
-                <Divider />
               </HStack>
             );
           })}
@@ -45,8 +44,8 @@ export default function ClothingList(props) {
         props.value.map((item, index) => {
           return (
             <VStack space={CARD_SPACING} key={item.id}>
-              {index != 0 && <Divider />}
               <ItemCard
+                setDeleted={() => props.removeItem(item._id)}
                 hideButtons={props.hideButtons}
                 key={item.id}
                 item={item}
