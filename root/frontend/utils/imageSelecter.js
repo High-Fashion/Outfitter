@@ -19,6 +19,7 @@ import { Animated, Dimensions } from "react-native";
 
 export default function ImageSelecter() {
   const [image, setImage] = useState(null);
+  // const []
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -28,18 +29,19 @@ export default function ImageSelecter() {
       quality: 1,
     });
 
-    console.log(result);
+    console.log("result is: ", result);
+    console.log("image is: ", image)
 
-    if (!result.cancelled) {
-      setImage(result.uri);
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
     }
   };
 
   const takePicture = async () => {
     let result = await ImagePicker.launchCameraAsync();
 
-    if (!result.cancelled) {
-      setImage(result.uri);
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
     }
   };
 
@@ -69,7 +71,7 @@ export default function ImageSelecter() {
             <Image
               alt="selected clothing item"
               source={{ uri: image }}
-              resizeMode="contain"
+              // resizeMode="contain"
               style={{ width: Dimensions.width, height: 200 }}
             />
           ) : (

@@ -22,9 +22,16 @@ const outfitRouter = require("./routes/outfit.routes");
 const postRouter = require("./routes/post.routes");
 
 // MongoDB
+
+// start of gridfs initialization
 mongoose.connect(source);
 const connection = mongoose.connection;
+let gfs;
 connection.once("open", () => {
+  // initialize file stream
+  gfs = new mongoose.mongo.GridFSBucket(connection.db, {
+    bucketName: "images"
+  });
   console.log("DB connected.");
 });
 

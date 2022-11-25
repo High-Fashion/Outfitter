@@ -16,6 +16,7 @@ exports.create = (req, res) => {
     category: req.body.category,
     wardrobe: req.user.wardrobe,
   });
+  // do something with image here
 
   // Save
   item
@@ -69,7 +70,7 @@ exports.updateOne = (req, res) => {
         res.status(404).send({
           message: `Cannot update item with id=${id}. Maybe item was not found!`,
         });
-      } else res.send({ message: "Item was updated successfully." });
+      } else res.status(200).send({ message: "Item was updated successfully." });
     })
     .catch((err) => {
       res.status(500).send({

@@ -32,7 +32,6 @@ import { addItem } from "../services/wardrobeService";
 
 import ImageSelecter from "../utils/imageSelecter";
 import capitalize from "../utils/capitalize";
-// import * as ImagePicker from "expo-image-picker";
 import { useAuth } from "../contexts/Auth";
 
 function SizePicker(props) {
@@ -285,7 +284,8 @@ function NewItemScreen({ navigation, route }) {
   const [image, setImage] = useState(null);
 
   const [formData, setData] = useState({});
-
+//TODO on setData for image mime, type and filename?
+// STORE IMAGE ID in item
   const form = [
     {
       name: "Category",
@@ -362,7 +362,8 @@ function NewItemScreen({ navigation, route }) {
       });
     }
   }, [route]);
-
+//START OF FORM
+// TODO send image information through form
   return (
     <ScrollView>
       <ImageSelecter />

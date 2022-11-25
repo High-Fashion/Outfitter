@@ -45,7 +45,8 @@ export default function ItemCard(props) {
             <Button size="md" variant="ghost" onPress={() => 
               // {console.log("PRESSED", props.item)}}>
               // {console.log(props.item["material"])}}>
-              {navigation.navigate("EditItem", {type: "clothing", item: props.item})}}>
+              {console.log("ID is", user.wardrobe)}}>
+              {/* {navigation.navigate("EditItem", {type: "clothing", item: props.item})}}> */}
               ...
             </Button>
           {/* </View> */}
