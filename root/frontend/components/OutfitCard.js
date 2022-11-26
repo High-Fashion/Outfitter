@@ -8,7 +8,8 @@ import {
   View,
   VStack,
   Modal,
-  IconButton
+  IconButton,
+  Icon
 } from "native-base";
 import { AntDesign } from '@expo/vector-icons'; 
 import { Dimensions, StyleSheet, TouchableOpacity } from "react-native";
@@ -54,8 +55,60 @@ const getText = (item) => {
 
 function RatingModal(props){
   return(
-    <Modal>
-
+    <Modal  size="full" isOpen={props.showRatingModal} onClose={() => props.setShowRatingModal(false)}>
+      <Modal.Content maxWidth="400px">
+        <Modal.CloseButton/>
+        <Modal.Header>Outfit rating</Modal.Header>
+          <Modal.Body>
+            <HStack p={1} alignItems="center" justifyContent="space-between">
+              <View style={{ flex: 1, alignItems: "center" }}>
+                <View style={{ flex: 5, flexDirection: "row" }}>
+                  <IconButton
+                    p={1}
+                    icon={props.rating >= 1? <AntDesign name="star" size={24} color="black" /> :
+                    <AntDesign name="staro" size={24} color="black" />}
+                    onPress={() => props.setRating(1)}
+                  />
+                  <IconButton
+                    p={1}
+                    icon={props.rating >= 2? <AntDesign name="star" size={24} color="black" /> :
+                    <AntDesign name="staro" size={24} color="black" />}
+                    onPress={() => props.setRating(2)}
+                  />
+                  <IconButton
+                    p={1}
+                    icon={props.rating >= 3? <AntDesign name="star" size={24} color="black" /> :
+                    <AntDesign name="staro" size={24} color="black" />}
+                    onPress={() => props.setRating(3)}
+                  />
+                  <IconButton
+                    p={1}
+                    icon={props.rating >= 4? <AntDesign name="star" size={24} color="black" /> :
+                    <AntDesign name="staro" size={24} color="black" />}
+                    onPress={() => props.setRating(4)}
+                  />
+                  <IconButton
+                    p={1}
+                    icon={props.rating >= 5? <AntDesign name="star" size={24} color="black" /> :
+                    <AntDesign name="staro" size={24} color="black" />}
+                    onPress={() => props.setRating(5)}
+                  />
+                    <Button
+                  bgColor="blueGray.600"
+                  borderWidth="2"
+                  borderLeftWidth={2}
+                  borderColor="blueGray.900"
+                  flex={1}
+                  borderLeftRadius={0}
+                  onPress = {() => props.setShowRatingModal(false)}
+                >
+                  Rate
+                </Button>
+                </View>
+              </View>
+            </HStack>
+          </Modal.Body>
+       </Modal.Content>
     </Modal>
   );
 }
@@ -69,31 +122,31 @@ const StarRating = (props) => {
               p={1}
               icon={props.rating >= 1? <AntDesign name="star" size={24} color="black" /> :
                <AntDesign name="staro" size={24} color="black" />}
-               onPress={() => props.setRating(1)}
+               disabled={true}
             />
             <IconButton
               p={1}
               icon={props.rating >= 2? <AntDesign name="star" size={24} color="black" /> :
                <AntDesign name="staro" size={24} color="black" />}
-               onPress={() => props.setRating(2)}
+               disabled={true}
             />
             <IconButton
               p={1}
               icon={props.rating >= 3? <AntDesign name="star" size={24} color="black" /> :
                <AntDesign name="staro" size={24} color="black" />}
-               onPress={() => props.setRating(3)}
+               disabled={true}
             />
             <IconButton
               p={1}
               icon={props.rating >= 4? <AntDesign name="star" size={24} color="black" /> :
                <AntDesign name="staro" size={24} color="black" />}
-               onPress={() => props.setRating(4)}
+               disabled={true}
             />
             <IconButton
               p={1}
               icon={props.rating >= 5? <AntDesign name="star" size={24} color="black" /> :
                <AntDesign name="staro" size={24} color="black" />}
-               onPress={() => props.setRating(5)}
+               disabled={true}
             />
               <Button
             bgColor="blueGray.600"
@@ -102,6 +155,7 @@ const StarRating = (props) => {
             borderColor="blueGray.900"
             flex={1}
             borderLeftRadius={0}
+            onPress={() => props.setShowRatingModal(true)}
           >
             Rate
           </Button>
@@ -115,6 +169,7 @@ export default function OutfitCard(props) {
   const [rating, setRating] = useState(0);
   const outfit = flattenObj(props.outfit);
   const { refreshUser } = useAuth();
+  const [showRatingModal, setShowRatingModal] = useState(false)
   
   
   const remove = async (id) => {
@@ -125,6 +180,13 @@ export default function OutfitCard(props) {
   };
 
   return (
+    <VStack>
+      <RatingModal
+      rating={rating} 
+      setRating={setRating}
+      showRatingModal={showRatingModal}
+      setShowRatingModal={setShowRatingModal}
+      />
     <VStack p={3} space="1" borderRadius="xl" style={styles.card}>
       {Object.keys(outfit).map((slot) => {
         if (
@@ -157,7 +219,10 @@ export default function OutfitCard(props) {
       })}
       <StarRating 
       rating={rating} 
-      setRating={setRating}/>
+      setRating={setRating}
+      showRatingModal={showRatingModal}
+      setShowRatingModal={setShowRatingModal}
+      />
       <HStack space="0">
         <Button
           borderRightRadius={0}
@@ -181,6 +246,7 @@ export default function OutfitCard(props) {
           Delete
         </Button>
       </HStack>
+    </VStack>
     </VStack>
   );
 }
