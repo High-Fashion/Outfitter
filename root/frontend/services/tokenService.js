@@ -13,17 +13,17 @@ async function getAccessUsingRefresh(refresh_token) {
 }
 
 async function getVerifiedKeys(keys) {
-  console.log("Loading keys");
+  // console.log("Loading keys");
   if (keys) {
-    console.log("Checking access_token");
+    // console.log("Checking access_token");
     if (!isTokenExpired(keys.access_token)) {
-      console.log("Returning access_token");
+      // console.log("Returning access_token");
       return keys;
     } else {
-      console.log("Access_token expired");
-      console.log("Checking refresh_token expiration");
+      // console.log("Access_token expired");
+      // console.log("Checking refresh_token expiration");
       if (!isTokenExpired(keys.refresh_token)) {
-        console.log("Refreshing access_token using refresh_token");
+        // console.log("Refreshing access_token using refresh_token");
         const response = await getAccessUsingRefresh(keys.refresh_token);
         await AsyncStorage.setItem(
           "keys",
@@ -32,15 +32,15 @@ async function getVerifiedKeys(keys) {
             refresh_token: response.refresh_token,
           })
         );
-        console.log("Updated tokens");
+        // console.log("Updated tokens");
         return response;
       } else {
-        console.log("Refresh_token expired, redirecting to sign in");
+        // console.log("Refresh_token expired, redirecting to sign in");
         return null;
       }
     }
   } else {
-    console.log("Access_token missing");
+    // console.log("Access_token missing");
     return null;
   }
 }
@@ -49,7 +49,7 @@ function isTokenExpired(token) {
   console.log("Checking: ", token);
   try {
     var decoded = jwt_decode(token);
-    console.log(decoded);
+    // console.log(decoded);
     if (decoded.exp < Date.now() / 1000) {
       return true;
     } else {
@@ -63,7 +63,7 @@ function isTokenExpired(token) {
 
 const setCredentials = async (keys) => {
   try {
-    console.log("saving: ", JSON.stringify(keys));
+    // console.log("saving: ", JSON.stringify(keys));
     await AsyncStorage.setItem("keys", JSON.stringify(keys));
   } catch (e) {
     console.log(e);

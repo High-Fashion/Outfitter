@@ -121,7 +121,10 @@ function UserCard(props) {
 
 function SearchResults(props) {
   function openUser(user) {
-    props.navigate("Home", { screen: "UserProfile", params: { user: user } });
+    props.navigate("Home", {
+      screen: "UserProfile",
+      params: { id: user.id, username: user.username },
+    });
   }
 
   return (

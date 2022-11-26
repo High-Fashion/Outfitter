@@ -20,6 +20,24 @@ exports.readOne = (req, res) => {
         return res
           .status(404)
           .send({ message: "Not found user with id " + id });
+      var projection = "";
+      if (user.private) {
+        projection = privateProjection;
+      } else if (user.hideWardrobe) {
+        projection = followProjection;
+      } else {
+        projection = fullProjection;
+      }
+      User.findById(id)
+        .select(projection)
+        .then((user) => {
+          return res.status(200).json(user);
+        })
+        .catch((err) => {
+          return res
+            .status(500)
+            .send({ message: "Error retrieving user with id=" + id });
+        });
     })
     .catch((err) => {
       return res
@@ -189,9 +207,9 @@ exports.follow = (req, res) => {
         self.following.pull(user);
         user.save();
         self.save();
-      });
-      return res.status(200).send({
-        message: "Unfollowed!",
+        return res.status(200).send({
+          message: "Unfollowed!",
+        });
       });
     }
   });

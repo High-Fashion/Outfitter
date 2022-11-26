@@ -11,6 +11,7 @@ import {
   IconButton,
   Pressable,
   ScrollView,
+  Spinner,
   Text,
   useDisclose,
   View,
@@ -64,7 +65,7 @@ export function ProfileHeader(props) {
       {props.self ? (
         <HStack mx={2} alignItems="center" justifyContent="space-between">
           <View>
-            <Heading>{props.user.username}</Heading>
+            <Heading>{props.username}</Heading>
           </View>
           <HStack>
             <IconButton
@@ -90,7 +91,7 @@ export function ProfileHeader(props) {
             justifyContent="space-between"
           >
             <View>
-              <Heading>{props.user.username}</Heading>
+              <Heading>{props.username}</Heading>
             </View>
             <IconButton
               p={1}
@@ -119,10 +120,11 @@ function FollowedBy(props) {
   const { user } = useAuth();
   const user_followers = props.user?.followers ? props.user.followers : [];
   const self_following = user.following;
-  const mutualFollows = user_followers.filter(
-    (f) => !self_following.includes(f)
+  const mutualFollows = user_followers.filter((f) =>
+    self_following.includes(f)
   );
-  console.log("follow len", self_following);
+  const [names, setNames] = useState([]);
+
   if (mutualFollows.length == 0) return <></>;
 
   function RenderList() {
@@ -179,7 +181,7 @@ function FollowedBy(props) {
 function ProfileInfo(props) {
   const { user, refreshUser } = useAuth();
 
-  const [loading, setLoading] = useState(false);
+  const [followLoading, setFollowLoading] = useState(false);
 
   function pressAvatar() {}
   function pressPosts() {}
@@ -188,27 +190,15 @@ function ProfileInfo(props) {
   function editProfile() {}
 
   async function follow() {
-    setLoading(true);
-    followUser(
-      props.user,
-      props.user.private ? !props.sentReq : !props.isFollowing
-    ).then((success) => {
-      if (success) {
-        if (props.user.private) {
-          props.setSentReq(!props.isFollowing);
-        } else {
-          props.setIsFollowing(!props.isFollowing);
-        }
-      } else {
-        if (props.user.private) {
-          props.setSentReq(!props.isFollowing);
-        } else {
-          props.setIsFollowing(!props.isFollowing);
-        }
-      }
-      refreshUser();
-      setLoading(false);
-    });
+    setFollowLoading(true);
+    var res = await followUser(
+      profile,
+      profile.private
+        ? !user.sentRequests.includes(profile.id)
+        : !user.following.includes(profile.id)
+    );
+    await refreshUser();
+    setFollowLoading(false);
   }
 
   return (
@@ -249,19 +239,19 @@ function ProfileInfo(props) {
           <FollowedBy user={props.user} />
         </VStack>
         <Button
-          isLoading={loading}
+          isLoading={followLoading}
           onPress={props.self ? editProfile : follow}
           p={1}
         >
           {props.self
             ? "Edit Profile"
             : props.user.private
-            ? !props.sentReq
+            ? !user.sentRequests.includes(props.user.id)
               ? "Send follow request"
               : "Cancel follow request"
-            : props.isFollowing
-            ? "Unfollow"
-            : "Follow"}
+            : !user.following.includes(props.user.id)
+            ? "Follow"
+            : "Unfollow"}
         </Button>
       </VStack>
     </VStack>
@@ -353,23 +343,12 @@ function ProfileContent(props) {
 export function ProfileScreen({ navigation, route }) {
   const { user } = useAuth();
   const { isOpen, onOpen, onClose } = useDisclose();
-  const self = route?.params?.user ? false : true;
-
-  const [profile, setProfile] = useState(
-    route?.params?.user ? route?.params?.user : user
-  );
-  const [isFollowing, setIsFollowing] = useState(false);
-  const [sentReq, setSentReq] = useState(false);
-
-  useEffect(() => {
-    if (self) return;
-    console.log(user.following);
-    setIsFollowing(user.following.includes(profile.id));
-  }, [user]);
+  const self = route?.params?.id ? false : true;
+  const [profile, setProfile] = useState({});
 
   useEffect(() => {
     async function get() {
-      const userData = await getUser(route.params.user.id);
+      const userData = await getUser(route.params.id);
       setProfile(userData);
     }
     if (self) {
@@ -384,7 +363,7 @@ export function ProfileScreen({ navigation, route }) {
       <ProfileHeader
         goBack={navigation.goBack}
         self={self}
-        user={profile}
+        username={self ? user.username : route.params.username}
         openSettings={onOpen}
       />
     ),
@@ -392,18 +371,17 @@ export function ProfileScreen({ navigation, route }) {
 
   return (
     <View flex={1}>
-      <VStack flex={1}>
-        <SettingsActionsheet self={self} open={isOpen} close={onClose} />
-        <ProfileInfo
-          isFollowing={isFollowing}
-          sentReq={sentReq}
-          setIsFollowing={setIsFollowing}
-          setSentReq={setSentReq}
-          self={self}
-          user={profile}
-        />
-        <ProfileContent self={self} user={profile} />
-      </VStack>
+      {profile.username ? (
+        <VStack flex={1}>
+          <SettingsActionsheet self={self} open={isOpen} close={onClose} />
+          <ProfileInfo self={self} user={profile} />
+          <ProfileContent self={self} user={profile} />
+        </VStack>
+      ) : (
+        <VStack flex={1} alignItems="center" justifyContent="space-around">
+          <Spinner />
+        </VStack>
+      )}
     </View>
   );
 }

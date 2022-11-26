@@ -17,11 +17,13 @@ const userSchema = new Schema({
     ref: "Wardrobe",
     autopopulate: true,
   },
-  posts: [{ type: Schema.Types.ObjectId, ref: "Post" }],
-  followers: [{ type: Schema.Types.ObjectId, ref: "User" }],
-  following: [{ type: Schema.Types.ObjectId, ref: "User" }],
-  recievedRequests: [{ type: Schema.Types.ObjectId, ref: "User" }],
-  sentRequests: [{ type: Schema.Types.ObjectId, ref: "User" }],
+  posts: [{ type: Schema.Types.ObjectId, ref: "Post", required: true }],
+  followers: [{ type: Schema.Types.ObjectId, ref: "User", required: true }],
+  following: [{ type: Schema.Types.ObjectId, ref: "User", required: true }],
+  recievedRequests: [
+    { type: Schema.Types.ObjectId, ref: "User", required: true },
+  ],
+  sentRequests: [{ type: Schema.Types.ObjectId, ref: "User", required: true }],
   private: { type: Boolean, required: true, default: false },
   hideWardrobe: { type: Boolean, required: true, default: true },
 });

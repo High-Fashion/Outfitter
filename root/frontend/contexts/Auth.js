@@ -20,26 +20,6 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState({});
   const [signedIn, setSignedIn] = useState(false);
 
-  // useEffect(() => {
-  //   async function getCreds() {
-  //     const keys = await TokenService.getCredentials();
-  //     if (!keys) return;
-  //     const { access_token } = keys;
-  //     if (access_token) {
-  //       setSignedIn(true);
-  //     }
-  //   }
-  //   getCreds();
-  // }, []);
-
-  // useEffect(() => {
-  //   async function load() {
-  //     console.log("loading user");
-  //     refreshUser();
-  //   }
-  //   if (signedIn) load();
-  // }, [signedIn]);
-
   const signIn = (body) => {
     axios
       .post(config.API_URL + "/signin", {

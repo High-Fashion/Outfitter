@@ -2,23 +2,49 @@ import axiosInstance from "../utils/axiosInstance";
 import config from "../config";
 
 async function getUsers() {
-  const response = await axiosInstance.get(config.API_URL + "/users/");
-  return response.data;
+  return await axiosInstance
+    .get(config.API_URL + "/users/")
+    .then((res) => {
+      if (res.status == 200) {
+        return res.data;
+      } else {
+        return false;
+      }
+    })
+    .catch((err) => {
+      return false;
+    });
 }
 
 async function getUser(id) {
-  const response = await axiosInstance.get(config.API_URL + "/users/" + id);
-  const user = response.data;
-  return user;
+  console.log("Getting user: ", id);
+  return await axiosInstance
+    .get(config.API_URL + "/users/" + id)
+    .then((res) => {
+      if (res.status == 200) {
+        console.log("Getting user: ", id);
+        return res.data;
+      } else {
+        return false;
+      }
+    })
+    .catch((err) => {
+      return false;
+    });
 }
 
 async function followUser(user, bool) {
-  console.log("Following user", user);
-  const response = await axiosInstance.post(
-    config.API_URL + "/users/follow/" + user.id,
-    { follow: bool }
-  );
-  return response.status == 200;
+  console.log("Following user", user.username);
+  return await axiosInstance
+    .post(config.API_URL + "/users/follow/" + user.id, { follow: bool })
+    .then((res) => {
+      // console.log("res", res);
+      return res.status == 200;
+    })
+    .catch((err) => {
+      // console.log("err", err);
+      return false;
+    });
 }
 
 module.exports = {

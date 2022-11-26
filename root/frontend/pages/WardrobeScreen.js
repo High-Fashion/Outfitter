@@ -25,40 +25,42 @@ import ClothingList from "../components/ClothingList";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TouchableWithoutFeedback } from "react-native";
 
-function TypeSelector() {
-  const [selected, setSelected] = useState("clothing");
+function TypeSelector(props) {
   return (
     <HStack space={3} justifyContent="center">
       <Button
-        onPress={() => setSelected("clothing")}
+        onPress={() => props.setSelected("clothing")}
         variant="ghost"
         borderRadius="full"
       >
         <Heading
-          color={selected == "clothing" ? "blue.800" : "black"}
+          color={props.selected == "clothing" ? "indigo.800" : "black"}
           size="md"
         >
           Clothing
         </Heading>
       </Button>
       <Button
-        onPress={() => setSelected("accessories")}
+        onPress={() => props.setSelected("accessory")}
         variant="ghost"
         borderRadius="full"
       >
         <Heading
-          color={selected == "accessories" ? "blue.800" : "black"}
+          color={props.selected == "accessory" ? "indigo.800" : "black"}
           size="md"
         >
           Accessories
         </Heading>
       </Button>
       <Button
-        onPress={() => setSelected("shoes")}
+        onPress={() => props.setSelected("shoes")}
         variant="ghost"
         borderRadius="full"
       >
-        <Heading color={selected == "shoes" ? "blue.800" : "black"} size="md">
+        <Heading
+          color={props.selected == "shoes" ? "indigo.800" : "black"}
+          size="md"
+        >
           Shoes
         </Heading>
       </Button>
@@ -121,7 +123,10 @@ function FilterOptionsModal(props) {
 function getItemString(item) {
   var result = "";
   Object.keys(item).map((key) => {
-    if (!["category", "material", "pattern", "brand"].includes(key)) return;
+    if (
+      !["category", "material", "pattern", "brand", "fit", "name"].includes(key)
+    )
+      return;
     if (item[key]) {
       result += item[key];
     }
@@ -335,10 +340,10 @@ function WardrobeScreen({ navigation }) {
   const isFocused = useIsFocused();
 
   const [itemList, setItemList] = useState(user.wardrobe.items);
+  const [selectedType, setSelectedType] = useState("clothing");
   const [filteredItemList, setFilteredItemList] = useState(itemList);
 
   useEffect(() => {
-    console.log("called");
     // Call only when screen open or when back on screen
     if (isFocused) {
       refreshUser();
@@ -349,20 +354,37 @@ function WardrobeScreen({ navigation }) {
     setItemList(user.wardrobe.items);
   }, [user]);
 
-  useEffect(() => {
-    if (!searchQuery || searchQuery == "") {
-      setFilteredItemList(itemList);
-      return;
+  function compareType(item_type) {
+    switch (item_type) {
+      case "shoes":
+        return selectedType == "shoes";
+      case "accessory":
+        return selectedType == "accessory";
+      case "top":
+      case "bottoms":
+      case "one_piece":
+        return selectedType == "clothing";
     }
+  }
+
+  useEffect(() => {
     const newItems = itemList.filter((item) => {
-      const item_data = getItemString(item);
-      console.log("Item", item);
-      console.log("String", item_data);
-      const input_data = searchQuery.toUpperCase();
-      return item_data.includes(input_data);
+      if (!searchQuery || searchQuery == "") {
+        return compareType(item.type);
+      } else {
+        const item_data = getItemString(item);
+        console.log("Item", item);
+        console.log("String", item_data);
+        const input_data = searchQuery.toUpperCase();
+        if (item_data.includes(input_data)) {
+          return compareType(item_data);
+        } else {
+          return false;
+        }
+      }
     });
     setFilteredItemList(newItems);
-  }, [itemList, searchQuery]);
+  }, [itemList, searchQuery, selectedType]);
 
   function removeItem(item) {
     newlist = filteredItemList;
@@ -382,18 +404,19 @@ function WardrobeScreen({ navigation }) {
       />
       <ScrollView onTouchStart={() => setShowFAB(false)}>
         <VStack space={1} paddingTop={1} paddingBottom={10} w="100%">
-          <TypeSelector />
+          <TypeSelector selected={selectedType} setSelected={setSelectedType} />
           <Divider />
-          <SearchBar
-            open={() => setShowFilterModal(true)}
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            itemList={filteredItemList}
-            setFilteredItemList={setFilteredItemList}
-          />
-          <Divider />
-          <Text>{searchQuery}</Text>
-          <SortBar open={() => setShowSortModal(true)} />
+          <View mx={2} pt={1}>
+            <SearchBar
+              hideFilter
+              open={() => setShowFilterModal(true)}
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              itemList={filteredItemList}
+              setFilteredItemList={setFilteredItemList}
+            />
+          </View>
+          {false && <SortBar open={() => setShowSortModal(true)} />}
           <ClothingList removeItem={removeItem} value={filteredItemList} />
         </VStack>
       </ScrollView>
