@@ -15,6 +15,8 @@ import { AntDesign } from '@expo/vector-icons';
 import { Dimensions, StyleSheet, TouchableOpacity } from "react-native";
 import { useAuth } from "../contexts/Auth";
 import { deleteOutfit } from "../services/wardrobeService";
+import { editOutfit } from "../services/wardrobeService";
+import { updateUser } from "../services/userService"
 import capitalize from "../utils/capitalize";
 import ItemCard from "./ItemCard";
 const { width, height } = Dimensions.get("window");
@@ -178,6 +180,15 @@ export default function OutfitCard(props) {
       refreshUser();
     }
   };
+
+  const edit = async (id, outfit) => {
+    const response = await editOutfit(id, outfit);
+    if (response) {
+      refreshUser();
+    }
+  }
+
+  
 
   return (
     <VStack>

@@ -71,10 +71,25 @@ async function deleteOutfit(id) {
   return response.status == 200;
 }
 
+async function editOutfit(outfit, id){
+  console.log("edit outfit", id);
+  return await axiosInstance
+    .put(config.API_URL + "/outfit/" + id, item)
+    .then((res) => {
+      console.log("res", res);
+      return res.status == 200;
+    })
+    .catch((err) => {
+      console.log("err", err);
+      return false;
+    });
+}
+
 module.exports = {
   addItem,
   editItem,
   deleteItem,
   addOutfit,
   deleteOutfit,
+  editOutfit
 };

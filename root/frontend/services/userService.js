@@ -21,8 +21,23 @@ async function followUser(user, bool) {
   return response.status == 200;
 }
 
+async function updateUser(id, user) {
+  console.log("editing ", user);
+  return await axiosInstance
+    .put(config.API_URL + "/users/" + id, user)
+    .then((res) => {
+      console.log("res", res);
+      return res.status == 200;
+    })
+    .catch((err) => {
+      console.log("err", err);
+      return false;
+    });
+}
+
 module.exports = {
   getUsers,
   followUser,
   getUser,
+  updateUser
 };
