@@ -123,7 +123,7 @@ function SearchResults(props) {
   function openUser(user) {
     props.navigate("Home", {
       screen: "UserProfile",
-      params: { id: user.id, username: user.username },
+      params: { id: user._id, username: user.username },
     });
   }
 

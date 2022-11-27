@@ -34,9 +34,9 @@ async function getUser(id) {
 }
 
 async function followUser(user, bool) {
-  console.log("Following user", user.username);
+  console.log("Following user", user._id);
   return await axiosInstance
-    .post(config.API_URL + "/users/follow/" + user.id, { follow: bool })
+    .post(config.API_URL + "/users/follow/" + user._id, { follow: bool })
     .then((res) => {
       // console.log("res", res);
       return res.status == 200;

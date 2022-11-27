@@ -5,7 +5,7 @@ const User = require("../models/user");
 exports.create = (req, res) => {
   // Create a post
   const postData = {
-    user: req.user.id,
+    user: req.user._id,
     text: req.body.type,
     type: req.body.type,
     likes: [],

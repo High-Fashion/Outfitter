@@ -29,11 +29,11 @@ export default function ClothingList(props) {
         >
           {props.value.map((item) => {
             return (
-              <HStack key={item.id} alignItems="center">
+              <HStack key={item._id} alignItems="center">
                 <Checkbox value={item} />
                 <ItemCard
                   hideButtons={props.hideButtons}
-                  key={item.id}
+                  key={item._id}
                   item={item}
                 />
               </HStack>
@@ -43,11 +43,11 @@ export default function ClothingList(props) {
       ) : (
         props.value.map((item, index) => {
           return (
-            <VStack space={CARD_SPACING} key={item.id}>
+            <VStack space={CARD_SPACING} key={item._id}>
               <ItemCard
                 setDeleted={() => props.removeItem(item._id)}
                 hideButtons={props.hideButtons}
-                key={item.id}
+                key={item._id}
                 item={item}
               />
             </VStack>

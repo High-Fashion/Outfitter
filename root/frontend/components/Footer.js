@@ -17,6 +17,7 @@ import { useAuth } from "../contexts/Auth";
 import WardrobeScreen from "../pages/WardrobeScreen.js";
 import HomeScreen from "../pages/HomeScreen.js";
 import OutfitScreen from "../pages/OutfitScreen.js";
+import PeopleListScreen from "../pages/PeopleListScreen.js";
 import { ProfileHeader, ProfileScreen } from "../pages/ProfileScreen.js";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -39,6 +40,7 @@ function HomeScreenNav() {
         options={{ headerShown: false }}
       />
       <Stack.Screen name="UserProfile" component={ProfileScreen} />
+      <Stack.Screen name="PeopleList" component={PeopleListScreen} />
     </Stack.Navigator>
   );
 }

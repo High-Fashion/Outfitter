@@ -37,7 +37,7 @@ exports.signup = (req, res) => {
 };
 
 const generateAccessToken = (user) => {
-  return jwt.sign({ id: user.id }, process.env.ACCESS_TOKEN_SECRET, {
+  return jwt.sign({ id: user._id }, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: "5m",
   });
 };
@@ -121,7 +121,6 @@ const getRefreshToken = async (token) => {
 };
 
 exports.refresh = async (req, res) => {
-  console.log("Refresh", req.body.refresh_token);
   //Verify old refresh token
   jwt.verify(
     req.body.refresh_token,
@@ -134,16 +133,15 @@ exports.refresh = async (req, res) => {
         });
       //Get old refresh token from database
       const old_refresh_token = await getRefreshToken(decoded.refresh_token);
-      console.log(decoded.refresh_token);
       const { user } = old_refresh_token;
       const new_refresh_token = generateRefreshToken(user);
 
       //Sign new refresh token
       const signed_refresh_token = jwt.sign(
-        {refresh_token: new_refresh_token.token},
+        { refresh_token: new_refresh_token.token },
         process.env.REFRESH_TOKEN_SECRET,
         {
-          expiresIn: "7d"
+          expiresIn: "7d",
         }
       );
 

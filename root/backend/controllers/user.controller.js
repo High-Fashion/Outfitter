@@ -1,7 +1,7 @@
 const User = require("../models/user");
 
 exports.get = (req, res) => {
-  User.findById(req.user.id).then((user) => {
+  User.findById(req.user._id).then((user) => {
     return res.status(200).json(user);
   });
 };
@@ -20,7 +20,21 @@ exports.readOne = (req, res) => {
         return res
           .status(404)
           .send({ message: "Not found user with id " + id });
+
+      var postsCount = 0;
+      var followerCount = 0;
+      var followingCount = 0;
+
+      var followers = user.followers.map((f) => f._id);
+      var mutuals = req.user.following.filter((following) => {
+        if (followers.includes(following)) {
+          return true;
+        }
+      });
       var projection = "";
+      postsCount = user.posts.length;
+      followerCount = user.followers.length;
+      followingCount = user.following.length;
       if (user.private) {
         projection = privateProjection;
       } else if (user.hideWardrobe) {
@@ -30,8 +44,16 @@ exports.readOne = (req, res) => {
       }
       User.findById(id)
         .select(projection)
+        .populate("followers", privateProjection)
+        .populate("following", privateProjection)
         .then((user) => {
-          return res.status(200).json(user);
+          var ret = { ...user._doc };
+          ret.postsCount = postsCount;
+          ret.followerCount = followerCount;
+          ret.followingCount = followingCount;
+          ret.mutuals = mutuals;
+          console.log("ret", ret);
+          return res.status(200).json(ret);
         })
         .catch((err) => {
           return res
@@ -136,81 +158,101 @@ exports.follow = (req, res) => {
 
   const id = req.params.id;
 
-  User.findById(id).then((user) => {
-    var isInArray = false;
-    var requests = user.recievedRequests.map((f) => f._id);
-    var followers = user.followers.map((f) => f._id);
-    if (user.private == true) {
-      isInArray = requests.some((f) => {
-        return f.equals(req.user._id);
-      });
-    } else {
-      isInArray = followers.some((f) => {
-        return f.equals(req.user._id);
-      });
-    }
-    if (req.body.follow == "true") {
-      if (isInArray) {
-        console.log("Already following user!");
-        return res.status(400).send({
-          message: "Already following user!",
+  User.findById(id)
+    .then((user) => {
+      var isInArray = false;
+      if (user.private == true) {
+        var requests = user.recievedRequests.map((f) => f._id);
+        isInArray = requests.some((f) => {
+          return f.equals(req.user._id);
+        });
+      } else {
+        var followers = user.followers.map((f) => f._id);
+        isInArray = followers.some((f) => {
+          return f.equals(req.user._id);
         });
       }
 
-      User.findById(req.user._id).then((self) => {
-        if (user._id == self._id) {
-          console.log("Cannot follow yourself!");
+      if (req.body.follow == "true") {
+        if (isInArray) {
+          console.log("Already following user!");
           return res.status(400).send({
-            message: "Cannot follow yourself!",
+            message: "Already following user!",
           });
         }
 
-        if (user.private === true) {
-          user.recievedRequests.push(self);
-          self.sentRequests.push(user);
-          user.save();
-          self.save();
-          return res.status(200).send({
-            message: "Request sent!",
+        User.findById(req.user._id)
+          .then((self) => {
+            if (user._id == self._id) {
+              console.log("Cannot follow yourself!");
+              return res.status(400).send({
+                message: "Cannot follow yourself!",
+              });
+            }
+
+            if (user.private === true) {
+              user.recievedRequests.push(self);
+              self.sentRequests.push(user);
+              user.save();
+              self.save();
+              return res.status(200).send({
+                message: "Request sent!",
+              });
+            }
+
+            user.followers.push(self);
+            self.following.push(user);
+            user.save();
+            self.save();
+            return res.status(200).send({
+              message: "Followed!",
+            });
+          })
+          .catch((err) => {
+            return res.status(500).send({
+              message: "Error following user with id=" + id,
+            });
+          });
+      } else {
+        if (!isInArray) {
+          console.log("You aren't following that user!");
+
+          return res.status(400).send({
+            message: "You aren't following that user!",
           });
         }
 
-        user.followers.push(self);
-        self.following.push(user);
-        user.save();
-        self.save();
-        return res.status(200).send({
-          message: "Followed!",
-        });
-      });
-    } else {
-      if (!isInArray) {
-        console.log("You aren't following that user!");
+        User.findById(req.user._id)
+          .then((self) => {
+            if (user.private === true) {
+              user.recievedRequests.pull(self);
+              self.sentRequests.pull(user);
+              user.save();
+              self.save();
+              return res.status(200).send({
+                message: "Request unsent!",
+              });
+            }
 
-        return res.status(400).send({
-          message: "You aren't following that user!",
-        });
+            user.followers.pull(self);
+            self.following.pull(user);
+            user.save();
+            self.save();
+            return res.status(200).send({
+              message: "Unfollowed!",
+            });
+          })
+          .catch((err) => {
+            return res.status(500).send({
+              message: "Error following user with id=" + id,
+            });
+          });
       }
-
-      User.findById(req.user._id).then((self) => {
-        if (user.private === true) {
-          user.recievedRequests.pull(self);
-          self.sentRequests.pull(user);
-          user.save();
-          self.save();
-          return res.status(200).send({
-            message: "Request unsent!",
-          });
-        }
-
-        user.followers.pull(self);
-        self.following.pull(user);
-        user.save();
-        self.save();
-        return res.status(200).send({
-          message: "Unfollowed!",
-        });
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.status(500).send({
+        message: "Error following user with id=" + id,
       });
-    }
-  });
+    });
 };

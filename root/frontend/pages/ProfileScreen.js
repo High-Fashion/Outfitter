@@ -62,7 +62,7 @@ function SettingsActionsheet(props) {
 export function ProfileHeader(props) {
   return (
     <VStack pb={0.5} safeAreaTop>
-      {props.self ? (
+      {props.self && !props.hideSettings ? (
         <HStack mx={2} alignItems="center" justifyContent="space-between">
           <View>
             <Heading>{props.username}</Heading>
@@ -93,11 +93,13 @@ export function ProfileHeader(props) {
             <View>
               <Heading>{props.username}</Heading>
             </View>
-            <IconButton
-              p={1}
-              onPress={props.openSettings}
-              icon={<MaterialCommunityIcons name="dots-vertical" size={30} />}
-            />
+            {!props.hideSettings && (
+              <IconButton
+                p={1}
+                onPress={props.openSettings}
+                icon={<MaterialCommunityIcons name="dots-vertical" size={30} />}
+              />
+            )}
           </HStack>
         </HStack>
       )}
@@ -180,7 +182,6 @@ function FollowedBy(props) {
 
 function ProfileInfo(props) {
   const { user, refreshUser } = useAuth();
-
   const [followLoading, setFollowLoading] = useState(false);
 
   function pressAvatar() {}
@@ -192,10 +193,10 @@ function ProfileInfo(props) {
   async function follow() {
     setFollowLoading(true);
     var res = await followUser(
-      profile,
-      profile.private
-        ? !user.sentRequests.includes(profile.id)
-        : !user.following.includes(profile.id)
+      props.user,
+      props.user.private
+        ? !user.sentRequests.includes(props.user._id)
+        : !user.following.includes(props.user._id)
     );
     await refreshUser();
     setFollowLoading(false);
@@ -213,19 +214,43 @@ function ProfileInfo(props) {
           <Pressable onPress={pressPosts}>
             <Count
               label={"Posts"}
-              value={props?.user?.posts ? props.user.posts.length : 0}
+              value={
+                props?.user?.private
+                  ? props?.user?.postsCount
+                    ? props.user.postsCount
+                    : 0
+                  : props?.user?.posts
+                  ? props.user.posts.length
+                  : 0
+              }
             />
           </Pressable>
-          <Pressable onPress={pressFollowers}>
+          <Pressable onPress={() => props.peopleScreen("followers")}>
             <Count
               label={"Followers"}
-              value={props?.user?.followers ? props.user.followers.length : 0}
+              value={
+                props?.user?.private
+                  ? props?.user?.followerCount
+                    ? props.user.followerCount
+                    : 0
+                  : props?.user?.followers
+                  ? props.user.followers.length
+                  : 0
+              }
             />
           </Pressable>
-          <Pressable onPress={pressFollowing}>
+          <Pressable onPress={() => props.peopleScreen("following")}>
             <Count
               label={"Following"}
-              value={props?.user?.following ? props.user.following.length : 0}
+              value={
+                props?.user?.private
+                  ? props?.user?.followingCount
+                    ? props.user.followingCount
+                    : 0
+                  : props?.user?.following
+                  ? props.user.following.length
+                  : 0
+              }
             />
           </Pressable>
         </HStack>
@@ -246,10 +271,10 @@ function ProfileInfo(props) {
           {props.self
             ? "Edit Profile"
             : props.user.private
-            ? !user.sentRequests.includes(props.user.id)
+            ? !user.sentRequests.includes(props.user._id)
               ? "Send follow request"
               : "Cancel follow request"
-            : !user.following.includes(props.user.id)
+            : !user.following.includes(props.user._id)
             ? "Follow"
             : "Unfollow"}
         </Button>
@@ -259,6 +284,72 @@ function ProfileInfo(props) {
 }
 
 const { width } = Dimensions.get("window");
+
+function Posts(props) {
+  return (
+    <FlatList
+      style={{ width: width }}
+      data={[1, 2, 3, 4, 5, 6, 7]}
+      numColumns={3}
+      renderItem={({ item, index }) => {
+        return (
+          <View
+            paddingLeft={(index + 1) % 3 == 0 ? 0.5 : 0}
+            paddingRight={(index + 1) % 3 == 1 ? 0.5 : 0}
+            paddingBottom={0.5}
+            style={{ width: width / 3, height: width / 3 }}
+          >
+            <Button flex={1} borderRadius={0} />
+          </View>
+        );
+      }}
+    />
+  );
+}
+
+function Clothing(props) {
+  return (
+    <FlatList
+      style={{ width: width }}
+      data={[1, 2, 3, 4, 5, 6, 7]}
+      numColumns={3}
+      renderItem={({ item, index }) => {
+        return (
+          <View
+            paddingLeft={(index + 1) % 3 == 0 ? 0.5 : 0}
+            paddingRight={(index + 1) % 3 == 1 ? 0.5 : 0}
+            paddingBottom={0.5}
+            style={{ width: width / 3, height: width / 3 }}
+          >
+            <Button flex={1} borderRadius={0} />
+          </View>
+        );
+      }}
+    />
+  );
+}
+
+function Outfits(props) {
+  return (
+    <FlatList
+      style={{ width: width }}
+      data={[1, 2, 3, 4, 5, 6, 7]}
+      numColumns={3}
+      renderItem={({ item, index }) => {
+        return (
+          <View
+            paddingLeft={(index + 1) % 3 == 0 ? 0.5 : 0}
+            paddingRight={(index + 1) % 3 == 1 ? 0.5 : 0}
+            paddingBottom={0.5}
+            style={{ width: width / 3, height: width / 3 }}
+          >
+            <Button flex={1} borderRadius={0} />
+          </View>
+        );
+      }}
+    />
+  );
+}
 
 function ProfileContent(props) {
   if (!props.user) return <></>;
@@ -318,24 +409,17 @@ function ProfileContent(props) {
           />
         </View>
       </HStack>
-
-      <FlatList
-        style={{ width: width }}
-        data={[1, 2, 3, 4, 5, 6, 7]}
-        numColumns={3}
-        renderItem={({ item, index }) => {
-          return (
-            <View
-              paddingLeft={(index + 1) % 3 == 0 ? 0.5 : 0}
-              paddingRight={(index + 1) % 3 == 1 ? 0.5 : 0}
-              paddingBottom={0.5}
-              style={{ width: width / 3, height: width / 3 }}
-            >
-              <Button flex={1} borderRadius={0} />
-            </View>
-          );
-        }}
-      />
+      <ScrollView
+        horizontal={true}
+        snapToInterval={width}
+        disableIntervalMomentum={true}
+      >
+        <HStack>
+          <Posts posts={props.posts} />
+          <Clothing clothing={props.clothing} />
+          <Outfits outfits={props.outfits} />
+        </HStack>
+      </ScrollView>
     </VStack>
   );
 }
@@ -345,18 +429,20 @@ export function ProfileScreen({ navigation, route }) {
   const { isOpen, onOpen, onClose } = useDisclose();
   const self = route?.params?.id ? false : true;
   const [profile, setProfile] = useState({});
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
     async function get() {
       const userData = await getUser(route.params.id);
       setProfile(userData);
+      console.log(userData._id);
     }
     if (self) {
       setProfile(user);
       return;
     }
     get();
-  }, []);
+  }, [user]);
 
   navigation.setOptions({
     header: () => (
@@ -369,13 +455,23 @@ export function ProfileScreen({ navigation, route }) {
     ),
   });
 
+  function peopleScreen(path) {
+    navigation.navigate("PeopleList", {
+      username: profile.username,
+      mutual: profile.mutuals,
+      following: profile.following,
+      followers: profile.followers,
+      path: path,
+    });
+  }
+
   return (
     <View flex={1}>
       {profile.username ? (
         <VStack flex={1}>
           <SettingsActionsheet self={self} open={isOpen} close={onClose} />
-          <ProfileInfo self={self} user={profile} />
-          <ProfileContent self={self} user={profile} />
+          <ProfileInfo self={self} user={profile} peopleScreen={peopleScreen} />
+          <ProfileContent posts={posts} self={self} user={profile} />
         </VStack>
       ) : (
         <VStack flex={1} alignItems="center" justifyContent="space-around">

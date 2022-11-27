@@ -86,7 +86,6 @@ exports.authorize = async (req, res, next) => {
     });
   }
   const access_token = req.headers["authorization"].split(" ")[1];
-  console.log(req.headers);
   if (access_token == null)
     return res.status(401).json({
       success: false,
@@ -108,7 +107,6 @@ exports.authorize = async (req, res, next) => {
             message: "INVALID TOKEN",
           });
         req.user = user;
-        console.log(req.user);
         return next();
       });
     }

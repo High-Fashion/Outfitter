@@ -18,7 +18,7 @@ exports.create = (req, res) => {
 
   // Create a wardrobe
   const wardrobe = new Wardrobe({
-    user: req.user.id,
+    user: req.user._id,
     gender: [...req.body.gender],
     styles: styleObjectList,
   });
