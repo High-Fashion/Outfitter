@@ -17,6 +17,8 @@ import {
   View,
   VStack,
 } from "native-base";
+import ItemCard from "../components/ItemCard";
+import OutfitCard from "../components/OutfitCard";
 import { Avatar as NativeBaseAvatar } from "native-base";
 import Avatar from "../components/Avatar";
 import { useAuth } from "../contexts/Auth";
@@ -289,7 +291,7 @@ function Posts(props) {
   return (
     <FlatList
       style={{ width: width }}
-      data={[1, 2, 3, 4, 5, 6, 7]}
+      data={props.postIds}
       numColumns={3}
       renderItem={({ item, index }) => {
         return (
@@ -311,17 +313,12 @@ function Clothing(props) {
   return (
     <FlatList
       style={{ width: width }}
-      data={[1, 2, 3, 4, 5, 6, 7]}
-      numColumns={3}
+      data={props.clothing}
+      numColumns={1}
       renderItem={({ item, index }) => {
         return (
-          <View
-            paddingLeft={(index + 1) % 3 == 0 ? 0.5 : 0}
-            paddingRight={(index + 1) % 3 == 1 ? 0.5 : 0}
-            paddingBottom={0.5}
-            style={{ width: width / 3, height: width / 3 }}
-          >
-            <Button flex={1} borderRadius={0} />
+          <View paddingBottom={3}>
+            <ItemCard item={item} />
           </View>
         );
       }}
@@ -333,17 +330,12 @@ function Outfits(props) {
   return (
     <FlatList
       style={{ width: width }}
-      data={[1, 2, 3, 4, 5, 6, 7]}
-      numColumns={3}
+      data={props.outfits}
+      numColumns={1}
       renderItem={({ item, index }) => {
         return (
-          <View
-            paddingLeft={(index + 1) % 3 == 0 ? 0.5 : 0}
-            paddingRight={(index + 1) % 3 == 1 ? 0.5 : 0}
-            paddingBottom={0.5}
-            style={{ width: width / 3, height: width / 3 }}
-          >
-            <Button flex={1} borderRadius={0} />
+          <View>
+            <OutfitCard outfit={item} />
           </View>
         );
       }}
@@ -415,7 +407,7 @@ function ProfileContent(props) {
         disableIntervalMomentum={true}
       >
         <HStack>
-          <Posts posts={props.posts} />
+          <Posts posts={props.posts} postIds={props.postIds} />
           <Clothing clothing={props.clothing} />
           <Outfits outfits={props.outfits} />
         </HStack>
@@ -429,7 +421,7 @@ export function ProfileScreen({ navigation, route }) {
   const { isOpen, onOpen, onClose } = useDisclose();
   const self = route?.params?.id ? false : true;
   const [profile, setProfile] = useState({});
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState({});
 
   useEffect(() => {
     async function get() {
@@ -443,6 +435,18 @@ export function ProfileScreen({ navigation, route }) {
     }
     get();
   }, [user]);
+
+  useEffect(() => {
+    async function loadPosts() {
+      await Promise.all(
+        profile.posts.map(async (post) => {
+          const postData = await getPost(post);
+          setPosts({ ...posts, post: postData });
+        })
+      );
+    }
+    loadPosts();
+  }, [profile.posts]);
 
   navigation.setOptions({
     header: () => (
@@ -471,7 +475,14 @@ export function ProfileScreen({ navigation, route }) {
         <VStack flex={1}>
           <SettingsActionsheet self={self} open={isOpen} close={onClose} />
           <ProfileInfo self={self} user={profile} peopleScreen={peopleScreen} />
-          <ProfileContent posts={posts} self={self} user={profile} />
+          <ProfileContent
+            postIds={profile.posts}
+            posts={posts}
+            clothing={profile.wardrobe.items}
+            outfits={profile.wardrobe.outfits}
+            self={self}
+            user={profile}
+          />
         </VStack>
       ) : (
         <VStack flex={1} alignItems="center" justifyContent="space-around">

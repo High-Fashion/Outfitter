@@ -24,7 +24,6 @@ schema.set("toJSON", {
   transform: function (doc, ret) {
     // remove these props when object is serialized
     delete ret._id;
-    delete ret.id;
     delete ret.user;
   },
 });

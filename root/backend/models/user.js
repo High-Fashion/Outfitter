@@ -34,7 +34,6 @@ userSchema.set("toJSON", {
   virtuals: true,
   versionKey: false,
   transform: function (doc, ret) {
-    delete ret.id;
     delete ret.hashedPassword;
   },
 });

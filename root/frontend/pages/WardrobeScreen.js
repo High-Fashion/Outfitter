@@ -377,7 +377,7 @@ function WardrobeScreen({ navigation }) {
         console.log("String", item_data);
         const input_data = searchQuery.toUpperCase();
         if (item_data.includes(input_data)) {
-          return compareType(item_data);
+          return compareType(item.type);
         } else {
           return false;
         }

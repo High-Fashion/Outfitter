@@ -4,7 +4,7 @@ const Wardrobe = require("../models/wardrobe");
 exports.create = (req, res) => {
   console.log("CREATE OUTFIT");
   // Create a outfit
-  const outfit = new Outfit({...req.body, user: req.user._id});
+  const outfit = new Outfit({ ...req.body, user: req.user._id });
 
   // Save
   outfit
@@ -18,7 +18,8 @@ exports.create = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: err.message || "Some error occurred while creating the outfit.",
+        message:
+          err.message || "Some error occurred while creating the outfit.",
       });
     });
 };
@@ -33,7 +34,9 @@ exports.readOne = (req, res) => {
       else res.send(data);
     })
     .catch((err) => {
-      res.status(500).send({ message: "Error retrieving outfit with id=" + id });
+      res
+        .status(500)
+        .send({ message: "Error retrieving outfit with id=" + id });
     });
 };
 
@@ -86,5 +89,20 @@ exports.deleteOne = (req, res) => {
       res.status(500).send({
         message: "Could not delete Outfit with id=" + id,
       });
+    });
+};
+
+exports.copy = (req, res) => {
+  const id = req.params.id;
+  Outfit.findById(id)
+    .then((data) => {
+      if (!data)
+        res.status(404).send({ message: "Not found outfit with id " + id });
+      else res.send(data);
+    })
+    .catch((err) => {
+      res
+        .status(500)
+        .send({ message: "Error retrieving outfit with id=" + id });
     });
 };

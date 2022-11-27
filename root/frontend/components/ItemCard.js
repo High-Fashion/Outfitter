@@ -282,6 +282,7 @@ function CardMenu(props) {
 export default function ItemCard(props) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [updatingName, setUpdatingName] = useState(false);
+  const { user } = useAuth();
 
   const getText = () => {
     var text = "";
