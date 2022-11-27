@@ -18,7 +18,7 @@ import {
 } from "native-base";
 import SearchBar from "../components/SearchBar";
 
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import OutfitCard from "../components/OutfitCard";
 import { useAuth } from "../contexts/Auth";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -166,6 +166,29 @@ function SortBar(props) {
   );
 }
 
+function getOutfitString(outfit) {
+  var result = "";
+
+  Object.keys(outfit).map((slot) => {
+    var item = outfit[slot];
+    Object.keys(item).map((key) => {
+      if (!["category", "material", "pattern", "brand"].includes(key)) return;
+      if (item[key]) {
+        result += item[key];
+      }
+    });
+    if (item.colors) {
+      Object.keys(item.colors).map((color) => {
+        if (item.colors[color]) {
+          result += item.colors[color];
+        }
+      });
+    }
+  });
+  
+  return result.toUpperCase();
+}
+
 function OutfitList(props) {
   return (
     <VStack>
@@ -178,12 +201,40 @@ function OutfitList(props) {
 
 function OutfitScreen({ navigation }) {
   const { user } = useAuth();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [outfits, setOutfits] = useState(user.wardrobe.outfits);
+  const [filteredOutfitList, setFilteredOutfitList] = useState(outfits);
+
+  useEffect(() => {
+    setOutfits(user.wardrobe.outfits);
+  }, [user]);
+
+  useEffect(() => {
+    if (!searchQuery || searchQuery == "") {
+      setFilteredOutfitList(outfits);
+      return;
+    }
+    const newItems = outfits.filter((outfit) => {
+      const outfit_data = getOutfitString(outfit);
+      console.log("Outfit", outfit);
+      console.log("String", outfit_data);
+      const input_data = searchQuery.toUpperCase();
+      return outfit_data.includes(input_data);
+    });
+    setFilteredOutfitList(newItems);
+  }, [outfits, searchQuery]);
+
   return (
     <SafeAreaView flex={1}>
       <ScrollView>
         <VStack space={1} paddingTop={1} w="100%">
-          <SearchBar />
+          <SearchBar 
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          itemList={filteredOutfitList}
+          setFilteredItemList={setFilteredOutfitList}/>
           <SortBar />
+          <Text>{searchQuery}</Text>
           <OutfitList outfits={user.wardrobe.outfits} />
         </VStack>
       </ScrollView>
