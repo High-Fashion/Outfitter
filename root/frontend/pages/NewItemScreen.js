@@ -281,11 +281,17 @@ function ColorPickerSection(props) {
 }
 
 function NewItemScreen({ navigation, route }) {
-  const [image, setImage] = useState(null);
-
+  
   const [formData, setData] = useState({});
+  const [image, setImage] = useState(null);
 //TODO on setData for image mime, type and filename?
 // STORE IMAGE ID in item
+
+  const selectedImage = (image) => {
+    setData({ ...formData, image: image })
+    // console.log("SET DATA TO: ", image);
+  }
+
   const form = [
     {
       name: "Category",
@@ -347,9 +353,16 @@ function NewItemScreen({ navigation, route }) {
   ];
 
   const submit = async () => {
+    // console.log("Click submit image is: ", image);
+    // console.log("\n\nIN SUBMIT FORM DATA IS: ", formdata);
     var res = await addItem(formData);
     if (res == true) navigation.navigate("Wardrobe");
   };
+
+
+  const testImage = () => {
+    console.log(image);
+  }
 
   useEffect(() => {
     if (route?.params?.type) {
@@ -362,11 +375,9 @@ function NewItemScreen({ navigation, route }) {
       });
     }
   }, [route]);
-//START OF FORM
-// TODO send image information through form
   return (
     <ScrollView>
-      <ImageSelecter />
+      <ImageSelecter selectedImage={selectedImage} />
       <VStack mx={5} space={2} paddingBottom={7}>
         {form.map((field) => {
           if (field.horizontal)
@@ -399,6 +410,7 @@ function NewItemScreen({ navigation, route }) {
             );
         })}
         <Button onPress={() => submit()}>Submit</Button>
+        <Button onPress={() => testImage()}>Print Image</Button>
       </VStack>
     </ScrollView>
   );

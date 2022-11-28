@@ -1,8 +1,14 @@
 const Item = require("../models/item");
 const Wardrobe = require("../models/wardrobe");
 
-exports.create = (req, res) => {
+// const multer = require("multer");
+// const {GridFSStorage}= require("multer-gridfs-storage")
+
+exports.create = (req, res, next) => {
   console.log("CREATE OBJECT");
+  console.log("\n\nREQ BODY IS: ", req.body);
+  // req.test = "TESTING!!\n\n";
+  req.data = null;
   // Create a item
   const item = new Item({
     accessory: req.body.accessory,
@@ -15,17 +21,21 @@ exports.create = (req, res) => {
     fit: req.body.fit, //tight, well, loose
     category: req.body.category,
     wardrobe: req.user.wardrobe,
+    // change order of upload and retrieve
+    // image: req.user.image,
   });
-  // do something with image here
-
+  
   // Save
   item
-    .save()
-    .then((data) => {
-      Wardrobe.findById(req.user.wardrobe).then((wardrobe) => {
+  .save()
+  .then((data) => {
+    Wardrobe.findById(req.user.wardrobe).then((wardrobe) => {
         wardrobe.items.push(item);
         wardrobe.save();
-        res.send(data);
+        // res.send(data);
+        console.log("\n\nDATA IS ", data);
+        req.data = data["_id"];
+        next();
       });
     })
     .catch((err) => {
@@ -33,21 +43,31 @@ exports.create = (req, res) => {
         message: err.message || "Some error occurred while creating the item.",
       });
     });
-};
+  };
+  
+  exports.readOne = (req, res) => {
+    const id = req.params.id;
 
-exports.readOne = (req, res) => {
-  const id = req.params.id;
-
-  Item.findById(id)
+    Item.findById(id)
     .then((data) => {
       if (!data)
-        res.status(404).send({ message: "Not found item with id " + id });
+      res.status(404).send({ message: "Not found item with id " + id });
       else res.send(data);
     })
     .catch((err) => {
       res.status(500).send({ message: "Error retrieving item with id=" + id });
     });
-};
+  };
+  
+exports.uploadImage = (req,res, next) => {
+  console.log("IN UPLOAD!",req.test);
+  console.log("\n\nIN UPLOAD DATA IS:\n", req.data);
+  // console.log("UPLOADING IMAGE! DATA IS : \n", res.data);
+  // const db = clis.test is: ", req.test);
+  // const bucket = new mongodb.GridFSBucket(db);
+  // upload.single(req.image);
+  // res.send(data);
+}
 
 exports.readAll = (req, res) => {
   Item.find()

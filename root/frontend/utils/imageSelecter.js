@@ -17,9 +17,8 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { Animated, Dimensions } from "react-native";
 
-export default function ImageSelecter() {
+export default function ImageSelecter({selectedImage}) {
   const [image, setImage] = useState(null);
-  // const []
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -34,6 +33,7 @@ export default function ImageSelecter() {
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
+      selectedImage(result.assets[0].uri);
     }
   };
 
@@ -42,6 +42,7 @@ export default function ImageSelecter() {
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
+      selectedImage(result.assets[0].uri);
     }
   };
 
@@ -67,6 +68,7 @@ export default function ImageSelecter() {
         }}
       >
         <Center style={{ height: fullHeight }}>
+          <Image source={image ? { uri: image } : require("../assets/emptyimage.png")} style={{ width: 200, height: 200}} />
           {image ? (
             <Image
               alt="selected clothing item"

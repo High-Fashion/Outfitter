@@ -33,6 +33,7 @@ exports.validateUpdateWardrobe = (req, res, next) => {
 
 exports.validateCreateItem = (req, res, next) => {
   // Validate request
+  console.log("IN VALIDATE CREATE REQ BODY IS: ", req.body)
   if (!req.body.colors) {
     res.status(400).send({ message: "Content can not be empty!" });
     return;

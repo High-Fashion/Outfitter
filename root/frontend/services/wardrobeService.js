@@ -11,20 +11,16 @@ function getShoes() {}
 function getAccessories() {}
 
 async function addItem(item) {
-  console.log("adding ", item, image);
+  console.log("\n\nadding ", item);
   const response = await axiosInstance.post(
     config.API_URL + "/item/create",
-    item,
-    image
+    item
   );
   console.log(response.data);
   return response.status == 200;
 }
 
 async function editItem(item, id) {
-  // console.log("editing ITEM", item)
-  // console.log("!!!!!!!!!!!!!!!!!!ID is: " , id)
-  // console.log("editing item with id: ", item["id"]);
   const response = await axiosInstance.put(
     config.API_URL + "/item/" + id,
   );
