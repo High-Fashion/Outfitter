@@ -3,7 +3,9 @@ const Schema = mongoose.Schema;
 
 const schema = new Schema({
   name: { type: String, required: false },
+  user: { type: Schema.Types.ObjectId, ref: "User" },
   type: String, //clothing, accessory, shoes
+  imageName: String,
   category: String, //jeans, baseball cap, boots.
   subcategories: [String], // jeans => mom, distressed, high waisted
   brand: String,

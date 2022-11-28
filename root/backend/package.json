@@ -10,6 +10,8 @@
   "author": "Spencer Bass",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.218.0",
+    "@aws-sdk/s3-request-presigner": "^3.218.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.0",
     "cookie-parser": "^1.4.6",
@@ -19,6 +21,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.5.3",
     "mongoose-autopopulate": "^0.16.1",
+    "multer": "^1.4.5-lts.1",
     "validator": "^13.7.0"
   },
   "devDependencies": {

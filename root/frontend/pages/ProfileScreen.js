@@ -440,11 +440,13 @@ export function ProfileScreen({ navigation, route }) {
     async function loadPosts() {
       await Promise.all(
         profile.posts.map(async (post) => {
+          if (!post) return;
           const postData = await getPost(post);
           setPosts({ ...posts, post: postData });
         })
       );
     }
+    if (!profile.posts?.length || profile.posts?.length == 0) return;
     loadPosts();
   }, [profile.posts]);
 

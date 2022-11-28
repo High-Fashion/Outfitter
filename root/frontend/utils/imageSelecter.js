@@ -17,9 +17,9 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { Animated, Dimensions } from "react-native";
 
-export default function ImageSelecter() {
-  const [image, setImage] = useState(null);
+const { width } = Dimensions.get("window");
 
+export default function ImageSelecter(props) {
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -30,16 +30,18 @@ export default function ImageSelecter() {
 
     console.log(result);
 
-    if (!result.cancelled) {
-      setImage(result.uri);
+    if (!result.canceled) {
+      props.setImage(result.assets[0]);
     }
   };
 
   const takePicture = async () => {
-    let result = await ImagePicker.launchCameraAsync();
+    let result = await ImagePicker.launchCameraAsync({
+      allowsEditing: true,
+    });
 
-    if (!result.cancelled) {
-      setImage(result.uri);
+    if (!result.canceled) {
+      props.setImage(result.assets[0]);
     }
   };
 
@@ -51,10 +53,14 @@ export default function ImageSelecter() {
   useEffect(() => {
     Animated.spring(animatedHeight, {
       friction: 100,
-      toValue: open ? fullHeight : startingHeight,
+      toValue: open
+        ? props.image
+          ? (width / props.image.width) * props.image.height
+          : fullHeight
+        : startingHeight,
       useNativeDriver: false,
     }).start();
-  }, [open]);
+  }, [open, props.image]);
 
   return (
     <View bgColor="coolGray.500">
@@ -64,15 +70,21 @@ export default function ImageSelecter() {
           height: animatedHeight,
         }}
       >
-        <Center style={{ height: fullHeight }}>
-          {image ? (
-            <Image
-              alt="selected clothing item"
-              source={{ uri: image }}
-              resizeMode="contain"
-              style={{ width: Dimensions.width, height: 200 }}
-            />
-          ) : (
+        {props.image ? (
+          <Image
+            alt="selected clothing item"
+            source={
+              props.image
+                ? { uri: props.image.uri }
+                : require("../assets/emptyimage.png")
+            }
+            style={{
+              width: width,
+              height: (width / props.image.width) * props.image.height,
+            }}
+          />
+        ) : (
+          <Center style={{ height: fullHeight }}>
             <VStack alignItems={"center"}>
               <Icon
                 color={"gray.600"}
@@ -83,8 +95,8 @@ export default function ImageSelecter() {
                 No Image
               </Text>
             </VStack>
-          )}
-        </Center>
+          </Center>
+        )}
         <VStack
           style={{
             zIndex: 2,

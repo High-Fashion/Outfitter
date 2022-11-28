@@ -33,10 +33,12 @@ exports.validateUpdateWardrobe = (req, res, next) => {
 
 exports.validateCreateItem = (req, res, next) => {
   // Validate request
-  if (!req.body.colors) {
+  if (!req.body.data) {
+    console.log("fail");
     res.status(400).send({ message: "Content can not be empty!" });
     return;
   }
+  req.body = JSON.parse(req.body.data);
   next();
 };
 
@@ -51,7 +53,7 @@ exports.validateUpdateItem = (req, res, next) => {
 
 exports.validateCreateOutfit = (req, res, next) => {
   next();
-}
+};
 
 exports.validateUpdateOutfit = (req, res, next) => {
   next();

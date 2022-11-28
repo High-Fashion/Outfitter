@@ -2,7 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
+const multer = require("multer");
+const upload = multer();
 require("dotenv").config();
 const source = process.env.MONGODB_URI;
 const PORT = process.env.PORT || 5000;
@@ -46,9 +47,8 @@ app.use(function (req, res, next) {
 });
 
 // Body-parser middleware
-app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use(bodyParser.json());
 app.use("/", (req, res, next) => {
   console.log(req.body);
   next();
@@ -64,6 +64,7 @@ app.post("/signout", auth_controller.signout);
 
 app.use("/users", userRouter);
 app.use("/wardrobe", wardrobeRouter);
+
 app.use("/item", itemRouter);
 app.use("/outfit", outfitRouter);
 app.use("/post", postRouter);

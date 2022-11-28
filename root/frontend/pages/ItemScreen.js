@@ -83,7 +83,7 @@ function ColorPickerSection(props) {
 
 function ItemScreen({ navigation, route }) {
   const toast = useToast();
-  const [image, setImage] = useState(null);
+
   const editing = route?.params?.item != undefined;
   const [submitting, setSubmitting] = useState(false);
   const [formData, setData] = useState(
@@ -209,7 +209,10 @@ function ItemScreen({ navigation, route }) {
 
   return (
     <ScrollView>
-      <ImageSelecter />
+      <ImageSelecter
+        image={formData?.image}
+        setImage={(image) => setData({ ...formData, image: image })}
+      />
       <VStack mx={5} space={2} paddingBottom={7}>
         {form.map((field) => {
           if (field.horizontal)

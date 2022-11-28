@@ -9,6 +9,6 @@ const wardrobeSchema = new Schema({
   outfits: [{ type: Schema.Types.ObjectId, ref: "Outfit", autopopulate: true }],
 });
 
-wardrobeSchema.plugin(require("mongoose-autopopulate"))
+wardrobeSchema.plugin(require("mongoose-autopopulate"));
 
 module.exports = mongoose.model("Wardrobe", wardrobeSchema);
