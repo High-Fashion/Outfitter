@@ -5,15 +5,9 @@ const crypto = require("crypto");
 
 exports.create = async (req, res) => {
   console.log("CREATE OBJECT");
-  const imageName = crypto.randomBytes(32).toString("hex");
-  await uploadFile(req.file.buffer, imageName, req.file.mimetype).catch((err) =>
-    console.log(err)
-  );
-
-  const item = new Item({
+  var props = {
     type: req.body.type, //clothing, accessory, shoes
     user: req.user._id,
-    imageName: imageName,
     brand: req.body.brand,
     size: req.body.size,
     colors: req.body.colors,
@@ -23,7 +17,16 @@ exports.create = async (req, res) => {
     category: req.body.category,
     wardrobe: req.user.wardrobe,
     subcategories: req.body.subcategories, // jeans => mom, distressed, high waisted
-  });
+  };
+
+  if (req.file) {
+    const imageName = crypto.randomBytes(32).toString("hex");
+    props = { ...props, imageName: imageName };
+    await uploadFile(req.file.buffer, imageName, req.file.mimetype).catch(
+      (err) => console.log(err)
+    );
+  }
+  const item = new Item(props);
 
   // Save
   item

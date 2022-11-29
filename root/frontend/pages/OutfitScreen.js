@@ -185,15 +185,15 @@ function getOutfitString(outfit) {
       });
     }
   });
-  
+
   return result.toUpperCase();
 }
 
 function OutfitList(props) {
   return (
-    <VStack>
+    <VStack space={3} mt={3}>
       {props.outfits.map((outfit) => {
-        return <OutfitCard outfit={outfit} />;
+        return <OutfitCard key={outfit._id} outfit={outfit} />;
       })}
     </VStack>
   );
@@ -227,18 +227,21 @@ function OutfitScreen({ navigation }) {
   return (
     <SafeAreaView flex={1}>
       <ScrollView>
-        <VStack space={1} paddingTop={1} w="100%">
-          <SearchBar 
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          itemList={filteredOutfitList}
-          setFilteredItemList={setFilteredOutfitList}/>
-          <SortBar />
-          <Text>{searchQuery}</Text>
-          <OutfitList outfits={user.wardrobe.outfits} />
+        <VStack space={1} paddingTop={1} pb={10} w="100%">
+          <View mx={2} pt={1}>
+            <SearchBar
+              hideFilter
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              itemList={filteredOutfitList}
+              setFilteredItemList={setFilteredOutfitList}
+            />
+          </View>
+          <OutfitList outfits={filteredOutfitList} />
         </VStack>
       </ScrollView>
       <Fab
+        colorScheme={"indigo"}
         renderInPortal={false}
         shadow={2}
         size="lg"

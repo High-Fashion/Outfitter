@@ -21,6 +21,7 @@ const wardrobeRouter = require("./routes/wardrobe.routes");
 const itemRouter = require("./routes/item.routes");
 const outfitRouter = require("./routes/outfit.routes");
 const postRouter = require("./routes/post.routes");
+const { getObjectSignedUrl } = require("./utils/s3client");
 
 // MongoDB
 mongoose.connect(source);
@@ -55,6 +56,12 @@ app.use("/", (req, res, next) => {
 });
 
 //Routing
+app.get("/image/:id", async (req, res) => {
+  const imageUrl = await getObjectSignedUrl(req.params.id).catch((err) => {
+    return res.status(400).send({ message: "Could not find imageURL" });
+  });
+  res.status(200).json({ uri: imageUrl });
+});
 app.post("/signup", validateSignUp, auth_controller.signup);
 app.post("/signin", validateSignIn, auth_controller.signin);
 app.post("/refresh", auth_controller.refresh);

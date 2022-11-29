@@ -35,10 +35,11 @@ import {
 } from "@expo/vector-icons";
 
 import capitalize from "../utils/capitalize";
-import { deleteItem } from "../services/wardrobeService";
-import { useRef, useState } from "react";
+import { deleteItem, getImage } from "../services/wardrobeService";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../contexts/Auth";
 import ToastAlert from "./ToastAlert";
+import IconImage from "./IconImage";
 import colors from "../assets/colors.json";
 
 const colorCodes = colors["codes"];
@@ -48,90 +49,6 @@ const CARD_HEIGHT = height / 2;
 const CARD_WIDTH = width - 50;
 const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
 import { editItem } from "../services/wardrobeService";
-
-const getIcon = (category, subcategories) => {
-  switch (category) {
-    case "skirts":
-      return require("../assets/clothing_icons/pleated_skirt_outline.png");
-    case "heels":
-      return require("../assets/clothing_icons/heels_outline.png");
-    case "pants":
-    case "jeans":
-      return require("../assets/clothing_icons/jeans_outline.png");
-    case "shirts":
-      return require("../assets/clothing_icons/polo_outline.png");
-    case "hoodies":
-      return require("../assets/clothing_icons/hoodie_outline.png");
-    case "sweaters":
-      return require("../assets/clothing_icons/sweater_outline.png");
-    case "shorts":
-      return require("../assets/clothing_icons/shorts_outline.png");
-    case "coats & jackets":
-      switch (subcategories) {
-        case subcategories.contains("peacoat"):
-          return require("../assets/clothing_icons/coat_outline.png");
-        case subcategories.contains("puffer"):
-          return require("../assets/clothing_icons/puffy_jacket_outline.png");
-        default:
-          return require("../assets/clothing_icons/pocket_jacket_outline.png");
-      }
-    case "suits":
-    case "blazers & sport coats":
-      return require("../assets/clothing_icons/suit_jacket_outline.png");
-    case "dresses":
-      return require("../assets/clothing_icons/dress_outline.png");
-    case "tops":
-      return require("../assets/clothing_icons/bralette_outline.png");
-    case "hats":
-      return require("../assets/clothing_icons/hat_outline.png");
-    case "glasses":
-      return require("../assets/clothing_icons/glasses_outline.png");
-    case "boots":
-    case "flats":
-    case "sandals":
-    case "sneakers":
-      return require("../assets/clothing_icons/sneaker_outline.png");
-    case "jewelry":
-      switch (subcategories) {
-        default:
-        case subcategories.contains("watch"):
-          return require("../assets/clothing_icons/watch_outline.png");
-      }
-    case "swimwear":
-    case "belts":
-    case "formal":
-    case "bags":
-    case "other":
-    case "hair":
-    default:
-      return "";
-  }
-};
-
-function ItemIcon(props) {
-  return (
-    <VStack overflow={"hidden"} alignItems={"center"} height={"3xs"}>
-      <Image
-        resizeMode="contain"
-        tintColor={colorCodes[props.item.colors.primary]}
-        alt="image missing"
-        source={getIcon(props.item.category, props.item.subcategories)}
-      />
-    </VStack>
-  );
-}
-
-function ItemImage(props) {
-  return (
-    <View>
-      {props.item.image ? (
-        <Image alt="image missing" />
-      ) : (
-        <ItemIcon item={props.item} />
-      )}
-    </View>
-  );
-}
 
 function CardMenu(props) {
   const navigation = useNavigation();
@@ -279,9 +196,44 @@ function CardMenu(props) {
   );
 }
 
+function ItemImage(props) {
+  const [uri, setUri] = useState(null);
+
+  useEffect(() => {
+    async function get() {
+      const imageData = await getImage(props.item.imageName);
+      console.log(imageData);
+      setUri(imageData);
+    }
+    if (!props.item.imageName) return;
+    get();
+  }, []);
+
+  return (
+    <View flex="1">
+      {uri ? (
+        <View>
+          {props.layout && (
+            <Image
+              flex="1"
+              style={{ width: props.layout.width, height: props.layout.height }}
+              source={{ uri: uri }}
+              resizeMode="cover"
+              alt="image missing"
+            />
+          )}
+        </View>
+      ) : (
+        <IconImage item={props.item} />
+      )}
+    </View>
+  );
+}
+
 export default function ItemCard(props) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [updatingName, setUpdatingName] = useState(false);
+  const [layout, setLayout] = useState({});
   const { user } = useAuth();
 
   const getText = () => {
@@ -345,21 +297,36 @@ export default function ItemCard(props) {
         borderColor="gray.300"
         overflow={"hidden"}
       >
-        <VStack>
+        <VStack
+          position="relative"
+          height="sm"
+          onLayout={(e) =>
+            setLayout({
+              width: e.nativeEvent.layout.width,
+              height: e.nativeEvent.layout.height,
+            })
+          }
+        >
           <View position={"absolute"} zIndex={2} top="2" right="1">
             <CardMenu
               setDeleted={props.setDeleted}
-              flex={1}
               setIsLoaded={setIsLoaded}
               item={props.item}
             />
           </View>
-          <ItemImage item={props.item} />
+          <View position={"absolute"} zIndex={1} top={0} left={0}>
+            <ItemImage layout={layout} item={props.item} />
+          </View>
           <View
             borderWidth={1}
             borderBottomWidth={0}
             borderColor="gray.300"
+            backgroundColor="white"
             borderRadius={"2xl"}
+            position={"absolute"}
+            zIndex={2}
+            bottom={-1}
+            left={0}
           >
             <VStack space={2} mx={2} mb={2} my={1}>
               <View>

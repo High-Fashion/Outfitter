@@ -12,14 +12,33 @@ function getShoes() {}
 
 function getAccessories() {}
 
+async function getImage(imageName) {
+  console.log(imageName);
+  return await axiosInstance
+    .get(config.API_URL + "/image/" + imageName)
+    .then((res) => {
+      if (res.status == 200) {
+        return res.data.uri;
+      } else {
+        return false;
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      return false;
+    });
+}
+
 async function addItem(item) {
   console.log("adding ", item);
   var formData = new FormData();
-  let uri = item.image.uri;
-  let filename = uri.split("/").pop();
-  let match = /\.(\w+)$/.exec(filename);
-  let type = match ? `image/${match[1]}` : `image`;
-  formData.append("image", { uri: uri, name: filename, type });
+  if (item.image) {
+    let uri = item.image.uri;
+    let filename = uri.split("/").pop();
+    let match = /\.(\w+)$/.exec(filename);
+    let type = match ? `image/${match[1]}` : `image`;
+    formData.append("image", { uri: uri, name: filename, type });
+  }
   var newItem = item;
   delete newItem.image;
   formData.append("data", JSON.stringify(item));
@@ -111,4 +130,5 @@ module.exports = {
   addOutfit,
   deleteOutfit,
   editOutfit,
+  getImage,
 };
