@@ -24,9 +24,10 @@ import { useNavigation } from "@react-navigation/native";
 import Avatar from "../components/Avatar";
 import CheckButton from "../components/CheckButton";
 import { useAuth } from "../contexts/Auth";
+import { updateUser } from "../services/userService"
 
 export default function EditProfileScreen() {
-    const { user } = useAuth();
+    const { user, refreshUser } = useAuth();
     const [formData, setData] = useState({
         firstName: user.firstName,
         lastName: user.lastName,
@@ -50,8 +51,13 @@ export default function EditProfileScreen() {
         );
     }
 
-    function handleSubmit() {
-        console.log(formData);
+    const handleSubmit = async () => {
+        // console.log(user._id)
+        // console.log(formData);
+       var res = await updateUser(user._id, user);
+       if (res == true) {
+        refreshUser();
+       }
     }
 
     const navigation = useNavigation();
