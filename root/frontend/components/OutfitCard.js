@@ -16,6 +16,7 @@ import {
   Menu,
   ScrollView,
   Input,
+  Heading,
 } from "native-base";
 import {
   Entypo,
@@ -566,7 +567,7 @@ export default function OutfitCard(props) {
   };
 
   return (
-    <View shadow="5" mx={2} borderTopRadius="xl" borderBottomRadius={"2xl"}>
+    <View shadow="5" borderTopRadius="xl" borderBottomRadius={"2xl"}>
       <RatingModal
         rating={rating}
         setRating={setRating}
@@ -584,13 +585,15 @@ export default function OutfitCard(props) {
         overflow={"hidden"}
       >
         <VStack>
-          <View position={"absolute"} zIndex={2} top="2" right="1">
-            <CardMenu
-              setDeleted={props.setDeleted}
-              flex={1}
-              item={props.item}
-            />
-          </View>
+          {!props.info && (
+            <View position={"absolute"} zIndex={2} top="2" right="1">
+              <CardMenu
+                setDeleted={props.setDeleted}
+                flex={1}
+                item={props.item}
+              />
+            </View>
+          )}
           <OutfitImage outfit={outfit} />
 
           <View
@@ -601,18 +604,22 @@ export default function OutfitCard(props) {
             borderRadius={"2xl"}
           >
             <VStack space={2} mx={2} mb={2} my={1}>
-              <View>
-                <Input
-                  rightElement={<Icon as={Entypo} name="edit" size="lg" />}
-                  fontSize="xl"
-                  p={0}
-                  defaultValue={name}
-                  onChangeText={setName}
-                  variant="underlined"
-                  fontWeight="bold"
-                  onBlur={updateName}
-                />
-              </View>
+              {!props.info ? (
+                <View>
+                  <Input
+                    rightElement={<Icon as={Entypo} name="edit" size="lg" />}
+                    fontSize="xl"
+                    p={0}
+                    defaultValue={name}
+                    onChangeText={setName}
+                    variant="underlined"
+                    fontWeight="bold"
+                    onBlur={updateName}
+                  />
+                </View>
+              ) : (
+                <Heading>{name}</Heading>
+              )}
               {Object.keys(outfit).map((slot) => {
                 if (
                   slot == "user" ||

@@ -1,9 +1,11 @@
 const User = require("../models/user");
 
 exports.get = (req, res) => {
-  User.findById(req.user._id).then((user) => {
-    return res.status(200).json(user);
-  });
+  User.findById(req.user._id)
+    .populate("followers following")
+    .then((user) => {
+      return res.status(200).json(user);
+    });
 };
 
 const privateProjection =

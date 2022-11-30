@@ -9,6 +9,7 @@ import {
   HStack,
   Icon,
   IconButton,
+  Menu,
   Pressable,
   ScrollView,
   Spinner,
@@ -32,7 +33,9 @@ import {
 import { Dimensions } from "react-native";
 import { useState, useEffect } from "react";
 import { HeaderBackButton } from "@react-navigation/elements";
-import { getUser, followUser } from "../services/userService";
+import { getUser } from "../services/userService";
+import { useNavigation } from "@react-navigation/native";
+import FollowButton from "../components/FollowButton";
 
 function SettingsActionsheet(props) {
   const { signOut } = useAuth();
@@ -61,6 +64,42 @@ function SettingsActionsheet(props) {
   );
 }
 
+function PostMenu(props) {
+  const navigation = useNavigation();
+
+  return (
+    <Menu
+      placement="bottom left"
+      trigger={(triggerProps) => {
+        return (
+          <IconButton
+            {...triggerProps}
+            p={1}
+            icon={<MaterialIcons name="add-box" size={30} />}
+          />
+        );
+      }}
+    >
+      <Menu.Item
+        onPress={() => navigation.navigate("Post", { type: "outfit" })}
+      >
+        <FontAwesome5 name="person-booth" size={18} color="muted.800" />
+        <Text color="muted.800" fontSize="md" fontWeight="semibold">
+          Post Outfit Picture
+        </Text>
+      </Menu.Item>
+      <Menu.Item
+        onPress={() => navigation.navigate("Post", { type: "clothing" })}
+      >
+        <FontAwesome5 name="tshirt" size={18} color="muted.800" />
+        <Text color="muted.800" fontSize="md" fontWeight="semibold">
+          Post Clothing Picture
+        </Text>
+      </Menu.Item>
+    </Menu>
+  );
+}
+
 export function ProfileHeader(props) {
   return (
     <VStack pb={0.5} safeAreaTop>
@@ -70,10 +109,7 @@ export function ProfileHeader(props) {
             <Heading>{props.username}</Heading>
           </View>
           <HStack>
-            <IconButton
-              p={1}
-              icon={<MaterialIcons name="add-box" size={30} />}
-            />
+            <PostMenu />
             <IconButton
               onPress={props.openSettings}
               p={1}
@@ -183,26 +219,10 @@ function FollowedBy(props) {
 }
 
 function ProfileInfo(props) {
-  const { user, refreshUser } = useAuth();
-  const [followLoading, setFollowLoading] = useState(false);
-
   function pressAvatar() {}
   function pressPosts() {}
   function pressFollowers() {}
   function pressFollowing() {}
-  function editProfile() {}
-
-  async function follow() {
-    setFollowLoading(true);
-    var res = await followUser(
-      props.user,
-      props.user.private
-        ? !user.sentRequests.includes(props.user._id)
-        : !user.following.includes(props.user._id)
-    );
-    await refreshUser();
-    setFollowLoading(false);
-  }
 
   return (
     <VStack>
@@ -265,21 +285,7 @@ function ProfileInfo(props) {
           {props.user?.bio && <Text>{props.user.bio}</Text>}
           <FollowedBy user={props.user} />
         </VStack>
-        <Button
-          isLoading={followLoading}
-          onPress={props.self ? editProfile : follow}
-          p={1}
-        >
-          {props.self
-            ? "Edit Profile"
-            : props.user.private
-            ? !user.sentRequests.includes(props.user._id)
-              ? "Send follow request"
-              : "Cancel follow request"
-            : !user.following.includes(props.user._id)
-            ? "Follow"
-            : "Unfollow"}
-        </Button>
+        <FollowButton self={props.self} user={props.user} />
       </VStack>
     </VStack>
   );

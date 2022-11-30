@@ -417,7 +417,9 @@ function WardrobeScreen({ navigation }) {
             />
           </View>
           {false && <SortBar open={() => setShowSortModal(true)} />}
-          <ClothingList removeItem={removeItem} value={filteredItemList} />
+          <View mx="2">
+            <ClothingList removeItem={removeItem} value={filteredItemList} />
+          </View>
         </VStack>
       </ScrollView>
       <AddItemFab

@@ -27,6 +27,8 @@ import axiosInstance from "./utils/axiosInstance";
 import config from "./config";
 import { Keyboard } from "react-native";
 import Footer from "./components/Footer.js";
+import PostScreen from "./pages/PostScreen.js";
+import PeopleListScreen from "./pages/PeopleListScreen.js";
 
 const Stack = createNativeStackNavigator();
 
@@ -127,6 +129,11 @@ export default function Router() {
                     name="Root"
                     component={Footer}
                     options={{ headerShown: false }}
+                  />
+                  <Stack.Screen name="Post" component={PostScreen} />
+                  <Stack.Screen
+                    name="PeopleList"
+                    component={PeopleListScreen}
                   />
                   <Stack.Screen
                     name="Item"

@@ -194,7 +194,7 @@ function ItemScreen({ navigation, route }) {
   useEffect(() => {
     if (editing) {
       navigation.setOptions({
-        headerTitle: "Editting " + capitalize(route.params.item.type),
+        headerTitle: "Editing " + capitalize(route.params.item.type),
       });
     } else if (route?.params?.type) {
       navigation.setOptions({

@@ -24,6 +24,7 @@ import {
 } from "react";
 import { Animated } from "react-native";
 import { useAuth } from "../contexts/Auth";
+import FollowButton from "../components/FollowButton";
 
 const { width } = Dimensions.get("window");
 const { height } = Dimensions.get("window");
@@ -37,7 +38,12 @@ function UserList(props) {
         data={[...props.data]}
         renderItem={({ item }) => {
           return (
-            <HStack flex={1} justifyContent="space-between" mr={4}>
+            <HStack
+              key={item._id}
+              flex={1}
+              justifyContent="space-between"
+              mr={4}
+            >
               <HStack>
                 <Avatar />
                 <VStack>
@@ -47,7 +53,7 @@ function UserList(props) {
               </HStack>
               {item.username != user.username && (
                 <VStack justifyContent={"space-around"}>
-                  <Button>Follow</Button>
+                  <FollowButton user={item} />
                 </VStack>
               )}
             </HStack>
@@ -151,14 +157,12 @@ export default function PeopleListScreen({ navigation, route }) {
     ),
   });
 
-  if (route.params.mutual.length > 0) {
-  }
   const labels =
-    route.params.mutual.length > 0
+    route?.params?.mutual?.length > 0
       ? [
           {
             id: 0,
-            label: route.params.mutual.length + " mutual",
+            label: route?.params?.mutual?.length + " mutual",
           },
           {
             id: 1,
@@ -182,7 +186,6 @@ export default function PeopleListScreen({ navigation, route }) {
 
   const [secondHeaderHeight, setHeight] = useState(0);
   const headerHeight = useHeaderHeight();
-  const bottomHeight = useBottomTabBarHeight();
   const initialScreen = ["mutual", "followers", "following"].indexOf(
     route.params.path
   );
@@ -208,13 +211,13 @@ export default function PeopleListScreen({ navigation, route }) {
         <Animated.ScrollView
           ref={ref}
           horizontal={true}
-          height={height - headerHeight - bottomHeight - secondHeaderHeight}
+          height={height - headerHeight - secondHeaderHeight}
           pagingEnabled
           bounces={false}
           contentOffset={{
             y: 0,
             x:
-              route.params.mutual.length > 0
+              route?.params?.mutual?.length > 0
                 ? initialScreen * width
                 : (initialScreen - 1) * width,
           }}
@@ -223,7 +226,7 @@ export default function PeopleListScreen({ navigation, route }) {
             { useNativeDriver: false }
           )}
         >
-          {route.params.mutual.length > 0 && (
+          {route?.params?.mutual?.length > 0 && (
             <UserList data={route.params.mutual} />
           )}
           <UserList data={route.params.followers} />

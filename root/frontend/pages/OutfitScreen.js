@@ -237,7 +237,9 @@ function OutfitScreen({ navigation }) {
               setFilteredItemList={setFilteredOutfitList}
             />
           </View>
-          <OutfitList outfits={filteredOutfitList} />
+          <View mx="2">
+            <OutfitList outfits={filteredOutfitList} />
+          </View>
         </VStack>
       </ScrollView>
       <Fab

@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "frontend",
-    "slug": "frontend",
+    "name": "Outfitter",
+    "slug": "outfitter",
+    "description": "Wardrobe tracker, outfit builder, and social media application.",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -12,17 +13,25 @@
       "backgroundColor": "#FFFFFF"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/9c2c7b5c-9469-4db3-a447-4bf95dfc53cc"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.spencerbass1001.outfitter"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.spencerbass1001.outfitter"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -31,9 +40,18 @@
       [
         "expo-image-picker",
         {
-          "photosPermission": "The app accesses your photos to recommend clothing"
+          "photosPermission": "The app accesses your photos to share and post images."
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "9c2c7b5c-9469-4db3-a447-4bf95dfc53cc"
+      }
+    },
+    "owner": "spencerbass1001",
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    }
   }
 }

@@ -40,7 +40,6 @@ function HomeScreenNav() {
         options={{ headerShown: false }}
       />
       <Stack.Screen name="UserProfile" component={ProfileScreen} />
-      <Stack.Screen name="PeopleList" component={PeopleListScreen} />
     </Stack.Navigator>
   );
 }

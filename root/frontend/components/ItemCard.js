@@ -286,7 +286,7 @@ export default function ItemCard(props) {
   };
 
   return (
-    <View shadow="5" mx={2} borderTopRadius="xl" borderBottomRadius={"2xl"}>
+    <View shadow="5" borderTopRadius="xl" borderBottomRadius={"2xl"}>
       <Box
         flex={1}
         zIndex={1}
@@ -307,13 +307,15 @@ export default function ItemCard(props) {
             })
           }
         >
-          <View position={"absolute"} zIndex={2} top="2" right="1">
-            <CardMenu
-              setDeleted={props.setDeleted}
-              setIsLoaded={setIsLoaded}
-              item={props.item}
-            />
-          </View>
+          {!props.info && (
+            <View position={"absolute"} zIndex={2} top="2" right="1">
+              <CardMenu
+                setDeleted={props.setDeleted}
+                setIsLoaded={setIsLoaded}
+                item={props.item}
+              />
+            </View>
+          )}
           <View position={"absolute"} zIndex={1} top={0} left={0}>
             <ItemImage layout={layout} item={props.item} />
           </View>
@@ -329,18 +331,22 @@ export default function ItemCard(props) {
             left={0}
           >
             <VStack space={2} mx={2} mb={2} my={1}>
-              <View>
-                <Input
-                  rightElement={<Icon as={Entypo} name="edit" size="lg" />}
-                  fontSize="xl"
-                  p={0}
-                  defaultValue={name}
-                  onChangeText={setName}
-                  variant="underlined"
-                  fontWeight="bold"
-                  onBlur={updateName}
-                />
-              </View>
+              {!props.info ? (
+                <View>
+                  <Input
+                    rightElement={<Icon as={Entypo} name="edit" size="lg" />}
+                    fontSize="xl"
+                    p={0}
+                    defaultValue={name}
+                    onChangeText={setName}
+                    variant="underlined"
+                    fontWeight="bold"
+                    onBlur={updateName}
+                  />
+                </View>
+              ) : (
+                <Heading>{name}</Heading>
+              )}
               <HStack flexWrap={"wrap"} space={1}>
                 <View py="0.5">
                   <Button
