@@ -12,6 +12,7 @@ import SignInScreen from "./pages/SignInScreen.js";
 import * as SplashScreen from "expo-splash-screen";
 import NewOutfitScreen from "./pages/NewOutfitScreen.js";
 import ItemScreen from "./pages/ItemScreen.js";
+import EditProfileScreen from "./pages/EditProfileScreen.js";
 
 import {
   BodyShape,
@@ -141,6 +142,11 @@ export default function Router() {
                         ? route.params.title
                         : "New Outfit",
                     })}
+                  />
+                  <Stack.Screen
+                    name="EditProfile"
+                    component={EditProfileScreen}
+                    options={({ title: "Edit Profile" })}
                   />
                 </Stack.Group>
               ) : (
