@@ -22,20 +22,52 @@ function QuizScreen({ navigation: { navigate }, route }) {
     { label: "Emo", value: "emo" },
     { label: "Goth", value: "goth", parent: "emo" },
     { label: "Punk", value: "punk", parent: "emo" },
+    { label: "Grunge", value: "grunge", parent: "emo" },
+    { label: "Rocker", value: "rocker", parent: "emo" },
 
     { label: "Urban", value: "urban" },
     { label: "Hipster", value: "hipster", parent: "urban" },
     { label: "Vintage", value: "vintage", parent: "urban" },
     { label: "Streetwear", value: "streetwear", parent: "urban" },
+    { label: "Retro", value: "retro", parent: "urban" },
+    { label: "Y2K", value: "y2k", parent: "urban" },
 
     { label: "Bohemian", value: "bohemian" },
+    { label: "Hipster", value: "hispter", parent: "bohemian" },
+
+    { label: "Athleisure", value: "athleisure" },
+    { label: "Sporty", value: "sporty", parent: "athleisure" },
+
+    { label: "Business Casual", value: "business_casual" },
+    { label: "Minimalist", value: "minimalist", parent: "business_casual" },
 
     { label: "Surfer", value: "surfer" },
-    { label: "Beach", value: "beach", parent: "surfer" },
+    { label: "Beachy", value: "beachy", parent: "surfer" },
+
     { label: "Country", value: "country" },
+    { label: "Wild West", value: "wild_west", parent: "country"},
+    { label: "Cottagecore", value: "cottagecore", parent: "country" },
+    { label: "Fairycore", value: "fairycore", parent: "country" },
+    { label: "Southern", value: "southern", parent: "country" },
 
     { label: "Geeky", value: "geeky" },
-    { label: "nerdy", value: "nerdy", parent: "geeky" },
+    { label: "Nerdy", value: "nerdy", parent: "geeky" },
+
+    { label: "Preppy", value: "preppy" },
+    { label: "Academia", value: "academia", parent: "preppy" },
+
+    { label: "Haute", value: "haute" },
+
+    { label: "K-Pop", value: "kpop" },
+
+    { label: "Kawaii", value: "kawaii" },
+
+    { label: "Biker", value: "biker" },
+
+    { label: "Androgynous", value: "androgynous" },
+
+    { label: "Casual", value: "casual"},
+    { label: "loungewear", value: "loungewear", parent: "casual" },
   ]);
 
   const updateValue = (text) => {
