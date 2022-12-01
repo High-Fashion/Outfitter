@@ -277,6 +277,9 @@ function CardMenu(props) {
       refreshUser();
     }
   }
+  function similarScreen(){
+    navigation.navigate("Similar Outfits", {outfit: props.outfit});
+  }
   function outfit() {}
   function post() {
     navigation.navigate("Post", { type: "outfit", outfit: props.outfit });
@@ -354,7 +357,7 @@ function CardMenu(props) {
             Delete Outfit
           </Text>
         </Menu.Item>
-        <Menu.Item isDisabled onPress={outfit}>
+        <Menu.Item  onPress={similarScreen}>
           <Icon
             color="muted.800"
             as={MaterialIcons}
