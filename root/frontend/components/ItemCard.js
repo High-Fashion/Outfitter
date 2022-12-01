@@ -89,7 +89,9 @@ function CardMenu(props) {
     }
   }
   function outfit() {}
-  function post() {}
+  function post() {
+    navigation.navigate("Post", { type: "clothing", item: props.item });
+  }
   function share() {}
 
   return (
@@ -174,7 +176,7 @@ function CardMenu(props) {
             Add to New Outfit
           </Text>
         </Menu.Item>
-        <Menu.Item isDisabled onPress={post}>
+        <Menu.Item onPress={post}>
           <Icon
             color="muted.800"
             as={Ionicons}
@@ -286,7 +288,11 @@ export default function ItemCard(props) {
   };
 
   return (
-    <View shadow="5" borderTopRadius="xl" borderBottomRadius={"2xl"}>
+    <View
+      shadow={props.hideShadow ? "0" : "5"}
+      borderTopRadius="xl"
+      borderBottomRadius={"2xl"}
+    >
       <Box
         flex={1}
         zIndex={1}
@@ -308,7 +314,7 @@ export default function ItemCard(props) {
           }
         >
           {!props.info && (
-            <View position={"absolute"} zIndex={2} top="2" right="1">
+            <View position={"absolute"} zIndex={5} top="2" right="1">
               <CardMenu
                 setDeleted={props.setDeleted}
                 setIsLoaded={setIsLoaded}
@@ -316,7 +322,7 @@ export default function ItemCard(props) {
               />
             </View>
           )}
-          <View position={"absolute"} zIndex={1} top={0} left={0}>
+          <View position={"absolute"} zIndex={4} top={0} left={0}>
             <ItemImage layout={layout} item={props.item} />
           </View>
           <View
@@ -326,7 +332,7 @@ export default function ItemCard(props) {
             backgroundColor="white"
             borderRadius={"2xl"}
             position={"absolute"}
-            zIndex={2}
+            zIndex={5}
             bottom={-1}
             left={0}
           >

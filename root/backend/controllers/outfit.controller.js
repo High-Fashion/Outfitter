@@ -1,10 +1,22 @@
 const Outfit = require("../models/outfit");
 const Wardrobe = require("../models/wardrobe");
+const { uploadFile } = require("../utils/s3client");
+const crypto = require("crypto");
 
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
   console.log("CREATE OUTFIT");
   // Create a outfit
-  const outfit = new Outfit({ ...req.body, user: req.user._id });
+  var props = { ...req.body, user: req.user._id };
+
+  if (req.file) {
+    const imageName = crypto.randomBytes(32).toString("hex");
+    props = { ...props, imageName: imageName };
+    await uploadFile(req.file.buffer, imageName, req.file.mimetype).catch(
+      (err) => console.log(err)
+    );
+  }
+
+  const outfit = new Outfit(props);
 
   // Save
   outfit

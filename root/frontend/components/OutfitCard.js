@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import {
+  Spinner,
   Button,
   FlatList,
   HStack,
@@ -249,7 +250,7 @@ function CardMenu(props) {
   const cancelRef = useRef(null);
 
   function edit() {
-    navigation.navigate("Outfit", { outfit: props.outfit });
+    navigation.navigate("NewOutfit", { outfit: props.outfit });
   }
 
   async function _delete() {
@@ -273,12 +274,13 @@ function CardMenu(props) {
       },
     });
     if (response) {
-      props.setDeleted(true);
       refreshUser();
     }
   }
   function outfit() {}
-  function post() {}
+  function post() {
+    navigation.navigate("Post", { type: "outfit", outfit: props.outfit });
+  }
   function share() {}
 
   return (
@@ -363,7 +365,7 @@ function CardMenu(props) {
             Generate Similar Outfit
           </Text>
         </Menu.Item>
-        <Menu.Item isDisabled onPress={post}>
+        <Menu.Item onPress={post}>
           <Icon
             color="muted.800"
             as={Ionicons}
@@ -399,7 +401,7 @@ function ItemImage(props) {
   }, []);
 
   return (
-    <View>
+    <View flex="1">
       {uri ? (
         <Image
           style={{ width: props.dims.width, height: props.dims.height }}
@@ -413,20 +415,9 @@ function ItemImage(props) {
   );
 }
 
-function OutfitImage(props) {
+function ItemImageArray(props) {
   const [cardLayout, setCardLayout] = useState({});
   const [count, setCount] = useState(0);
-  const [uri, setUri] = useState(null);
-
-  useEffect(() => {
-    async function get() {
-      const imageData = await getImage(props.outfit.imageName);
-      console.log(imageData);
-      setUri(imageData);
-    }
-    if (!props.outfit.imageName) return;
-    get();
-  }, []);
 
   useEffect(() => {
     var c = 0;
@@ -466,6 +457,7 @@ function OutfitImage(props) {
 
   return (
     <View
+      flex="1"
       onLayout={(e) =>
         setCardLayout({
           x: e.nativeEvent.layout.x,
@@ -477,51 +469,82 @@ function OutfitImage(props) {
     >
       {cardLayout.width && count > 0 && (
         <View alignItems={"center"}>
-          {uri ? (
-            <Image
-              style={{ width: "100%", height: "100%" }}
-              source={{ uri: uri }}
-              alt="image missing"
-            />
-          ) : (
-            <HStack flexWrap={"wrap"}>
-              {Object.keys(props.outfit).map((slot) => {
-                if (
-                  slot == "user" ||
-                  slot == "_id" ||
-                  slot == "id" ||
-                  slot == "imageName" ||
-                  props.outfit[slot].length == 0
-                ) {
-                  return;
-                } else {
-                  return (
-                    <View>
-                      {props.outfit[slot].map((item) => {
-                        return (
-                          <HStack
-                            alignItems={"center"}
-                            style={{
+          <HStack flexWrap={"wrap"}>
+            {Object.keys(props.outfit).map((slot) => {
+              if (
+                slot == "user" ||
+                slot == "_id" ||
+                slot == "id" ||
+                slot == "imageName" ||
+                props.outfit[slot].length == 0
+              ) {
+                return;
+              } else {
+                return (
+                  <View>
+                    {props.outfit[slot].map((item) => {
+                      return (
+                        <HStack
+                          alignItems={"center"}
+                          style={{
+                            width: cardLayout.width / count,
+                            height: cardLayout.width / count,
+                          }}
+                        >
+                          <ItemImage
+                            item={item}
+                            dims={{
                               width: cardLayout.width / count,
                               height: cardLayout.width / count,
                             }}
-                          >
-                            <ItemImage
-                              item={item}
-                              dims={{
-                                width: cardLayout.width / count,
-                                height: cardLayout.width / count,
-                              }}
-                            />
-                          </HStack>
-                        );
-                      })}
-                    </View>
-                  );
-                }
-              })}
-            </HStack>
+                          />
+                        </HStack>
+                      );
+                    })}
+                  </View>
+                );
+              }
+            })}
+          </HStack>
+        </View>
+      )}
+    </View>
+  );
+}
+
+function OutfitImage(props) {
+  const [uri, setUri] = useState(null);
+
+  useEffect(() => {
+    async function get() {
+      const imageData = await getImage(props.outfit.imageName);
+      console.log(imageData);
+      setUri(imageData);
+    }
+    if (!props.outfit.imageName) return;
+    get();
+  }, []);
+
+  return (
+    <View flex="1">
+      {uri ? (
+        <View>
+          {props.layout && (
+            <Image
+              style={{ width: props.layout.width, height: props.layout.width }}
+              source={{ uri: uri }}
+              resizeMode="cover"
+              alt="image missing"
+            />
           )}
+        </View>
+      ) : (
+        <View
+          flex="1"
+          pb={props.spacer - 10}
+          style={{ width: props.layout.width }}
+        >
+          <ItemImageArray outfit={props.outfit} />
         </View>
       )}
     </View>
@@ -534,9 +557,11 @@ export default function OutfitCard(props) {
   const { refreshUser } = useAuth();
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [updatingName, setUpdatingName] = useState(false);
+  const [spacerHeight, setSpacerHeight] = useState(0);
   const [name, setName] = useState(
     props.outfit?.name ? props.outfit.name : "Untitled Outfit"
   );
+  const [layout, setLayout] = useState({});
   const remove = async (id) => {
     const response = await deleteOutfit(id);
     if (response) {
@@ -584,24 +609,42 @@ export default function OutfitCard(props) {
         borderColor="gray.300"
         overflow={"hidden"}
       >
-        <VStack>
+        <VStack
+          position="relative"
+          onLayout={(e) => {
+            setLayout({
+              width: e.nativeEvent.layout.width,
+              height: e.nativeEvent.layout.height,
+            });
+          }}
+        >
           {!props.info && (
-            <View position={"absolute"} zIndex={2} top="2" right="1">
-              <CardMenu
-                setDeleted={props.setDeleted}
-                flex={1}
-                item={props.item}
-              />
+            <View position={"absolute"} zIndex={5} top="2" right="1">
+              <CardMenu flex={1} outfit={props.outfit} />
             </View>
           )}
-          <OutfitImage outfit={outfit} />
+          <View position={"relative"} zIndex={4} top={0} left={0}>
+            <OutfitImage
+              layout={layout}
+              outfit={outfit}
+              spacer={spacerHeight}
+            />
+          </View>
 
           <View
+            onLayout={(e) => {
+              setSpacerHeight(e.nativeEvent.layout.height);
+            }}
             borderWidth={1}
             borderBottomWidth={0}
             borderColor="gray.300"
             backgroundColor="white"
             borderRadius={"2xl"}
+            position={"absolute"}
+            zIndex={5}
+            bottom={-1}
+            left={0}
+            width="100%"
           >
             <VStack space={2} mx={2} mb={2} my={1}>
               {!props.info ? (
@@ -620,37 +663,40 @@ export default function OutfitCard(props) {
               ) : (
                 <Heading>{name}</Heading>
               )}
-              {Object.keys(outfit).map((slot) => {
-                if (
-                  slot == "user" ||
-                  slot == "_id" ||
-                  slot == "id" ||
-                  outfit[slot].length == 0
-                )
-                  return;
-                return (
-                  <HStack
-                    mx={2}
-                    alignItems="center"
-                    justifyContent="space-between"
-                  >
-                    <View>
-                      <Text>{capitalize(slot)}</Text>
-                    </View>
-                    {outfit[slot].map((item) => {
-                      return (
-                        <Button
-                          variant={"subtle"}
-                          p={1}
-                          style={{ flexShrink: 1 }}
-                        >
-                          {item.name ? item.name : getText(item)}
-                        </Button>
-                      );
-                    })}
-                  </HStack>
-                );
-              })}
+              <VStack>
+                {Object.keys(outfit).map((slot) => {
+                  if (
+                    slot == "user" ||
+                    slot == "_id" ||
+                    slot == "id" ||
+                    slot.includes("image") ||
+                    outfit[slot].length == 0
+                  )
+                    return;
+                  return (
+                    <HStack
+                      mx={2}
+                      alignItems="center"
+                      justifyContent="space-between"
+                    >
+                      <View>
+                        <Text>{capitalize(slot)}</Text>
+                      </View>
+                      {outfit[slot].map((item) => {
+                        return (
+                          <Button
+                            variant={"subtle"}
+                            p={1}
+                            style={{ flexShrink: 1 }}
+                          >
+                            {item.name ? item.name : getText(item)}
+                          </Button>
+                        );
+                      })}
+                    </HStack>
+                  );
+                })}
+              </VStack>
             </VStack>
           </View>
         </VStack>

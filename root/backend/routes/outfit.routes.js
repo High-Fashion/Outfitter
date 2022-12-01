@@ -1,4 +1,8 @@
 const router = require("express").Router();
+const multer = require("multer");
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 const {
   validateCreateOutfit,
@@ -7,7 +11,12 @@ const {
 
 const outfit_controller = require("../controllers/outfit.controller");
 
-router.post("/create", validateCreateOutfit, outfit_controller.create);
+router.post(
+  "/create",
+  upload.single("image"),
+  validateCreateOutfit,
+  outfit_controller.create
+);
 router.get("/", outfit_controller.readAll);
 router.get("/:id", outfit_controller.readOne);
 router.get("/:id/copy", outfit_controller.copy);

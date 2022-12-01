@@ -8,10 +8,12 @@ import {
   View,
   Box,
   HStack,
+  Icon,
 } from "native-base";
 import { HeaderBackButton } from "@react-navigation/elements";
 import capitalize from "../utils/capitalize";
 import { Dimensions, StyleSheet } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
 
 const { width } = Dimensions.get("window");
 
@@ -112,22 +114,39 @@ function ModelImage(props) {
     <View>
       <View style={styles.container[focus]}>
         {focus == "whole" && (
-          <Image style={styles.image.whole} source={imageCache.whole} />
+          <Image
+            alt="image missing"
+            style={styles.image.whole}
+            source={imageCache.whole}
+          />
         )}
         {focus == "head" && (
-          <Image style={styles.image.head} source={imageCache.head} />
+          <Image
+            alt="image missing"
+            style={styles.image.head}
+            source={imageCache.head}
+          />
         )}
         {focus == "torso" && !handFocus && (
           <Image
+            alt="image missing"
             style={styles.image.torso(armFocus)}
             source={imageCache.whole}
           />
         )}
         {focus == "torso" && handFocus && (
-          <Image style={styles.image.hand(armFocus)} source={imageCache.hand} />
+          <Image
+            alt="image missing"
+            style={styles.image.hand(armFocus)}
+            source={imageCache.hand}
+          />
         )}
         {focus == "legs" && (
-          <Image style={styles.image[focus]} source={imageCache.whole} />
+          <Image
+            alt="image missing"
+            style={styles.image[focus]}
+            source={imageCache.whole}
+          />
         )}
       </View>
     </View>
@@ -161,37 +180,68 @@ function ModelButtons(props) {
         onPress={() => setFocus("head")}
         flex={1}
         borderRadius="full"
-        variant="outline"
-      ></Button>
+        variant="unstyled"
+      >
+        <View bgColor={"white"} borderRadius="full">
+          <Icon as={AntDesign} name="pluscircle" size="lg" color="indigo.400" />
+        </View>
+      </Button>
       <HStack flex={3} justifyContent="space-between">
         <Button
-          variant="outline"
+          variant="unstyled"
           flex={1}
           onPress={() => {
             setFocus("torso");
             setArmFocus("left");
           }}
-        ></Button>
+        >
+          <View bgColor={"white"} borderRadius="full">
+            <Icon
+              as={AntDesign}
+              name="pluscircle"
+              size="lg"
+              color="indigo.400"
+            />
+          </View>
+        </Button>
+        <Button variant="unstyled" flex={5} onPress={() => setFocus("torso")}>
+          <View bgColor={"white"} borderRadius="full">
+            <Icon
+              as={AntDesign}
+              name="pluscircle"
+              size="lg"
+              color="indigo.400"
+            />
+          </View>
+        </Button>
         <Button
-          variant="outline"
-          flex={5}
-          onPress={() => setFocus("torso")}
-        ></Button>
-        <Button
-          variant="outline"
+          variant="unstyled"
           flex={1}
           onPress={() => {
             setFocus("torso");
             setArmFocus("right");
           }}
-        ></Button>
+        >
+          <View bgColor={"white"} borderRadius="full">
+            <Icon
+              as={AntDesign}
+              name="pluscircle"
+              size="lg"
+              color="indigo.400"
+            />
+          </View>
+        </Button>
       </HStack>
       <Button
         width="50%"
         flex={4}
         onPress={() => setFocus("legs")}
-        variant="outline"
-      ></Button>
+        variant="unstyled"
+      >
+        <View bgColor={"white"} borderRadius="full">
+          <Icon as={AntDesign} name="pluscircle" size="lg" color="indigo.400" />
+        </View>
+      </Button>
     </Box>
   );
   const HeadButtons = () => (
@@ -205,47 +255,85 @@ function ModelButtons(props) {
       alignItems="center"
     >
       <Button
-        variant="outline"
+        variant="unstyled"
         width="60%"
         flex={8}
         onPress={() => setSlot("head")}
       >
-        <Text>Head</Text>
+        <View bgColor={"white"} borderRadius="full">
+          <Icon as={AntDesign} name="pluscircle" size="lg" color="indigo.400" />
+        </View>
       </Button>
 
       <HStack justifyContent="space-between" width="70%" flex={6}>
-        <Button flex={1} variant="outline" onPress={() => setSlot("eyes")}>
-          <Text>Eyes</Text>
+        <Button flex={1} variant="unstyled" onPress={() => setSlot("eyes")}>
+          <View bgColor={"white"} borderRadius="full">
+            <Icon
+              as={AntDesign}
+              name="pluscircle"
+              size="lg"
+              color="indigo.400"
+            />
+          </View>
         </Button>
       </HStack>
       <HStack justifyContent="space-between" width="65%" flex={8}>
-        <Button flex={1} variant="outline" onPress={() => setSlot("left ear")}>
-          <Text>LE</Text>
+        <Button flex={1} variant="unstyled" onPress={() => setSlot("left ear")}>
+          <View bgColor={"white"} borderRadius="full">
+            <Icon
+              as={AntDesign}
+              name="pluscircle"
+              size="lg"
+              color="indigo.400"
+            />
+          </View>
         </Button>
         <Button flex={1} variant="ghost"></Button>
-        <Button flex={5} variant="outline" onPress={() => setSlot("nose")}>
-          <Text>Nose</Text>
+        <Button flex={5} variant="unstyled" onPress={() => setSlot("nose")}>
+          <View bgColor={"white"} borderRadius="full">
+            <Icon
+              as={AntDesign}
+              name="pluscircle"
+              size="lg"
+              color="indigo.400"
+            />
+          </View>
         </Button>
         <Button flex={1} variant="ghost"></Button>
-        <Button flex={1} variant="outline" onPress={() => setSlot("right ear")}>
-          <Text>RE</Text>
+        <Button
+          flex={1}
+          variant="unstyled"
+          onPress={() => setSlot("right ear")}
+        >
+          <View bgColor={"white"} borderRadius="full">
+            <Icon
+              as={AntDesign}
+              name="pluscircle"
+              size="lg"
+              color="indigo.400"
+            />
+          </View>
         </Button>
       </HStack>
       <Button
         width="55%"
-        variant="outline"
+        variant="unstyled"
         flex={4}
         onPress={() => setSlot("mouth")}
       >
-        <Text>Mouth</Text>
+        <View bgColor={"white"} borderRadius="full">
+          <Icon as={AntDesign} name="pluscircle" size="lg" color="indigo.400" />
+        </View>
       </Button>
       <Button
         width="50%"
-        variant="outline"
+        variant="unstyled"
         flex={8}
         onPress={() => setSlot("neck")}
       >
-        <Text>Neck</Text>
+        <View bgColor={"white"} borderRadius="full">
+          <Icon as={AntDesign} name="pluscircle" size="lg" color="indigo.400" />
+        </View>
       </Button>
     </VStack>
   );
@@ -260,44 +348,72 @@ function ModelButtons(props) {
       alignItems="center"
     >
       <HStack flex={1}>
-        <Button flex={1} variant="outline" onPress={() => setFocus("head")}>
-          <Text>Head</Text>
+        <Button flex={1} variant="unstyled" onPress={() => setFocus("head")}>
+          <View bgColor={"white"} borderRadius="full">
+            <Icon as={AntDesign} name="upcircle" size="md" color="indigo.400" />
+          </View>
         </Button>
       </HStack>
       <HStack flex={4} justifyContent="space-between">
         <Button
           flex={1}
-          variant="outline"
+          variant="unstyled"
           onPress={() => {
             setFocus("torso");
             setArmFocus("left");
           }}
         >
-          <Text>Left Arm</Text>
+          <View bgColor={"white"} borderRadius="full">
+            <Icon
+              as={AntDesign}
+              name="leftcircle"
+              size="md"
+              color="indigo.400"
+            />
+          </View>
         </Button>
         <VStack flex={3}>
-          <Button flex={3} variant="outline" onPress={() => setSlot("torso")}>
-            <Text>Top</Text>
+          <Button flex={3} variant="unstyled" onPress={() => setSlot("torso")}>
+            <Icon
+              as={AntDesign}
+              name="pluscircle"
+              size="sm"
+              color="indigo.400"
+            />
           </Button>
           <Button
             flex={1}
-            variant="outline"
+            variant="unstyled"
             onPress={() => {
               setFocus("legs");
             }}
           >
-            <Text>Legs</Text>
+            <View bgColor={"white"} borderRadius="full">
+              <Icon
+                as={AntDesign}
+                name="downcircle"
+                size="md"
+                color="indigo.400"
+              />
+            </View>
           </Button>
         </VStack>
         <Button
           flex={1}
-          variant="outline"
+          variant="unstyled"
           onPress={() => {
             setFocus("torso");
             setArmFocus("right");
           }}
         >
-          <Text>Right Arm</Text>
+          <View bgColor={"white"} borderRadius="full">
+            <Icon
+              as={AntDesign}
+              name="rightcircle"
+              size="lg"
+              color="indigo.400"
+            />
+          </View>
         </Button>
       </HStack>
     </VStack>
@@ -315,35 +431,63 @@ function ModelButtons(props) {
       <VStack>
         <Button
           flex={3}
-          variant="outline"
+          variant="unstyled"
           onPress={() => setSlot(armFocus + " upper arm")}
         >
-          <Text>Upper</Text>
+          <View bgColor={"white"} borderRadius="full">
+            <Icon
+              as={AntDesign}
+              name="pluscircle"
+              size="lg"
+              color="indigo.400"
+            />
+          </View>
         </Button>
         <Button
           flex={4}
-          variant="outline"
+          variant="unstyled"
           onPress={() => setSlot(armFocus + " forearm")}
         >
-          <Text>Forearm</Text>
+          <View bgColor={"white"} borderRadius="full">
+            <Icon
+              as={AntDesign}
+              name="pluscircle"
+              size="lg"
+              color="indigo.400"
+            />
+          </View>
         </Button>
         <Button
           flex={1}
-          variant="outline"
+          variant="unstyled"
           onPress={() => {
             setSlot(armFocus + " wrist");
           }}
         >
-          <Text>Wrist</Text>
+          <View bgColor={"white"} borderRadius="full">
+            <Icon
+              as={AntDesign}
+              name="pluscircle"
+              size="lg"
+              color="indigo.400"
+            />
+          </View>
         </Button>
         <Button
           flex={3}
-          variant="outline"
+          variant="unstyled"
           onPress={() => {
             setHandFocus(true);
           }}
         >
-          <Text>Hand</Text>
+          <View bgColor={"white"} borderRadius="full">
+            <Icon
+              as={AntDesign}
+              name="pluscircle"
+              size="lg"
+              color="indigo.400"
+            />
+          </View>
         </Button>
       </VStack>
     </VStack>
@@ -359,48 +503,75 @@ function ModelButtons(props) {
       alignItems="center"
     >
       <Button
-        variant="outline"
+        variant="unstyled"
         width="60%"
         flex={1}
         onPress={() => setSlot("waist")}
       >
-        <Text>Waist</Text>
+        <View bgColor={"white"} borderRadius="full">
+          <Icon as={AntDesign} name="pluscircle" size="lg" color="indigo.400" />
+        </View>
       </Button>
       <Button
         width="55%"
-        variant="outline"
+        variant="unstyled"
         flex={1}
         onPress={() => setSlot("hips")}
       >
-        <Text>Hips</Text>
+        <View bgColor={"white"} borderRadius="full">
+          <Icon as={AntDesign} name="pluscircle" size="lg" color="indigo.400" />
+        </View>
       </Button>
       <Button
         width="50%"
-        variant="outline"
+        variant="unstyled"
         flex={8}
         onPress={() => setSlot("legs")}
       >
-        <Text>Pants</Text>
+        <View bgColor={"white"} borderRadius="full">
+          <Icon as={AntDesign} name="pluscircle" size="lg" color="indigo.400" />
+        </View>
       </Button>
       <HStack justifyContent="space-between" width="50%" flex={1}>
         <Button
           flex={1}
-          variant="outline"
+          variant="unstyled"
           onPress={() => setSlot("left ankle")}
         >
-          <Text>Left Ankle</Text>
+          <View bgColor={"white"} borderRadius="full">
+            <Icon
+              as={AntDesign}
+              name="pluscircle"
+              size="lg"
+              color="indigo.400"
+            />
+          </View>
         </Button>
         <Button
           flex={1}
-          variant="outline"
+          variant="unstyled"
           onPress={() => setSlot("right ankle")}
         >
-          <Text>Right Ankle</Text>
+          <View bgColor={"white"} borderRadius="full">
+            <Icon
+              as={AntDesign}
+              name="pluscircle"
+              size="lg"
+              color="indigo.400"
+            />
+          </View>
         </Button>
       </HStack>
       <HStack flex={2} width="50%" justifyContent="space-between">
-        <Button flex={1} variant="outline" onPress={() => setSlot("feet")}>
-          <Text>Feet</Text>
+        <Button flex={1} variant="unstyled" onPress={() => setSlot("feet")}>
+          <View bgColor={"white"} borderRadius="full">
+            <Icon
+              as={AntDesign}
+              name="pluscircle"
+              size="lg"
+              color="indigo.400"
+            />
+          </View>
         </Button>
       </HStack>
     </VStack>
@@ -415,20 +586,20 @@ function ModelButtons(props) {
       }}
     >
       <View style={styles.button_container.thumb}>
-        <Button variant="ghost" onPress={() => setSlot("thumb")} />
+        <Button variant="ghost" onPress={() => setSlot("thumb")}></Button>
       </View>
       <View style={styles.button_container.index}>
-        <Button variant="ghost" onPress={() => setSlot("index")} />
+        <Button variant="ghost" onPress={() => setSlot("index")}></Button>
       </View>
       <View style={styles.button_container.middle}>
-        <Button variant="ghost" onPress={() => setSlot("middle")} />
+        <Button variant="ghost" onPress={() => setSlot("middle")}></Button>
       </View>
 
       <View style={styles.button_container.ring}>
-        <Button variant="ghost" onPress={() => setSlot("ring")} />
+        <Button variant="ghost" onPress={() => setSlot("ring")}></Button>
       </View>
       <View style={styles.button_container.pinky}>
-        <Button variant="ghost" onPress={() => setSlot("pinky")} />
+        <Button variant="ghost" onPress={() => setSlot("pinky")}></Button>
       </View>
     </View>
   );

@@ -244,7 +244,7 @@ function ItemScreen({ navigation, route }) {
               </FormControl>
             );
         })}
-        <Button leftIcon={submitting && <Spinner />} onPress={() => finish()}>
+        <Button isLoading={submitting} onPress={() => finish()}>
           Submit
         </Button>
       </VStack>

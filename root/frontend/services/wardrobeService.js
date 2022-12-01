@@ -92,14 +92,34 @@ async function deleteItem(id) {
 
 function getOutfits() {}
 
-async function addOutfit(outfit) {
-  console.log("adding ", outfit);
-  const response = await axiosInstance.post(
-    config.API_URL + "/outfit/create",
-    outfit
-  );
-  console.log(response.data);
-  return response.status == 200;
+async function addOutfit(outfit, image) {
+  var formData = new FormData();
+  if (image) {
+    let uri = image.uri;
+    let filename = uri.split("/").pop();
+    let match = /\.(\w+)$/.exec(filename);
+    let type = match ? `image/${match[1]}` : `image`;
+    formData.append("image", { uri: uri, name: filename, type });
+  }
+  formData.append("data", JSON.stringify(outfit));
+  const keys = await tokenService.getCredentials();
+  if (!keys) return false;
+  const { access_token } = keys;
+  return await axios
+    .post(config.API_URL + "/outfit/create", formData, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+        "Content-Type": "multipart/form-data",
+      },
+    })
+    .then((res) => {
+      console.log("res", res);
+      return res.status == 200;
+    })
+    .catch((err) => {
+      console.log("err", err);
+      return false;
+    });
 }
 
 async function deleteOutfit(id) {

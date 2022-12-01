@@ -162,7 +162,17 @@ export default function PostScreen({ route, navigation }) {
 
   const editing = route?.params?.post != undefined;
   const [submitting, setSubmitting] = useState(false);
-  const [formData, setData] = useState(editing ? { ...route.params.post } : {});
+  const [formData, setData] = useState(
+    editing
+      ? { ...route.params.post }
+      : route.params.type == "clothing"
+      ? {
+          item: route.params?.item ? route.params.item : undefined,
+        }
+      : {
+          outfit: route.params?.outfit ? route.params.outfit : undefined,
+        }
+  );
 
   async function addPost() {}
   async function editPost() {}

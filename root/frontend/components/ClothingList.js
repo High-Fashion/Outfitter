@@ -31,11 +31,7 @@ export default function ClothingList(props) {
             return (
               <HStack key={item._id} alignItems="center">
                 <Checkbox value={item} />
-                <ItemCard
-                  hideButtons={props.hideButtons}
-                  key={item._id}
-                  item={item}
-                />
+                <ItemCard info item={item} />
               </HStack>
             );
           })}

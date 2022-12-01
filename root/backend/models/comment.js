@@ -9,6 +9,7 @@ const commentSchema = new Schema({
   replies: [
     { type: Schema.Types.ObjectId, ref: "Comment", autopopulate: true },
   ],
+  created: { type: Date, default: Date.now },
 });
 
 commentSchema.plugin(require("mongoose-autopopulate"));
