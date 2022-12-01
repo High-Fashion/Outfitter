@@ -2,11 +2,15 @@ import { Button } from "native-base";
 import { useState } from "react";
 import { useAuth } from "../contexts/Auth";
 import { followUser } from "../services/userService";
+import { useNavigation } from "@react-navigation/native";
 
 export default function FollowButton(props) {
   const { user, refreshUser } = useAuth();
   const [followLoading, setFollowLoading] = useState(false);
-  function editProfile() {}
+  const navigation = useNavigation();
+  function editProfile() {
+    navigation.navigate("EditProfile");
+  }
 
   async function follow() {
     setFollowLoading(true);
