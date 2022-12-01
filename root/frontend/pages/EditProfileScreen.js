@@ -52,11 +52,10 @@ export default function EditProfileScreen() {
     }
 
     const handleSubmit = async () => {
-        // console.log(user._id)
-        // console.log(formData);
-       var res = await updateUser(user._id, user);
+       var res = await updateUser(user._id, formData);
        if (res == true) {
         refreshUser();
+        console.log("RES IS: ", res);
        }
     }
 
