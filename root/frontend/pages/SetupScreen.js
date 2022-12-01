@@ -1,3 +1,4 @@
+//https://theconceptwardrobe.com/build-a-wardrobe/pear-body-shape for outfit sugesstions based off body type
 import { useEffect, useState } from "react";
 import {
   Text,
@@ -173,7 +174,9 @@ export function BodyShape({ navigation }) {
       description:
         "People with an inverted triangle body shape have shoulders and a bust that are wider than their hips.",
       suggestions:
-        "ops that have some shaping around the waist and more open necklines, or clothing that shows off your legs. fitted but not waist defined dresses. A-line dresses and skirts. skinny pants over flares or boot legs.",
+        "Fitted but not waist defined dresses. A-line dresses and skirts. Straight and cigarette-style pants. U or V necklines.",
+      female_suggestions:"Fitted but not waist defined dresses. A-line dresses and skirts. Straight and cigarette-style pants. U or V necklines.",
+      male_suggestions:"Looser t-shirts, wide cargo shorts or pants, loose fitting jeans",
     },
     {
       name: "Rectangle",
@@ -183,13 +186,13 @@ export function BodyShape({ navigation }) {
       description:
         "People with a rectangle body shape have a waist measurement that is roughly the same as their hips or shoulders.",
       suggestions:
-        "try to define your waist with dresses that have a defined waist line or tuck shirts into jeans and skirts. If you feel a little boxy, try to add more curves to your clothing in the form of scoop neck shirts instead of V-necks or dresses that have flowy skirts to add volume on you lower half. off-the-shoulder tops, tube dresses, and belted waists",
+        "Wide V, slash, or scoop neckline. Turtlenecks, crew, funnel, flared longsleeve, button-down, ruffleand halter tops. Off-the-shoulder tops, tube dresses, and belted waists. Double breasted, belted, and straight jackets. Trench coats and peacoats. Wide and cargo pants.",
       subtypes: [
         {
           name: "Athletic",
           description:
             "The athletic body type is similar to the rectangle body type in that the shoulder and hip measurements are roughly the same, however athletic body types are generally more muscular and tend to have a waist that is narrower than the hips and shoulders.",
-          suggestions: "halter, strapless, and racerback styles",
+          suggestions: "halter, strapless, and racerback styles. Wear wrap and flared dresses to add volume. Plunging necklines, U or V neck, or tube dresses are great options as well.",
         },
       ],
     },
@@ -201,7 +204,7 @@ export function BodyShape({ navigation }) {
       description:
         "People with a pear body shape have hips that are wider than both their shoulders and waist.",
       suggestions:
-        "You’ve got a heavier bottom half of your bod if this is you. If you aren’t in love with this, define your waist with tucked shirts or dresses with a defined waist seam. If you prefer not to define your waist, statement necklaces or hairdos are a great way to draw the eye up and make your body look longer!",
+        "You’ve got a heavier bottom half of your bod if this is you. If you aren’t in love with this, define your waist with tucked shirts or dresses with a defined waist seam. If you prefer not to define your waist, statement necklaces or hairdos are a great way to draw the eye up and make your body look longer! Wear stripes, ruffle, or crop tops. Wear a cropped denim or long blazer jacket. A-Line and Trench coats are great options for colder temperatures.",
       subtypes: [
         {
           name: "Diamond",
@@ -240,7 +243,7 @@ export function BodyShape({ navigation }) {
         },
       ],
       suggestions:
-        "Form-fitting or tailored clothing. Your waist is already there, but it’s up to you if you want to define it or not! If you want to define it, follow the advice for rectangles and pears. Thinner hourglasses might want to add volume to their bottom half with full skirts or dresses while a more curvy hourglass may want to go with a form fitting bottom option. ",
+        "Form-fitting or tailored clothing. Your waist is already there, but it’s up to you if you want to define it or not! If you want to define it, follow the advice for rectangles and pears. Thinner hourglasses might want to add volume to their bottom half with full skirts or dresses while a more curvy hourglass may want to go with a form fitting bottom option. Wear peplum, belted, or fitted shirts. Short, fitted leather, belted cardigan, or fitted blazers are great jacket options. Trench, coachman, wrap, or A-Line coats are great for colder temperatures. Wear slim, wide, straight, flared, or bootcut pants.",
     },
     {
       name: "Round",
@@ -294,6 +297,8 @@ export function BodyShape({ navigation }) {
                       </HStack>
                       <Text>{content.description}</Text>
                       <Text>{content.suggestions}</Text>
+                      <Text>{content.female_suggestions}</Text>
+                      <Text>{content.male_suggestions}</Text>
                       {content.subtypes &&
                         content.subtypes.map((subtype) => {
                           return (
