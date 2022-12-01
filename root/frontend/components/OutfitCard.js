@@ -382,6 +382,12 @@ function CardMenu(props) {
             Share to Friend
           </Text>
         </Menu.Item>
+        <Menu.Item onPress={() => props.setShowRatingModal(true)}>
+          <Icon color="muted.800" as={AntDesign} name="staro" size="md" />
+          <Text color="muted.800" fontSize="md" fontWeight="semibold">
+            Rate Outfit
+          </Text>
+        </Menu.Item>
       </Menu>
     </View>
   );
@@ -554,7 +560,7 @@ function OutfitImage(props) {
 export default function OutfitCard(props) {
   const [rating, setRating] = useState(0);
   const outfit = flattenObj(props.outfit);
-  const { refreshUser } = useAuth();
+  const { user, refreshUser } = useAuth();
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [updatingName, setUpdatingName] = useState(false);
   const [spacerHeight, setSpacerHeight] = useState(0);
@@ -568,6 +574,7 @@ export default function OutfitCard(props) {
       refreshUser();
     }
   };
+
 
   const toast = useToast();
   const updateName = async () => {
@@ -620,7 +627,12 @@ export default function OutfitCard(props) {
         >
           {!props.info && (
             <View position={"absolute"} zIndex={5} top="2" right="1">
-              <CardMenu flex={1} outfit={props.outfit} />
+              <CardMenu
+                flex={1}
+                outfit={props.outfit}
+                showRatingModal={showRatingModal}
+                setShowRatingModal={setShowRatingModal}
+              />
             </View>
           )}
           <View position={"relative"} zIndex={4} top={0} left={0}>

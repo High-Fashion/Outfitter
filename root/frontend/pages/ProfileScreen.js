@@ -18,6 +18,7 @@ import {
   View,
   VStack,
 } from "native-base";
+import FollowButton from "../components/FollowButton";
 import ItemCard from "../components/ItemCard";
 import OutfitCard from "../components/OutfitCard";
 import { Avatar as NativeBaseAvatar } from "native-base";
@@ -33,9 +34,8 @@ import {
 import { Dimensions } from "react-native";
 import { useState, useEffect } from "react";
 import { HeaderBackButton } from "@react-navigation/elements";
-import { getUser } from "../services/userService";
+import { getUser, followUser } from "../services/userService";
 import { useNavigation } from "@react-navigation/native";
-import FollowButton from "../components/FollowButton";
 
 function SettingsActionsheet(props) {
   const { signOut } = useAuth();
@@ -219,10 +219,29 @@ function FollowedBy(props) {
 }
 
 function ProfileInfo(props) {
+  const { user, refreshUser } = useAuth();
+  const [followLoading, setFollowLoading] = useState(false);
+  const navigation = useNavigation();
+
   function pressAvatar() {}
   function pressPosts() {}
   function pressFollowers() {}
   function pressFollowing() {}
+  function editProfile() {
+    navigation.navigate("EditProfile");
+  }
+
+  async function follow() {
+    setFollowLoading(true);
+    var res = await followUser(
+      props.user,
+      props.user.private
+        ? !user.sentRequests.includes(props.user._id)
+        : !user.following.includes(props.user._id)
+    );
+    await refreshUser();
+    setFollowLoading(false);
+  }
 
   return (
     <VStack>
