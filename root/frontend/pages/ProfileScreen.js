@@ -18,6 +18,7 @@ import {
   View,
   VStack,
 } from "native-base";
+import FollowButton from "../components/FollowButton";
 import ItemCard from "../components/ItemCard";
 import OutfitCard from "../components/OutfitCard";
 import { Avatar as NativeBaseAvatar } from "native-base";
