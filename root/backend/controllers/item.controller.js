@@ -62,10 +62,10 @@ exports.readOne = (req, res) => {
 exports.readAll = (req, res) => {
   Item.find()
     .then((data) => {
-      res.send(data);
+      return res.send(data);
     })
     .catch((err) => {
-      res.status(500).send({
+      return res.status(500).send({
         message: err.message || "Some error occurred while retrieving items.",
       });
     });
@@ -77,13 +77,13 @@ exports.updateOne = (req, res) => {
   Item.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
     .then((data) => {
       if (!data) {
-        res.status(404).send({
+        return res.status(404).send({
           message: `Cannot update item with id=${id}. Maybe item was not found!`,
         });
       } else res.send({ message: "Item was updated successfully." });
     })
     .catch((err) => {
-      res.status(500).send({
+      return res.status(500).send({
         message: "Error updating item with id=" + id,
       });
     });

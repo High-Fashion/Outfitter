@@ -162,6 +162,27 @@ function ItemScreen({ navigation, route }) {
     },
   ];
 
+  if ((editing === true && route?.params?.item?.type == "top" || route?.params?.item?.type == "bottoms") || (editing === false && route?.params?.type == "top" || route?.params?.type == "bottoms")) {
+    form.push({
+      name: "Fit",
+      component: (
+        <Select
+        defaultValue={formData["fit"]}
+        onValueChange={(text) => setData({ ...formData, fit: text })}
+        placeholder={"Select fit"}
+      >
+        {["tight", "normal", "baggy"].map((pattern) => (
+          <Select.Item
+            key={pattern}
+            label={pattern.charAt(0).toUpperCase() + pattern.slice(1)}
+            value={pattern}
+          />
+        ))}
+      </Select>
+      )
+    })
+  }
+
   const finish = async () => {
     setSubmitting(true);
     var res = editing

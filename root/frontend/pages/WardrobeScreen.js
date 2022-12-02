@@ -234,38 +234,48 @@ function SortBar(props) {
 
 function AddItemFab(props) {
   const { navigation } = props;
+  const { user } = useAuth();
+  var gender = user.wardrobe.gender
+  if (gender.includes("mens") && !gender.includes("womens")) {
+    gender = "mens"
+  } else if (gender.includes("womens") && !gender.includes("mens")) {
+    gender = "womens"
+  } else {
+    gender = "non-binary"
+  }
+
   const types = [
     {
       name: "Top",
-      image: require("../assets/icons/mens_clothing.png"),
+      image: gender == "mens" ? require("../assets/icons/mens_top.png") : gender == "womens" ? require("../assets/icons/womens_top.png") : [require("../assets/icons/mens_top.png"), require("../assets/icons/womens_top.png")][Math.random()],
       onPress: () => {
         navigation.navigate("Item", { type: "top" });
       },
     },
     {
       name: "Bottoms",
-      image: require("../assets/icons/mens_clothing.png"),
+      image: gender == "mens" ? require("../assets/icons/mens_bottoms.png") : gender == "womens" ? require("../assets/icons/womens_bottoms.png") : [require("../assets/icons/mens_bottoms.png"), require("../assets/icons/womens_bottoms.png")][Math.random()],
       onPress: () => {
         navigation.navigate("Item", { type: "bottoms" });
       },
     },
     {
       name: "One Piece",
-      image: require("../assets/icons/mens_clothing.png"),
+      image: gender == "mens" ? require("../assets/icons/mens_one_piece.png") : gender == "womens" ? require("../assets/icons/womens_one_piece.png") : [require("../assets/icons/mens_one_piece.png"), require("../assets/icons/womens_one_piece.png")][Math.random()],
       onPress: () => {
         navigation.navigate("Item", { type: "one_piece" });
       },
     },
     {
       name: "Accessory",
-      image: require("../assets/icons/mens_accessory.png"),
+      image: gender == "mens" ? require("../assets/icons/mens_accessory.png") : gender == "womens" ? require("../assets/icons/womens_accessory.png") : [require("../assets/icons/mens_accessory.png"), require("../assets/icons/womens_accessory.png")][Math.random()],
       onPress: () => {
         navigation.navigate("Item", { type: "accessory" });
       },
     },
     {
       name: "Shoes",
-      image: require("../assets/icons/mens_shoes.png"),
+      image: gender == "mens" ? require("../assets/icons/mens_shoes.png") : gender == "womens" ? require("../assets/icons/womens_shoes.png") : [require("../assets/icons/mens_shoes.png"), require("../assets/icons/womens_shoes.png")][Math.random()],
       onPress: () => {
         navigation.navigate("Item", { type: "shoes" });
       },
@@ -342,7 +352,7 @@ function WardrobeScreen({ navigation }) {
   const [itemList, setItemList] = useState(user.wardrobe.items);
   const [selectedType, setSelectedType] = useState("clothing");
   const [filteredItemList, setFilteredItemList] = useState(itemList);
-
+  
   useEffect(() => {
     // Call only when screen open or when back on screen
     if (isFocused) {
