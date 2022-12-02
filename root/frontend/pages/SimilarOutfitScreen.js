@@ -52,10 +52,10 @@ function SimilarOutfitScreen({ navigation, route }) {
         <Heading size="xl">Similar Outfits</Heading>
         {outfits ? (
           <VStack py={2} mx={2} space={3}>
-            {outfits.map((outfit) => {
+            {outfits.map((outfit, index) => {
               return (
-                <View>
-                  <OutfitCard info key={outfit._id} outfit={outfit} />
+                <View key={index}>
+                  <OutfitCard info key={index} outfit={outfit} />
                 </View>
               );
             })}

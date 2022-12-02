@@ -6,6 +6,7 @@ import {
   Divider,
   FormControl,
   VStack,
+  HStack,
   Button,
   ScrollView,
 } from "native-base";
@@ -26,17 +27,25 @@ function SignInScreen({ navigation }) {
     <ScrollView>
       <VStack paddingTop={4} alignItems="center" space={3} paddingBottom={4}>
         <VStack alignItems="center" paddingBottom={4}>
-          <Image
-            source={require("../assets/logo.png")}
+        <HStack
             style={{
-              width: 200,
-              height: 200,
-              position: "absolute",
-              left: 120,
-              top: -63,
+              position: "relative",
+              left: 20,
             }}
-          />
-          <Heading size="xl">Outfitter</Heading>
+            alignItems="center"
+          >
+            <Heading size="xl">Outfitter</Heading>
+            <View>
+              <Image
+                resizeMode="contain"
+                source={require("../assets/logo.png")}
+                style={{
+                  width: 40,
+                  height: 40,
+                }}
+              />
+            </View>
+          </HStack>
           <Text>Sign in to continue tracking your wardrobe</Text>
         </VStack>
         <Divider />
