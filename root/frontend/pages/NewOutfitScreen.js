@@ -19,7 +19,7 @@ import { useAuth } from "../contexts/Auth";
 import ClothingList from "../components/ClothingList";
 import Model from "../components/Model";
 import capitalize from "../utils/capitalize";
-import { addOutfit } from "../services/wardrobeService";
+import { addOutfit, editOutfit } from "../services/wardrobeService";
 import ImageSelecter from "../utils/imageSelecter";
 import ItemCard from "../components/ItemCard";
 import { Pressable } from "react-native";
@@ -52,7 +52,6 @@ function ItemSearchModal(props) {
       var newSelect = selected.filter((i) => i._id != item._id);
       setSelected(newSelect);
     }
-    console.log(selected);
   };
 
   return (
@@ -64,7 +63,6 @@ function ItemSearchModal(props) {
           <ScrollView>
             <VStack space={3}>
               {props.clothing.map((item) => {
-                console.log(item.type);
                 if (props.slot == "torso" && item.type != "top") return;
                 if (props.slot == "feet" && item.type != "shoes") return;
                 if (props.slot == "legs" && item.type != "bottoms") return;
@@ -184,22 +182,60 @@ function SlotModal(props) {
   );
 }
 
+function unflatten(obj){
+  let result = {},
+    temp,
+    substrings,
+    property,
+    i;
+  for (property in obj) {
+    substrings = property.split(".");
+    temp = result;
+    for (i = 0; i < substrings.length - 1; i++) {
+      if (!(substrings[i] in temp)) {
+        if (isFinite(substrings[i + 1])) {
+          temp[substrings[i]] = [];
+        } else {
+          temp[substrings[i]] = {};
+        }
+      }
+      temp = temp[substrings[i]];
+    }
+    temp[substrings[substrings.length - 1]] = obj[property];
+  }
+ return result;
+};
+
 function depopulate(outfit) {
-  var newOutfit = {};
-  Object.keys(outfit).map((slot) => {
-    var newSlot = outfit[slot].map((item) => item._id);
-    newOutfit[slot] = newSlot;
+  const flat = flattenObj(outfit);
+  var newOutfit = flat;
+  console.log("1!!!!!!!!!!!!!!!!!!!!!")
+  Object.keys(flat).map((slot) => {
+    if ((slot == "user" ||
+      slot == "_id" ||
+      slot == "id" ||
+      slot == "styles" ||
+      slot.includes("image"))
+    ) {
+      return
+    }
+    if (outfit[slot]) {
+      newOutfit[slot] = outfit[slot].map((item) => item._id);
+    }
   });
-  return newOutfit;
+  console.log("2!!!!!!!!!!!!!!!!!!!!!")
+  const unflat = unflatten(newOutfit)
+  console.log("flat!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", unflat)
+  return unflat;
 }
 
 function NewOutfitScreen({ navigation, route }) {
   const { user, refreshUser } = useAuth();
   const editing = route?.params?.outfit != undefined;
-  console.log(route.params.outfit);
   const [outfit, setOutfit] = useState(
     editing ? { ...route.params.outfit } : {}
   );
+  console.log(outfit)
   const [image, setImage] = useState(undefined);
   const [slot, setSlot] = useState();
   const [submitting, setSubmitting] = useState(false);
@@ -232,7 +268,7 @@ function NewOutfitScreen({ navigation, route }) {
   const finish = async () => {
     setSubmitting(true);
     var res = editing
-      ? await editOutfit(depopulate(outfit), image, route.params.item._id)
+      ? await editOutfit(depopulate(outfit), image, route.params.outfit._id)
       : await addOutfit(depopulate(outfit), image);
     setSubmitting(false);
     toast.show({
@@ -256,7 +292,6 @@ function NewOutfitScreen({ navigation, route }) {
     });
     if (res == true) {
       navigation.navigate("Outfits");
-      refreshUser();
     }
   };
 
@@ -293,7 +328,6 @@ function NewOutfitScreen({ navigation, route }) {
                   <Text>{capitalize(slot)}</Text>
                 </View>
                 {outfit[slot].map((item) => {
-                  console.log(item);
                   return (
                     <Button variant={"subtle"} p={1} style={{ flexShrink: 1 }}>
                       {item.name ? item.name : getText(item)}

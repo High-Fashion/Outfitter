@@ -22,6 +22,7 @@ import { React, useState, useEffect } from "react";
 import OutfitCard from "../components/OutfitCard";
 import { useAuth } from "../contexts/Auth";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useIsFocused } from "@react-navigation/native";
 
 function FilterOptionsModal(props) {
   function updateFilterOptions() {
@@ -200,10 +201,18 @@ function OutfitList(props) {
 }
 
 function OutfitScreen({ navigation }) {
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const [outfits, setOutfits] = useState(user.wardrobe.outfits);
   const [filteredOutfitList, setFilteredOutfitList] = useState(outfits);
+
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    // Call only when screen open or when back on screen
+    if (isFocused) {
+      refreshUser();
+    }
+  }, [isFocused]);
 
   useEffect(() => {
     setOutfits(user.wardrobe.outfits);

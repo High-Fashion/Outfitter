@@ -277,6 +277,9 @@ function CardMenu(props) {
       refreshUser();
     }
   }
+  function similarScreen(){
+    navigation.navigate("Similar Outfits", {outfit: props.outfit});
+  }
   function outfit() {}
   function post() {
     navigation.navigate("Post", { type: "outfit", outfit: props.outfit });
@@ -354,7 +357,7 @@ function CardMenu(props) {
             Delete Outfit
           </Text>
         </Menu.Item>
-        <Menu.Item isDisabled onPress={outfit}>
+        <Menu.Item  onPress={similarScreen}>
           <Icon
             color="muted.800"
             as={MaterialIcons}
@@ -399,7 +402,6 @@ function ItemImage(props) {
   useEffect(() => {
     async function get() {
       const imageData = await getImage(props.item.imageName);
-      console.log(imageData);
       setUri(imageData);
     }
     if (!props.item.imageName) return;
@@ -407,10 +409,12 @@ function ItemImage(props) {
   }, []);
 
   return (
-    <View flex="1">
+    <View style={{}}>
       {uri ? (
         <Image
-          style={{ width: props.dims.width, height: props.dims.height }}
+          style={{
+            width: props.dims.width, height: props.dims.height
+          }}
           source={{ uri: uri }}
           alt="image missing"
         />
@@ -438,7 +442,6 @@ function ItemImageArray(props) {
         return;
       }
       c += props.outfit[key].length;
-      console.log(props.outfit[key].length, props.outfit[key]);
     });
     switch (c) {
       case 1:
@@ -456,10 +459,6 @@ function ItemImageArray(props) {
         setCount(3);
     }
   }, []);
-
-  useEffect(() => {
-    console.log(count);
-  }, [count]);
 
   return (
     <View
@@ -481,19 +480,22 @@ function ItemImageArray(props) {
                 slot == "user" ||
                 slot == "_id" ||
                 slot == "id" ||
-                slot == "imageName" ||
+                slot == "styles" ||
+                slot.includes("image") ||
+                !props.outfit[slot] ||
                 props.outfit[slot].length == 0
               ) {
                 return;
               } else {
                 return (
-                  <View>
+                  <>
                     {props.outfit[slot].map((item) => {
                       return (
                         <HStack
                           alignItems={"center"}
                           style={{
-                            width: cardLayout.width / count,
+
+                            width: (cardLayout.width / count),
                             height: cardLayout.width / count,
                           }}
                         >
@@ -507,7 +509,7 @@ function ItemImageArray(props) {
                         </HStack>
                       );
                     })}
-                  </View>
+                  </>
                 );
               }
             })}
@@ -524,7 +526,6 @@ function OutfitImage(props) {
   useEffect(() => {
     async function get() {
       const imageData = await getImage(props.outfit.imageName);
-      console.log(imageData);
       setUri(imageData);
     }
     if (!props.outfit.imageName) return;
@@ -560,6 +561,9 @@ function OutfitImage(props) {
 export default function OutfitCard(props) {
   const [rating, setRating] = useState(0);
   const outfit = flattenObj(props.outfit);
+  if (!outfit["user"]) {
+    console.log(outfit)
+  }
   const { user, refreshUser } = useAuth();
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [updatingName, setUpdatingName] = useState(false);
@@ -681,10 +685,13 @@ export default function OutfitCard(props) {
                     slot == "user" ||
                     slot == "_id" ||
                     slot == "id" ||
+                    slot == "styles" ||
                     slot.includes("image") ||
+                    !outfit[slot] ||
                     outfit[slot].length == 0
                   )
                     return;
+                  
                   return (
                     <HStack
                       mx={2}

@@ -19,6 +19,7 @@ router.post(
 );
 router.get("/", outfit_controller.readAll);
 router.get("/:id", outfit_controller.readOne);
+router.get("/:id/similar", outfit_controller.generateSimilarOutfits);
 router.get("/:id/copy", outfit_controller.copy);
 router.put("/:id", validateUpdateOutfit, outfit_controller.updateOne);
 router.delete("/:id", outfit_controller.deleteOne);

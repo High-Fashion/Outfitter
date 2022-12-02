@@ -129,10 +129,10 @@ async function deleteOutfit(id) {
   return response.status == 200;
 }
 
-async function editOutfit(outfit, id) {
+async function editOutfit(outfit, image, id) {
   console.log("edit outfit", id);
   return await axiosInstance
-    .put(config.API_URL + "/outfit/" + id, item)
+    .put(config.API_URL + "/outfit/" + id, outfit)
     .then((res) => {
       console.log("res", res);
       return res.status == 200;
