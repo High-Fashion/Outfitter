@@ -140,7 +140,7 @@ function SlotModal(props) {
               <VStack space={3}>
                 {props.inSlot && props.inSlot.length > 0 ? (
                   props.inSlot.map((item) => {
-                    return <ItemCard hideShadow selected info item={item} />;
+                    return <ItemCard key={item._id} hideShadow selected info item={item} />;
                   })
                 ) : (
                   <Box
@@ -209,7 +209,6 @@ function unflatten(obj){
 function depopulate(outfit) {
   const flat = flattenObj(outfit);
   var newOutfit = flat;
-  console.log("1!!!!!!!!!!!!!!!!!!!!!")
   Object.keys(flat).map((slot) => {
     if ((slot == "user" ||
       slot == "_id" ||
@@ -223,9 +222,7 @@ function depopulate(outfit) {
       newOutfit[slot] = outfit[slot].map((item) => item._id);
     }
   });
-  console.log("2!!!!!!!!!!!!!!!!!!!!!")
   const unflat = unflatten(newOutfit)
-  console.log("flat!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", unflat)
   return unflat;
 }
 
@@ -323,13 +320,13 @@ function NewOutfitScreen({ navigation, route }) {
             )
               return;
             return (
-              <HStack mx={3} alignItems="center" justifyContent="space-between">
+              <HStack key={slot} mx={3} alignItems="center" justifyContent="space-between">
                 <View>
                   <Text>{capitalize(slot)}</Text>
                 </View>
                 {outfit[slot].map((item) => {
                   return (
-                    <Button variant={"subtle"} p={1} style={{ flexShrink: 1 }}>
+                    <Button key={item._id} variant={"subtle"} p={1} style={{ flexShrink: 1 }}>
                       {item.name ? item.name : getText(item)}
                     </Button>
                   );

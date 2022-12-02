@@ -492,9 +492,9 @@ function ItemImageArray(props) {
                     {props.outfit[slot].map((item) => {
                       return (
                         <HStack
+                          key={item._id}
                           alignItems={"center"}
                           style={{
-
                             width: (cardLayout.width / count),
                             height: cardLayout.width / count,
                           }}
@@ -679,7 +679,7 @@ export default function OutfitCard(props) {
               ) : (
                 <Heading>{name}</Heading>
               )}
-              <VStack>
+              <VStack space={2}>
                 {Object.keys(outfit).map((slot) => {
                   if (
                     slot == "user" ||
@@ -694,6 +694,7 @@ export default function OutfitCard(props) {
                   
                   return (
                     <HStack
+                      key={slot}
                       mx={2}
                       alignItems="center"
                       justifyContent="space-between"
@@ -701,17 +702,25 @@ export default function OutfitCard(props) {
                       <View>
                         <Text>{capitalize(slot)}</Text>
                       </View>
+
+                      <HStack
+                        space={2}  
+                        alignItems="center"
+                        justifyContent="space-between"
+                      >
                       {outfit[slot].map((item) => {
                         return (
                           <Button
-                            variant={"subtle"}
-                            p={1}
-                            style={{ flexShrink: 1 }}
+                          key={item._id}
+                          variant={"subtle"}
+                          p={1}
+                          style={{ flexShrink: 1 }}
                           >
                             {item.name ? item.name : getText(item)}
                           </Button>
                         );
                       })}
+                      </HStack>
                     </HStack>
                   );
                 })}

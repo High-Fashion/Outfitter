@@ -90,7 +90,7 @@ function ListHeader(props) {
             <HStack pt={2} space={1}>
               {props.subcategories.map((s) => {
                 return (
-                  <Button py={1} px={2} borderRadius="full">
+                  <Button key={s} py={1} px={2} borderRadius="full">
                     {capitalize(s, true)}
                   </Button>
                 );
@@ -158,6 +158,7 @@ export default function CategoryPicker(props) {
               {props?.subcategories?.map((s) => {
                 return (
                   <Button
+                    key={s}
                     variant="subtle"
                     py={1}
                     px={2}
