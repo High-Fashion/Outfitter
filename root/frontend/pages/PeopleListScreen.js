@@ -213,6 +213,7 @@ export default function PeopleListScreen({ navigation, route }) {
           horizontal={true}
           height={height - headerHeight - secondHeaderHeight}
           pagingEnabled
+          showsHorizontalScrollIndicator={false}
           bounces={false}
           contentOffset={{
             y: 0,

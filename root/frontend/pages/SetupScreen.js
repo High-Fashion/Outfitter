@@ -175,8 +175,10 @@ export function BodyShape({ navigation }) {
         "People with an inverted triangle body shape have shoulders and a bust that are wider than their hips.",
       suggestions:
         "Fitted but not waist defined dresses. A-line dresses and skirts. Straight and cigarette-style pants. U or V necklines.",
-      female_suggestions:"Fitted but not waist defined dresses. A-line dresses and skirts. Straight and cigarette-style pants. U or V necklines.",
-      male_suggestions:"Looser t-shirts, wide cargo shorts or pants, loose fitting jeans",
+      female_suggestions:
+        "Fitted but not waist defined dresses. A-line dresses and skirts. Straight and cigarette-style pants. U or V necklines.",
+      male_suggestions:
+        "Looser t-shirts, wide cargo shorts or pants, loose fitting jeans",
     },
     {
       name: "Rectangle",
@@ -192,7 +194,8 @@ export function BodyShape({ navigation }) {
           name: "Athletic",
           description:
             "The athletic body type is similar to the rectangle body type in that the shoulder and hip measurements are roughly the same, however athletic body types are generally more muscular and tend to have a waist that is narrower than the hips and shoulders.",
-          suggestions: "halter, strapless, and racerback styles. Wear wrap and flared dresses to add volume. Plunging necklines, U or V neck, or tube dresses are great options as well.",
+          suggestions:
+            "halter, strapless, and racerback styles. Wear wrap and flared dresses to add volume. Plunging necklines, U or V neck, or tube dresses are great options as well.",
         },
       ],
     },
@@ -296,9 +299,6 @@ export function BodyShape({ navigation }) {
                         <Image source={content.male_image} />
                       </HStack>
                       <Text>{content.description}</Text>
-                      <Text>{content.suggestions}</Text>
-                      <Text>{content.female_suggestions}</Text>
-                      <Text>{content.male_suggestions}</Text>
                       {content.subtypes &&
                         content.subtypes.map((subtype) => {
                           return (
@@ -310,7 +310,6 @@ export function BodyShape({ navigation }) {
                               <VStack padding={4} paddingBottom={0}>
                                 <Heading size="sm">{subtype.name}</Heading>
                                 <Text>{subtype.description}</Text>
-                                <Text>{subtype.suggestions}</Text>
                               </VStack>
                             </Box>
                           );

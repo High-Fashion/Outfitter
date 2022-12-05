@@ -1,20 +1,18 @@
 const Post = require("../models/post");
 const Comment = require("../models/comment");
 const User = require("../models/user");
+const { uploadFile } = require("../utils/s3client");
+const crypto = require("crypto");
 
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
   // Create a post
-  const postData = {
+  var props = {
     user: req.user._id,
-    text: req.body.type,
+    text: req.body.caption,
     type: req.body.type,
-    likes: [],
-    comments: [],
   };
-  const mediaData = {};
+  var mediaData = {};
   switch (req.body.type) {
-    case "photo":
-      mediaData.photo = req.body.photo;
     case "outfit":
       mediaData.outfit = req.body.outfit;
       break;
@@ -22,8 +20,20 @@ exports.create = (req, res) => {
       mediaData.item = req.body.item;
       break;
   }
+  if (req.file) {
+    const imageName = crypto.randomBytes(32).toString("hex");
+    props = { ...props, imageName: imageName };
+    await uploadFile(req.file.buffer, imageName, req.file.mimetype).catch(
+      (err) => console.log(err)
+    );
+  } else {
+    console.log("img fail");
+    return res.status(500).send({
+      message: err.message || "No image found.",
+    });
+  }
 
-  const post = new Post({ ...postData, ...mediaData });
+  const post = new Post({ ...props, ...mediaData });
 
   // Save
   post
@@ -32,11 +42,12 @@ exports.create = (req, res) => {
       User.findById(req.user).then((user) => {
         user.posts.push(post);
         user.save();
-        res.send(data);
+        return res.status(200).send(data);
       });
     })
     .catch((err) => {
-      res.status(500).send({
+      console.log(err);
+      return res.status(500).send({
         message: err.message || "Some error occurred while creating the post.",
       });
     });
@@ -46,10 +57,18 @@ exports.readOne = (req, res) => {
   const id = req.params.id;
 
   Post.findById(id)
+    .populate(
+      "user",
+      "firstName lastName username role created private hideWardrobe"
+    )
     .then((data) => {
       if (!data)
-        res.status(404).send({ message: "Not found post with id " + id });
-      else res.send(data);
+        return res
+          .status(404)
+          .send({ message: "Not found post with id " + id });
+      else {
+        return res.status(200).send(data);
+      }
     })
     .catch((err) => {
       res.status(500).send({ message: "Error retrieving post with id=" + id });
@@ -57,9 +76,44 @@ exports.readOne = (req, res) => {
 };
 
 exports.readAll = (req, res) => {
-  Post.find()
+  Post.find({
+    $match: {
+      created: {
+        $gte: Date.now() - 7 * 60 * 60 * 24 * 1000,
+      },
+    },
+  })
+    .populate(
+      "user",
+      "firstName lastName username role created private hideWardrobe"
+    )
     .then((data) => {
-      res.send(data);
+      filtered_posts = data.filter((post) => !post.user.private);
+      console.log(filtered_posts);
+      return res.status(200).send(filtered_posts.map((p) => p._id));
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.status(500).send({
+        message: err.message || "Some error occurred while retrieving posts.",
+      });
+    });
+};
+
+exports.readAllFollowing = (req, res) => {
+  Post.find({
+    $match: {
+      created: {
+        $gte: Date.now() - 7 * 60 * 60 * 24 * 1000,
+      },
+    },
+  })
+    .then((data) => {
+      filtered_posts = data.filter((post) =>
+        req.user.following.includes(post.user)
+      );
+      console.log(filtered_posts);
+      return res.status(200).send(filtered_posts.map((p) => p._id));
     })
     .catch((err) => {
       res.status(500).send({
@@ -74,13 +128,13 @@ exports.updateOne = (req, res) => {
   Post.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
     .then((data) => {
       if (!data) {
-        res.status(404).send({
+        return res.status(404).send({
           message: `Cannot update post with id=${id}. Maybe post was not found!`,
         });
-      } else res.send({ message: "Post was updated successfully." });
+      } else return res.send({ message: "Post was updated successfully." });
     })
     .catch((err) => {
-      res.status(500).send({
+      return res.status(500).send({
         message: "Error updating post with id=" + id,
       });
     });
@@ -92,17 +146,17 @@ exports.deleteOne = (req, res) => {
   Post.findByIdAndRemove(id)
     .then((data) => {
       if (!data) {
-        res.status(404).send({
+        return res.status(404).send({
           message: `Cannot delete Post with id=${id}. Maybe Post was not found!`,
         });
       } else {
-        res.send({
+        return res.status(200).send({
           message: "Post was deleted successfully!",
         });
       }
     })
     .catch((err) => {
-      res.status(500).send({
+      return res.status(500).send({
         message: "Could not delete Post with id=" + id,
       });
     });
