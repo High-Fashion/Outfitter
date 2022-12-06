@@ -9,6 +9,7 @@ import {
   HStack,
   Button,
   ScrollView,
+  View
 } from "native-base";
 import { useAuth } from "../contexts/Auth";
 import { useState } from "react";
