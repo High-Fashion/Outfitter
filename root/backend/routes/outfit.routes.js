@@ -18,6 +18,13 @@ router.post(
   outfit_controller.create
 );
 router.get("/", outfit_controller.readAll);
+router.param("id", (req, res, next, id) => {
+  if (!mongoose.isValidObjectId(id)) {
+    next(new Error("Invalid id."));
+  } else {
+    next();
+  }
+});
 router.get("/:id", outfit_controller.readOne);
 router.get("/:id/similar", outfit_controller.generateSimilarOutfits);
 router.get("/:id/copy", outfit_controller.copy);

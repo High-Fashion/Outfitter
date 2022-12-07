@@ -19,6 +19,13 @@ router.post(
 );
 router.get("/follow", post_controller.readAllFollowing);
 router.get("/", post_controller.readAll);
+router.param("id", (req, res, next, id) => {
+  if (!mongoose.isValidObjectId(id)) {
+    next(new Error("Invalid id."));
+  } else {
+    next();
+  }
+});
 router.get("/:id", post_controller.readOne);
 router.put("/:id", validateUpdatePost, post_controller.updateOne);
 router.delete("/:id", post_controller.deleteOne);

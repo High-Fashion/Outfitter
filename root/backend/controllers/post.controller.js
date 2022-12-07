@@ -69,16 +69,13 @@ exports.readOne = (req, res) => {
       "name type imageName category subcategories brand colors pattern material fit"
     )
     .then((data) => {
-      if (!data)
-        return res
-          .status(404)
-          .send({ message: "Not found post with id " + id });
+      if (!data) return res.status(404).send({ message: "Not found post" });
       else {
         return res.status(200).send(data);
       }
     })
     .catch((err) => {
-      res.status(500).send({ message: "Error retrieving post with id=" + id });
+      res.status(500).send({ message: "Error retrieving post" });
     });
 };
 
@@ -136,13 +133,13 @@ exports.updateOne = (req, res) => {
     .then((data) => {
       if (!data) {
         return res.status(404).send({
-          message: `Cannot update post with id=${id}. Maybe post was not found!`,
+          message: `Cannot update post. Maybe post was not found!`,
         });
       } else return res.send({ message: "Post was updated successfully." });
     })
     .catch((err) => {
       return res.status(500).send({
-        message: "Error updating post with id=" + id,
+        message: "Error updating post",
       });
     });
 };
@@ -154,7 +151,7 @@ exports.deleteOne = (req, res) => {
     .then((data) => {
       if (!data) {
         return res.status(404).send({
-          message: `Cannot delete Post with id=${id}. Maybe Post was not found!`,
+          message: `Cannot delete Post. Maybe Post was not found!`,
         });
       } else {
         return res.status(200).send({
@@ -164,7 +161,7 @@ exports.deleteOne = (req, res) => {
     })
     .catch((err) => {
       return res.status(500).send({
-        message: "Could not delete Post with id=" + id,
+        message: "Could not delete Post",
       });
     });
 };

@@ -53,14 +53,11 @@ exports.readOne = (req, res) => {
 
   Wardrobe.findById(id)
     .then((data) => {
-      if (!data)
-        res.status(404).send({ message: "Not found wardrobe with id " + id });
+      if (!data) res.status(404).send({ message: "Not found wardrobe" });
       else res.send(data);
     })
     .catch((err) => {
-      res
-        .status(500)
-        .send({ message: "Error retrieving wardrobe with id=" + id });
+      res.status(500).send({ message: "Error retrieving wardrobe" });
     });
 };
 
@@ -84,13 +81,13 @@ exports.updateOne = (req, res) => {
     .then((data) => {
       if (!data) {
         res.status(404).send({
-          message: `Cannot update wardrobe with id=${id}. Maybe wardrobe was not found!`,
+          message: `Cannot update wardrobe. Maybe wardrobe was not found!`,
         });
       } else res.send({ message: "Wardrobe was updated successfully." });
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Error updating wardrobe with id=" + id,
+        message: "Error updating wardrobe",
       });
     });
 };
@@ -102,7 +99,7 @@ exports.deleteOne = (req, res) => {
     .then((data) => {
       if (!data) {
         res.status(404).send({
-          message: `Cannot delete Wardrobe with id=${id}. Maybe Wardrobe was not found!`,
+          message: `Cannot delete Wardrobe. Maybe Wardrobe was not found!`,
         });
       } else {
         res.send({
@@ -112,7 +109,7 @@ exports.deleteOne = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Could not delete Wardrobe with id=" + id,
+        message: "Could not delete Wardrobe",
       });
     });
 };

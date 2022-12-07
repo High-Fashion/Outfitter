@@ -50,14 +50,11 @@ exports.readOne = (req, res) => {
 
   Item.findById(id)
     .then((data) => {
-      if (!data)
-        return res
-          .status(404)
-          .send({ message: "Not found item with id " + id });
+      if (!data) return res.status(404).send({ message: "Not found item" });
       else return res.status(200).send(data);
     })
     .catch((err) => {
-      res.status(500).send({ message: "Error retrieving item with id=" + id });
+      res.status(500).send({ message: "Error retrieving item" });
     });
 };
 
@@ -80,7 +77,7 @@ exports.updateOne = (req, res) => {
     .then((data) => {
       if (!data) {
         return res.status(404).send({
-          message: `Cannot update item with id=${id}. Maybe item was not found!`,
+          message: `Cannot update item. Maybe item was not found!`,
         });
       } else
         return res
@@ -89,7 +86,7 @@ exports.updateOne = (req, res) => {
     })
     .catch((err) => {
       return res.status(500).send({
-        message: "Error updating item with id=" + id,
+        message: "Error updating item",
       });
     });
 };
@@ -101,7 +98,7 @@ exports.deleteOne = (req, res) => {
     .then((data) => {
       if (!data) {
         return res.status(404).send({
-          message: `Cannot delete Item with id=${id}. Maybe Item was not found!`,
+          message: `Cannot delete Item. Maybe Item was not found!`,
         });
       } else {
         return res.status(200).send({
@@ -111,7 +108,7 @@ exports.deleteOne = (req, res) => {
     })
     .catch((err) => {
       return res.status(500).send({
-        message: "Could not delete Item with id=" + id,
+        message: "Could not delete Item",
       });
     });
 };

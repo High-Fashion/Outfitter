@@ -42,14 +42,11 @@ exports.readOne = (req, res) => {
 
   Outfit.findById(id)
     .then((data) => {
-      if (!data)
-        res.status(404).send({ message: "Not found outfit with id " + id });
+      if (!data) res.status(404).send({ message: "Not found outfit" });
       else res.send(data);
     })
     .catch((err) => {
-      res
-        .status(500)
-        .send({ message: "Error retrieving outfit with id=" + id });
+      res.status(500).send({ message: "Error retrieving outfit" });
     });
 };
 
@@ -306,7 +303,7 @@ exports.updateOne = (req, res) => {
     .then((data) => {
       if (!data) {
         return res.status(404).send({
-          message: `Cannot update outfit with id=${id}. Maybe item was not found!`,
+          message: `Cannot update outfit. Maybe item was not found!`,
         });
       }
       return res
@@ -315,7 +312,7 @@ exports.updateOne = (req, res) => {
     })
     .catch((err) => {
       return res.status(500).send({
-        message: "Error updating outfit with id=" + id,
+        message: "Error updating outfit",
       });
     });
 };
@@ -327,7 +324,7 @@ exports.deleteOne = (req, res) => {
     .then((data) => {
       if (!data) {
         res.status(404).send({
-          message: `Cannot delete Outfit with id=${id}. Maybe Outfit was not found!`,
+          message: `Cannot delete Outfit. Maybe Outfit was not found!`,
         });
       } else {
         res.send({
@@ -337,7 +334,7 @@ exports.deleteOne = (req, res) => {
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Could not delete Outfit with id=" + id,
+        message: "Could not delete Outfit",
       });
     });
 };
@@ -346,13 +343,10 @@ exports.copy = (req, res) => {
   const id = req.params.id;
   Outfit.findById(id)
     .then((data) => {
-      if (!data)
-        res.status(404).send({ message: "Not found outfit with id " + id });
+      if (!data) res.status(404).send({ message: "Not found outfit" });
       else res.send(data);
     })
     .catch((err) => {
-      res
-        .status(500)
-        .send({ message: "Error retrieving outfit with id=" + id });
+      res.status(500).send({ message: "Error retrieving outfit" });
     });
 };
