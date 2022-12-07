@@ -17,13 +17,4 @@ const postSchema = new Schema({
 
 postSchema.plugin(require("mongoose-autopopulate"));
 
-postSchema.set("toJSON", {
-  virtuals: true,
-  versionKey: false,
-  transform: function (doc, ret) {
-    delete ret._id;
-    delete ret.hashedPassword;
-  },
-});
-
 module.exports = mongoose.model("Post", postSchema);

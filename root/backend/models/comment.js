@@ -14,13 +14,4 @@ const commentSchema = new Schema({
 
 commentSchema.plugin(require("mongoose-autopopulate"));
 
-commentSchema.set("toJSON", {
-  virtuals: true,
-  versionKey: false,
-  transform: function (doc, ret) {
-    delete ret._id;
-    delete ret.hashedPassword;
-  },
-});
-
 module.exports = mongoose.model("Comment", commentSchema);

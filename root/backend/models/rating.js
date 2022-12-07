@@ -8,13 +8,4 @@ const ratingSchema = new Schema({
 
 ratingSchema.plugin(require("mongoose-autopopulate"));
 
-ratingSchema.set("toJSON", {
-  virtuals: true,
-  versionKey: false,
-  transform: function (doc, ret) {
-    delete ret._id;
-    delete ret.hashedPassword;
-  },
-});
-
 module.exports = mongoose.model("Rating", ratingSchema);

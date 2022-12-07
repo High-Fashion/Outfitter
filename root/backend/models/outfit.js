@@ -60,14 +60,6 @@ const schema = new Schema({
   feet: [{ type: Schema.Types.ObjectId, ref: "Item", autopopulate: true }],
 });
 
-schema.set("toJSON", {
-  virtuals: true,
-  versionKey: false,
-  transform: function (doc, ret) {
-    // delete ret._id;
-  },
-});
-
 schema.plugin(require("mongoose-autopopulate"));
 
 module.exports = mongoose.model("Outfit", schema);
