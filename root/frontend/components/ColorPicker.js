@@ -55,6 +55,25 @@ function CustomSelectItem(color, setOpen, setColor) {
   };
 }
 
+const ButtonTemplate = ({ color, setOpen }) => {
+  const colorCode = colorCodes[color];
+  const textColor = useContrastText(colorCode);
+  return (
+    <HStack px={2} space={1}>
+      <Button
+        py={1}
+        px={2}
+        borderRadius="full"
+        bgColor={colorCode}
+        _text={{ color: textColor }}
+        onPress={() => setOpen(true)}
+      >
+        {color}
+      </Button>
+    </HStack>
+  );
+};
+
 export default function ColorSelect(props) {
   const [open, setOpen] = useState(false);
 
@@ -72,25 +91,6 @@ export default function ColorSelect(props) {
     setFilteredListOptions(newList);
   }, [searchQuery]);
 
-  const ButtonTemplate = (props) => {
-    const colorCode = colorCodes[props.color];
-    const textColor = useContrastText(colorCode);
-    return (
-      <HStack px={2} space={1}>
-        <Button
-          py={1}
-          px={2}
-          borderRadius="full"
-          bgColor={colorCode}
-          _text={{ color: textColor }}
-          onPress={() => setOpen(true)}
-        >
-          {props.color}
-        </Button>
-      </HStack>
-    );
-  };
-
   return (
     <Select
       flex={1}
@@ -101,7 +101,9 @@ export default function ColorSelect(props) {
         setSearchQuery("");
       }}
       placeholder={!props.color ? "Select " + props.rank + " color" : ""}
-      leftElement={props.color && <ButtonTemplate color={props.color} />}
+      leftElement={
+        props.color && <ButtonTemplate color={props.color} setOpen={setOpen} />
+      }
       _item={{
         _stack: {
           alignItems: "center",
