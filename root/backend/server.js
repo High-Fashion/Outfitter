@@ -1,9 +1,6 @@
 const express = require("express");
-const cors = require("cors");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const multer = require("multer");
-const upload = multer();
 require("dotenv").config();
 const source = process.env.MONGODB_URI;
 const PORT = process.env.PORT || 5000;
@@ -31,21 +28,7 @@ connection.once("open", () => {
 });
 
 const app = express();
-
-app.use(cors({ origin: true }));
-
-app.use(function (req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Methods",
-    "GET, POST, OPTIONS, PUT, PATCH, DELETE"
-  );
-  res.header(
-    "Access-Control-Allow-Headers",
-    "x-access-token, Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
-});
+app.disable("x-powered-by");
 
 // Body-parser middleware
 app.use(bodyParser.urlencoded({ extended: true }));

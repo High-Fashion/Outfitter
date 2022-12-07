@@ -4,7 +4,7 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
-import { HeaderBackButton, useHeaderHeight } from "@react-navigation/elements";
+import { HeaderBackButton } from "@react-navigation/elements";
 import { useNavigation } from "@react-navigation/native";
 import {
   Actionsheet,
@@ -509,7 +509,6 @@ export function ProfileScreen({ navigation, route }) {
     });
   }
   const [secondHeaderHeight, setHeight] = useState(0);
-  const headerHeight = useHeaderHeight();
 
   const scrollX = useRef(new Animated.Value(0)).current;
 

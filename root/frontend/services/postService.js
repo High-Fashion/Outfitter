@@ -2,15 +2,6 @@ import axios from "axios";
 import config from "../config";
 import axiosInstance from "../utils/axiosInstance";
 import tokenService from "./tokenService";
-// import id from "faker/lib/locales/id_ID";
-
-function getWardrobe() {}
-
-function getItems() {}
-
-function getShoes() {}
-
-function getAccessories() {}
 
 async function getPost(id) {
   return await axiosInstance
