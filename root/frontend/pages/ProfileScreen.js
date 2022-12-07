@@ -212,27 +212,27 @@ function FollowedBy(props) {
 }
 
 function ProfileInfo(props) {
-  const postsCount = () => {
+  const postsCount = useCallback(() => {
     if (!props?.user?.posts || !props?.user?.postsCount) return 0;
     if (props?.user?.private) {
       return props.user.postsCount;
     }
     return props.user.posts.length;
-  };
-  const followerCount = () => {
+  });
+  const followerCount = useCallback(() => {
     if (!props?.user?.followers || !props?.user?.followerCount) return 0;
     if (props?.user?.private) {
       return props.user.followerCount;
     }
     return props.user.followers.length;
-  };
-  const followingCount = () => {
+  });
+  const followingCount = useCallback(() => {
     if (!props?.user?.following || !props?.user?.followingCount) return 0;
     if (props?.user?.private) {
       return props.user.followingCount;
     }
     return props.user.following.length;
-  };
+  });
 
   return (
     <VStack>
