@@ -18,10 +18,7 @@ exports.readOne = (req, res) => {
 
   User.findById(id)
     .then((user) => {
-      if (!user)
-        return res
-          .status(404)
-          .send({ message: "Not found user with id " + id });
+      if (!user) return res.status(404).send({ message: "Not found user" });
 
       let postsCount = 0;
       let followerCount = 0;
@@ -58,15 +55,11 @@ exports.readOne = (req, res) => {
           return res.status(200).json(ret);
         })
         .catch((err) => {
-          return res
-            .status(500)
-            .send({ message: "Error retrieving user with id=" + id });
+          return res.status(500).send({ message: "Error retrieving user" });
         });
     })
     .catch((err) => {
-      return res
-        .status(500)
-        .send({ message: "Error retrieving user with id=" + id });
+      return res.status(500).send({ message: "Error retrieving user" });
     });
 };
 
@@ -118,13 +111,13 @@ exports.updateOne = (req, res) => {
     .then((data) => {
       if (!data) {
         return res.status(404).send({
-          message: `Cannot update user with id=${id}. Maybe user was not found!`,
+          message: `Cannot update user. Maybe user was not found!`,
         });
       } else return res.send({ message: "User was updated successfully." });
     })
     .catch((err) => {
       return res.status(500).send({
-        message: "Error updating user with id=" + id,
+        message: "Error updating user",
       });
     });
 };
@@ -136,7 +129,7 @@ exports.deleteOne = (req, res) => {
     .then((data) => {
       if (!data) {
         return res.status(404).send({
-          message: `Cannot delete User with id=${id}. Maybe User was not found!`,
+          message: `Cannot delete User. Maybe User was not found!`,
         });
       } else {
         return res.send({
@@ -146,7 +139,7 @@ exports.deleteOne = (req, res) => {
     })
     .catch((err) => {
       return res.status(500).send({
-        message: "Could not delete User with id=" + id,
+        message: "Could not delete User",
       });
     });
 };
@@ -212,7 +205,7 @@ exports.follow = (req, res) => {
           })
           .catch((err) => {
             return res.status(500).send({
-              message: "Error following user with id=" + id,
+              message: "Error following user",
             });
           });
       } else {
@@ -246,7 +239,7 @@ exports.follow = (req, res) => {
           })
           .catch((err) => {
             return res.status(500).send({
-              message: "Error following user with id=" + id,
+              message: "Error following user",
             });
           });
       }
@@ -254,7 +247,7 @@ exports.follow = (req, res) => {
     .catch((err) => {
       console.log(err);
       return res.status(500).send({
-        message: "Error following user with id=" + id,
+        message: "Error following user",
       });
     });
 };
