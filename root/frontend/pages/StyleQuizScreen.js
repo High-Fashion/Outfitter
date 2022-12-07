@@ -1,18 +1,9 @@
 /*https://hossein-zare.github.io/react-native-dropdown-picker-website/docs/usage*/
 /*https://snack.expo.dev/@mali_ai/react-native-dropdown-picker*/
-import { useAuth } from "../contexts/Auth";
-import { useState, useEffect } from "react";
-import {
-  Text,
-  View,
-  TouchableOpacity,
-  VStack,
-  HStack,
-  Button,
-  Input,
-  HamburgerIcon,
-} from "native-base";
+import { Button, HStack, Input, Text, View, VStack } from "native-base";
+import { useEffect, useState } from "react";
 import DropDownPicker from "react-native-dropdown-picker";
+import { useAuth } from "../contexts/Auth";
 
 function QuizScreen({ navigation: { navigate }, route }) {
   const [open, setOpen] = useState(false);
@@ -45,7 +36,7 @@ function QuizScreen({ navigation: { navigate }, route }) {
     { label: "Beachy", value: "beachy", parent: "surfer" },
 
     { label: "Country", value: "country" },
-    { label: "Wild West", value: "wild_west", parent: "country"},
+    { label: "Wild West", value: "wild_west", parent: "country" },
     { label: "Cottagecore", value: "cottagecore", parent: "country" },
     { label: "Fairycore", value: "fairycore", parent: "country" },
     { label: "Southern", value: "southern", parent: "country" },
@@ -66,7 +57,7 @@ function QuizScreen({ navigation: { navigate }, route }) {
 
     { label: "Androgynous", value: "androgynous" },
 
-    { label: "Casual", value: "casual"},
+    { label: "Casual", value: "casual" },
     { label: "loungewear", value: "loungewear", parent: "casual" },
   ]);
 
@@ -106,7 +97,7 @@ function QuizScreen({ navigation: { navigate }, route }) {
 
   useEffect(() => {
     console.log("key");
-    var complete = true;
+    let complete = true;
     Object.keys(completed).forEach((key) => {
       console.log(key + " " + completed[key]);
       if (!completed[key]) complete = false;
@@ -116,7 +107,7 @@ function QuizScreen({ navigation: { navigate }, route }) {
 
   async function finishSetup() {
     if (!setupComplete) return;
-    var finished = await route.params.finish({
+    let finished = await route.params.finish({
       styles: styles,
     });
     if (finished) {

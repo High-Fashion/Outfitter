@@ -5,7 +5,7 @@ const crypto = require("crypto");
 
 exports.create = async (req, res) => {
   console.log("CREATE OBJECT");
-  var props = {
+  let props = {
     type: req.body.type, //clothing, accessory, shoes
     user: req.user._id,
     brand: req.body.brand,

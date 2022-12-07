@@ -1,25 +1,24 @@
 //https://theconceptwardrobe.com/build-a-wardrobe/pear-body-shape for outfit sugesstions based off body type
-import { useEffect, useState } from "react";
 import {
-  Text,
-  HStack,
+  Badge,
+  Box,
   Button,
-  VStack,
-  Heading,
+  Center,
+  CloseIcon,
   Divider,
   HamburgerIcon,
+  Heading,
+  HStack,
   Image,
-  View,
-  ScrollView,
-  Badge,
   Input,
-  DeleteIcon,
-  CloseIcon,
-  Center,
-  Box,
+  ScrollView,
+  Text,
+  View,
+  VStack,
 } from "native-base";
-import { useAuth } from "../contexts/Auth";
+import { useEffect, useState } from "react";
 import { LogBox } from "react-native";
+import { useAuth } from "../contexts/Auth";
 
 LogBox.ignoreLogs([
   "Non-serializable values were found in the navigation state",
@@ -31,7 +30,7 @@ export function WardrobeSettings({ route }) {
   const [womens, setWomens] = useState(gender.includes("womens"));
 
   const getList = () => {
-    var list = [];
+    let list = [];
     if (mens) list.push("mens");
     if (womens) list.push("womens");
     return list;
@@ -361,7 +360,7 @@ export function SetupScreen({ navigation: { navigate }, route }) {
 
   useEffect(() => {
     console.log("key");
-    var complete = true;
+    let complete = true;
     Object.keys(completed).forEach((key) => {
       console.log(key + " " + completed[key]);
       if (!completed[key]) complete = false;
@@ -371,7 +370,7 @@ export function SetupScreen({ navigation: { navigate }, route }) {
 
   async function finishSetup() {
     if (!setupComplete) return;
-    var finished = await route.params.finish({
+    let finished = await route.params.finish({
       styles: styles,
       gender: gender,
     });

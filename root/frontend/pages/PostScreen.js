@@ -228,7 +228,7 @@ export default function PostScreen({ route, navigation }) {
       return;
     }
     setSubmitting(true);
-    var res = editing
+    let res = editing
       ? await editPost(formData, route.params.post._id)
       : await addPost(formData);
     setSubmitting(false);

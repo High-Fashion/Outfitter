@@ -1,30 +1,29 @@
-import React, { Component, useState, useEffect } from "react";
 import {
   Button,
-  HStack,
-  VStack,
+  DeleteIcon,
   FormControl,
+  HStack,
   Input,
   ScrollView,
   Select,
-  DeleteIcon,
-  Spinner,
   useToast,
+  VStack,
 } from "native-base";
-import patterns from "../assets/patterns.json";
+import React, { useEffect, useState } from "react";
 import materials from "../assets/materials.json";
+import patterns from "../assets/patterns.json";
 import { addItem, editItem } from "../services/wardrobeService";
 
-import ImageSelecter from "../utils/imageSelecter";
 import capitalize from "../utils/capitalize";
+import ImageSelecter from "../utils/imageSelecter";
 // import * as ImagePicker from "expo-image-picker";
-import ToastAlert from "../components/ToastAlert";
 import CategoryPicker from "../components/CategoryPicker";
 import ColorPicker from "../components/ColorPicker";
+import ToastAlert from "../components/ToastAlert";
 
 function SizePicker(props) {
   const [measurement, setMeasurement] = React.useState("");
-  var allSizes = {
+  let allSizes = {
     mens: {
       shirts: ["small", "medium", "large", "XL", "2XL", "3XL"],
     },
@@ -162,30 +161,35 @@ function ItemScreen({ navigation, route }) {
     },
   ];
 
-  if ((editing === true && route?.params?.item?.type == "top" || route?.params?.item?.type == "bottoms") || (editing === false && route?.params?.type == "top" || route?.params?.type == "bottoms")) {
+  if (
+    (editing === true && route?.params?.item?.type == "top") ||
+    route?.params?.item?.type == "bottoms" ||
+    (editing === false && route?.params?.type == "top") ||
+    route?.params?.type == "bottoms"
+  ) {
     form.push({
       name: "Fit",
       component: (
         <Select
-        defaultValue={formData["fit"]}
-        onValueChange={(text) => setData({ ...formData, fit: text })}
-        placeholder={"Select fit"}
-      >
-        {["tight", "normal", "baggy"].map((pattern) => (
-          <Select.Item
-            key={pattern}
-            label={pattern.charAt(0).toUpperCase() + pattern.slice(1)}
-            value={pattern}
-          />
-        ))}
-      </Select>
-      )
-    })
+          defaultValue={formData["fit"]}
+          onValueChange={(text) => setData({ ...formData, fit: text })}
+          placeholder={"Select fit"}
+        >
+          {["tight", "normal", "baggy"].map((pattern) => (
+            <Select.Item
+              key={pattern}
+              label={pattern.charAt(0).toUpperCase() + pattern.slice(1)}
+              value={pattern}
+            />
+          ))}
+        </Select>
+      ),
+    });
   }
 
   const finish = async () => {
     setSubmitting(true);
-    var res = editing
+    let res = editing
       ? await editItem(formData, route.params.item._id)
       : await addItem(formData);
     setSubmitting(false);

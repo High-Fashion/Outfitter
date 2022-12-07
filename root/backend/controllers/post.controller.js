@@ -6,12 +6,12 @@ const crypto = require("crypto");
 
 exports.create = async (req, res) => {
   // Create a post
-  var props = {
+  let props = {
     user: req.user._id,
     text: req.body.caption,
     type: req.body.type,
   };
-  var mediaData = {};
+  let mediaData = {};
   switch (req.body.type) {
     case "outfit":
       mediaData.outfit = req.body.outfit;

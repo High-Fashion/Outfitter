@@ -1,8 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import config from "../config";
 import axios from "axios";
+import config from "../config";
 
-var jwt_decode = require("jwt-decode");
+let jwt_decode = require("jwt-decode");
 
 async function getAccessUsingRefresh(refresh_token) {
   return await axios
@@ -48,7 +48,7 @@ async function getVerifiedKeys(keys) {
 function isTokenExpired(token) {
   console.log("Checking: ", token);
   try {
-    var decoded = jwt_decode(token);
+    let decoded = jwt_decode(token);
     // console.log(decoded);
     if (decoded.exp < Date.now() / 1000) {
       return true;

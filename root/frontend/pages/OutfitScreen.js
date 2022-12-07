@@ -1,28 +1,25 @@
 import {
-  Text,
-  View,
-  Button,
-  VStack,
   AddIcon,
-  Fab,
-  ScrollView,
-  HStack,
-  Input,
-  SearchIcon,
-  Modal,
-  FormControl,
+  Box,
+  Button,
   Checkbox,
   CloseIcon,
-  Center,
-  Box,
+  Fab,
+  FormControl,
+  HStack,
+  Modal,
+  ScrollView,
+  Text,
+  View,
+  VStack,
 } from "native-base";
 import SearchBar from "../components/SearchBar";
 
-import { React, useState, useEffect } from "react";
+import { useIsFocused } from "@react-navigation/native";
+import { useEffect, useState } from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
 import OutfitCard from "../components/OutfitCard";
 import { useAuth } from "../contexts/Auth";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { useIsFocused } from "@react-navigation/native";
 
 function FilterOptionsModal(props) {
   function updateFilterOptions() {
@@ -30,7 +27,7 @@ function FilterOptionsModal(props) {
   }
 
   return (
-    <Modal size="full" isOpen={props.show} onClose={() => props.close()}>
+    <Modal size="full" isOpen={props.show} onClose={props.close}>
       <Modal.Content maxWidth="400px">
         <Modal.CloseButton />
         <Modal.Header>Filters</Modal.Header>
@@ -68,7 +65,7 @@ function FilterOptionsModal(props) {
         </Modal.Body>
         <Modal.Footer>
           <Button.Group space={2}>
-            <Button onPress={() => updateFilterOptions()}>Apply</Button>
+            <Button onPress={updateFilterOptions}>Apply</Button>
           </Button.Group>
         </Modal.Footer>
       </Modal.Content>
@@ -82,7 +79,7 @@ function SortOptionsModal(props) {
   }
 
   return (
-    <Modal size="full" isOpen={props.show} onClose={() => props.close()}>
+    <Modal size="full" isOpen={props.show} onClose={props.close}>
       <Modal.Content maxWidth="400px">
         <Modal.CloseButton />
         <Modal.Header>Sort By</Modal.Header>
@@ -120,7 +117,7 @@ function SortOptionsModal(props) {
         </Modal.Body>
         <Modal.Footer>
           <Button.Group space={2}>
-            <Button onPress={() => updateSortOptions()}>Apply</Button>
+            <Button onPress={updateSortOptions}>Apply</Button>
           </Button.Group>
         </Modal.Footer>
       </Modal.Content>
@@ -148,7 +145,7 @@ function SortBar(props) {
               <HStack space={1} alignItems="center">
                 <Text paddingBottom={1}>{filter}</Text>
                 <Button
-                  onPress={() => remove()}
+                  onPress={remove}
                   variant="ghost"
                   borderRadius="full"
                   padding={0}
@@ -160,7 +157,7 @@ function SortBar(props) {
           );
         })}
       </HStack>
-      <Button borderRadius="lg" onPress={() => props.open()}>
+      <Button borderRadius="lg" onPress={props.open}>
         Sort
       </Button>
     </HStack>
@@ -168,18 +165,18 @@ function SortBar(props) {
 }
 
 function getOutfitString(outfit) {
-  var result = "";
+  let result = "";
 
-  Object.keys(outfit).map((slot) => {
-    var item = outfit[slot];
-    Object.keys(item).map((key) => {
+  Object.keys(outfit).forEach((slot) => {
+    let item = outfit[slot];
+    Object.keys(item).forEach((key) => {
       if (!["category", "material", "pattern", "brand"].includes(key)) return;
       if (item[key]) {
         result += item[key];
       }
     });
     if (item.colors) {
-      Object.keys(item.colors).map((color) => {
+      Object.keys(item.colors).forEach((color) => {
         if (item.colors[color]) {
           result += item.colors[color];
         }
@@ -233,6 +230,10 @@ function OutfitScreen({ navigation }) {
     setFilteredOutfitList(newItems);
   }, [outfits, searchQuery]);
 
+  function newOutfit() {
+    navigation.navigate("NewOutfit");
+  }
+
   return (
     <SafeAreaView flex={1}>
       <ScrollView>
@@ -256,9 +257,7 @@ function OutfitScreen({ navigation }) {
         renderInPortal={false}
         shadow={2}
         size="lg"
-        onPress={() => {
-          navigation.navigate("NewOutfit");
-        }}
+        onPress={newOutfit}
         icon={<AddIcon color="white" size="xl" />}
       />
     </SafeAreaView>

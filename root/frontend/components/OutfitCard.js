@@ -1,34 +1,31 @@
-import { useState, useEffect, useRef } from "react";
 import {
-  Spinner,
+  AntDesign,
+  Entypo,
+  Feather,
+  Ionicons,
+  MaterialIcons,
+} from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import {
+  AlertDialog,
+  Box,
   Button,
-  FlatList,
+  Heading,
   HStack,
+  Icon,
+  IconButton,
   Image,
+  Input,
+  Menu,
+  Modal,
+  Spinner,
   Text,
+  useToast,
   View,
   VStack,
-  Modal,
-  IconButton,
-  Icon,
-  Box,
-  useToast,
-  AlertDialog,
-  Menu,
-  ScrollView,
-  Input,
-  Heading,
 } from "native-base";
-import {
-  Entypo,
-  MaterialCommunityIcons,
-  MaterialIcons,
-  FontAwesome,
-  Ionicons,
-  Feather,
-} from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
-import { Dimensions, StyleSheet, TouchableOpacity } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { Dimensions } from "react-native";
 import { useAuth } from "../contexts/Auth";
 import {
   deleteOutfit,
@@ -36,7 +33,6 @@ import {
   getImage,
 } from "../services/wardrobeService";
 import capitalize from "../utils/capitalize";
-import { useNavigation } from "@react-navigation/native";
 import IconImage from "./IconImage";
 import ToastAlert from "./ToastAlert";
 const { width, height } = Dimensions.get("window");
@@ -58,7 +54,7 @@ const flattenObj = (ob) => {
 };
 
 const getText = (item) => {
-  var text = "";
+  let text = "";
   if (item.colors) {
     if (item.colors.primary) text += item.colors.primary;
     if (item.colors.tertiary) {
@@ -431,7 +427,7 @@ function ItemImageArray(props) {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    var c = 0;
+    let c = 0;
     Object.keys(props.outfit).forEach((key) => {
       if (
         key == "user" ||
@@ -583,7 +579,7 @@ export default function OutfitCard(props) {
   const toast = useToast();
   const updateName = async () => {
     setUpdatingName(true);
-    var res = await editOutfit({ name: name }, props.outfit._id);
+    let res = await editOutfit({ name: name }, props.outfit._id);
     setUpdatingName(false);
     toast.show({
       render: () => {

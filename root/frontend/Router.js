@@ -1,36 +1,32 @@
-import {
-  createNavigationContainerRef,
-  NavigationContainer,
-  useNavigationContainerRef,
-} from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { View } from "native-base";
 
-import SignUpScreen from "./pages/SignUpScreen.js";
-import SignInScreen from "./pages/SignInScreen.js";
 import * as SplashScreen from "expo-splash-screen";
-import NewOutfitScreen from "./pages/NewOutfitScreen.js";
-import ItemScreen from "./pages/ItemScreen.js";
 import EditProfileScreen from "./pages/EditProfileScreen.js";
-import SimilarOutfitScreen from "./pages/SimilarOutfitScreen.js"
+import ItemScreen from "./pages/ItemScreen.js";
+import NewOutfitScreen from "./pages/NewOutfitScreen.js";
+import SignInScreen from "./pages/SignInScreen.js";
+import SignUpScreen from "./pages/SignUpScreen.js";
+import SimilarOutfitScreen from "./pages/SimilarOutfitScreen.js";
 
 import {
   BodyShape,
-  SetupScreen,
-  WardrobeSettings,
   PrivacySettings,
+  SetupScreen,
   StyleQuiz,
+  WardrobeSettings,
 } from "./pages/SetupScreen.js";
 
-import { useAuth } from "./contexts/Auth";
-import { useEffect, useState, useCallback } from "react";
-import axiosInstance from "./utils/axiosInstance";
-import config from "./config";
+import { useCallback, useEffect, useState } from "react";
 import { Keyboard } from "react-native";
 import Footer from "./components/Footer.js";
-import PostScreen from "./pages/PostScreen.js";
+import config from "./config";
+import { useAuth } from "./contexts/Auth";
 import PeopleListScreen from "./pages/PeopleListScreen.js";
+import PostScreen from "./pages/PostScreen.js";
+import axiosInstance from "./utils/axiosInstance";
 
 const Stack = createNativeStackNavigator();
 
@@ -90,7 +86,7 @@ export default function Router() {
             resolve();
             return;
           }
-          var bool = await refreshUser();
+          let bool = await refreshUser();
           resolve();
         });
       } catch (e) {
@@ -154,12 +150,12 @@ export default function Router() {
                   <Stack.Screen
                     name="Similar Outfits"
                     component={SimilarOutfitScreen}
-                    options={{headershown: true}}
+                    options={{ headershown: true }}
                   />
                   <Stack.Screen
                     name="EditProfile"
                     component={EditProfileScreen}
-                    options={({ title: "Edit Profile" })}
+                    options={{ title: "Edit Profile" }}
                   />
                 </Stack.Group>
               ) : (

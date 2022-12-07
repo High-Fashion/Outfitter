@@ -1,5 +1,14 @@
 import {
+  FontAwesome5,
+  Ionicons,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons";
+import { HeaderBackButton, useHeaderHeight } from "@react-navigation/elements";
+import { useNavigation } from "@react-navigation/native";
+import {
   Actionsheet,
+  Avatar as NativeBaseAvatar,
   FlatList,
   Heading,
   HStack,
@@ -14,25 +23,15 @@ import {
   View,
   VStack,
 } from "native-base";
+import { createRef, useCallback, useEffect, useRef, useState } from "react";
+import { Animated, Dimensions } from "react-native";
+import Avatar from "../components/Avatar";
 import FollowButton from "../components/FollowButton";
 import ItemCard from "../components/ItemCard";
 import OutfitCard from "../components/OutfitCard";
-import { Avatar as NativeBaseAvatar } from "native-base";
-import Avatar from "../components/Avatar";
-import { useAuth } from "../contexts/Auth";
-import {
-  Ionicons,
-  MaterialCommunityIcons,
-  FontAwesome5,
-  MaterialIcons,
-} from "@expo/vector-icons";
-import { Dimensions, Animated } from "react-native";
-import { useState, useEffect, useRef, useCallback, createRef } from "react";
-import { HeaderBackButton } from "@react-navigation/elements";
-import { getUser, followUser } from "../services/userService";
-import { useNavigation } from "@react-navigation/native";
-import { useHeaderHeight } from "@react-navigation/elements";
 import PostCard from "../components/PostCard";
+import { useAuth } from "../contexts/Auth";
+import { followUser, getUser } from "../services/userService";
 
 function SettingsActionsheet(props) {
   const { signOut } = useAuth();
@@ -228,7 +227,7 @@ function ProfileInfo(props) {
 
   async function follow() {
     setFollowLoading(true);
-    var res = await followUser(
+    let res = await followUser(
       props.user,
       props.user.private
         ? !user.sentRequests.includes(props.user._id)
