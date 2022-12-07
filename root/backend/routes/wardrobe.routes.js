@@ -1,6 +1,5 @@
 const router = require("express").Router();
 
-const { authorize } = require("../middleware/auth.middleware");
 const {
   validateCreateWardrobe,
   validateUpdateWardrobe,

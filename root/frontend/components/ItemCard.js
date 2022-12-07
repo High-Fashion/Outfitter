@@ -25,9 +25,9 @@ import {
   MaterialIcons,
 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import { Dimensions, StyleSheet } from "react-native";
+import { Dimensions } from "react-native";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import colors from "../assets/colors.json";
 import { useAuth } from "../contexts/Auth";
 import { deleteItem, editItem, getImage } from "../services/wardrobeService";
@@ -42,20 +42,39 @@ const CARD_HEIGHT = height / 2;
 const CARD_WIDTH = width - 50;
 const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
 
+function MenuIcon({ triggerProps, deleting }) {
+  return (
+    <View>
+      {deleting === true ? (
+        <Spinner />
+      ) : (
+        <IconButton
+          {...triggerProps}
+          borderRadius="full"
+          icon={<Entypo name="dots-three-vertical" size={22} color="black" />}
+        />
+      )}
+    </View>
+  );
+}
+
 function CardMenu(props) {
   const navigation = useNavigation();
   const toast = useToast();
   const { refreshUser } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const onClose = () => setIsOpen(false);
   const cancelRef = useRef(null);
 
-  function edit() {
+  const onClose = useCallback(() => setIsOpen(false));
+  const onOpen = useCallback(() => setIsOpen(true));
+  const edit = useCallback(() => {
     navigation.navigate("Item", { item: props.item });
-  }
-
-  async function _delete() {
+  });
+  const post = useCallback(() => {
+    navigation.navigate("Post", { type: "clothing", item: props.item });
+  });
+  const _delete = useCallback(async () => {
     setIsOpen(false);
     setDeleting(true);
     const response = await deleteItem(props.item._id);
@@ -79,10 +98,7 @@ function CardMenu(props) {
       props.setDeleted(true);
       refreshUser();
     }
-  }
-  function post() {
-    navigation.navigate("Post", { type: "clothing", item: props.item });
-  }
+  });
 
   return (
     <View>
@@ -116,27 +132,9 @@ function CardMenu(props) {
       </AlertDialog>
       <Menu
         placement="bottom right"
-        trigger={(triggerProps) => {
-          return (
-            <View>
-              {deleting === true ? (
-                <Spinner />
-              ) : (
-                <IconButton
-                  {...triggerProps}
-                  borderRadius="full"
-                  icon={
-                    <Entypo
-                      name="dots-three-vertical"
-                      size={22}
-                      color="black"
-                    />
-                  }
-                />
-              )}
-            </View>
-          );
-        }}
+        trigger={(triggerProps) => (
+          <MenuIcon triggerProps={triggerProps} deleting={deleting} />
+        )}
       >
         <Menu.Item onPress={edit}>
           <Icon color="muted.800" as={Feather} name="edit" size="md" />
@@ -144,7 +142,7 @@ function CardMenu(props) {
             Edit Item
           </Text>
         </Menu.Item>
-        <Menu.Item onPress={() => setIsOpen(true)}>
+        <Menu.Item onPress={onOpen}>
           <Icon
             color="muted.800"
             as={Ionicons}
@@ -155,7 +153,7 @@ function CardMenu(props) {
             Delete Item
           </Text>
         </Menu.Item>
-        <Menu.Item isDisabled onPress={outfit}>
+        <Menu.Item isDisabled>
           <Icon
             color="muted.800"
             as={MaterialIcons}
@@ -177,7 +175,7 @@ function CardMenu(props) {
             Share to Profile
           </Text>
         </Menu.Item>
-        <Menu.Item isDisabled onPress={share}>
+        <Menu.Item isDisabled>
           <Icon color="muted.800" as={Ionicons} name="share-social" size="md" />
           <Text color="muted.800" fontSize="md" fontWeight="semibold">
             Share to Friend
@@ -291,7 +289,14 @@ export default function ItemCard(props) {
 
   const toast = useToast();
 
-  const updateName = async () => {
+  const onLayout = useCallback((e) =>
+    setLayout({
+      width: e.nativeEvent.layout.width,
+      height: e.nativeEvent.layout.height,
+    })
+  );
+
+  const updateName = useCallback(async () => {
     setUpdatingName(true);
     let res = await editItem({ name: name }, props.item._id);
     setUpdatingName(false);
@@ -310,7 +315,7 @@ export default function ItemCard(props) {
         );
       },
     });
-  };
+  });
 
   return (
     <View
@@ -328,16 +333,7 @@ export default function ItemCard(props) {
         borderColor="gray.300"
         overflow={"hidden"}
       >
-        <VStack
-          position="relative"
-          height="sm"
-          onLayout={(e) =>
-            setLayout({
-              width: e.nativeEvent.layout.width,
-              height: e.nativeEvent.layout.height,
-            })
-          }
-        >
+        <VStack position="relative" height="sm" onLayout={onLayout}>
           {!props.info && (
             <View position={"absolute"} zIndex={5} top="2" right="1">
               <CardMenu setDeleted={props.setDeleted} item={props.item} />
@@ -467,124 +463,4 @@ export default function ItemCard(props) {
       </Box>
     </View>
   );
-
-  // return (
-  //   <View>
-  //     <VStack alignItems="center">
-  //       {props.item.image && <View style={styles.card}>
-  //         <Image
-  //           source={{ uri: props.item.image }}
-  //           style={styles.cardImage}
-  //           resizeMode="cover"
-  //           alt="No image..."
-  //         ></Image>
-  //       </View>}
-  //       <View style={styles.cardDescription(props)}>
-  //         <HStack justifyContent={"flex-start"}>
-  //           <Button size="md" variant="ghost" onPress={() =>
-  //             {navigation.navigate("EditItem", {type: "clothing", item: props.item})}}>
-  //           </Button>
-  //         </HStack>
-  //         <VStack space={2} alignItems="center">
-  //           <Text numberOfLines={1} style={styles.cardtitle}>
-  //             {getText(props.item)}
-  //           </Text>
-  //           {(!props.hideButtons || props.hideButtons == false) && (
-  //             <HStack space={2}>
-  //               <TouchableOpacity
-  //                 onPress={() => {}}
-  //                 style={[styles.button1, {}]}
-  //               >
-  //                 <Text textAlign="center" lineHeight={30}>
-  //                   Item Details
-  //                 </Text>
-  //               </TouchableOpacity>
-  //               <TouchableOpacity
-  //                 onPress={() => {}}
-  //                 style={[styles.button2, {}]}
-  //               >
-  //                 <Text textAlign="center" lineHeight={30} fontSize={12}>
-  //                   Delete Item
-  //                 </Text>
-  //               </TouchableOpacity>
-  //             </HStack>
-  //           )}
-  //         </VStack>
-  //       </View>
-  //     </VStack>
-  //   </View>
-  // );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  card: {
-    marginLeft: 20,
-    marginRight: 20,
-    backgroundColor: "white",
-    borderTopLeftRadius: 15,
-    borderTopRightRadius: 15,
-    borderColor: "#102f42",
-    borderWidth: 2,
-    height: 220,
-    width: CARD_WIDTH,
-    overflow: "hidden",
-  },
-  cardImage: {
-    flex: 3,
-    borderTopRightRadius: 13,
-    borderTopLeftRadius: 13,
-    width: "100%",
-    height: "100%",
-    alignSelf: "center",
-  },
-  cardtitle: {
-    fontSize: 20,
-    marginTop: 10,
-    //fontWeight: "bold",
-  },
-  cardDescription: (props) => ({
-    height: 80,
-    alignItems: "center",
-    fontSize: 20,
-    color: "#478bb5",
-    width: CARD_WIDTH,
-    borderTopLeftRadius: props.item.image ? 0 : 15,
-    borderTopRightRadius: props.item.image ? 0 : 15,
-    borderBottomLeftRadius: 15,
-    borderBottomRightRadius: 15,
-    backgroundColor: "#aed0e6",
-    borderWidth: 2,
-    borderColor: "#102f42",
-    marginLeft: 20,
-    marginRight: 20,
-  }),
-
-  button1: {
-    borderWidth: 1,
-    marginLeft: 10,
-    marginRight: 10,
-    width: 250,
-    height: 33,
-    borderColor: "#102f42",
-    backgroundColor: "#478bb5",
-    borderRadius: 40,
-  },
-
-  button2: {
-    borderWidth: 1,
-    marginLeft: 10,
-    marginRight: 10,
-    width: 75,
-    height: 33,
-    borderColor: "#102f42",
-    backgroundColor: "#478bb5",
-    borderRadius: 40,
-  },
-  // editButton: {
-  //   top: 0,
-  //   right: 0,
-  // },
-});

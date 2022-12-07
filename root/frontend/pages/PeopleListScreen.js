@@ -136,14 +136,12 @@ function Tabs({ labels, setHeight, scrollX, onItemPress }) {
 
 export default function PeopleListScreen({ navigation, route }) {
   navigation.setOptions({
-    header: () => (
-      <ProfileHeader
-        goBack={navigation.goBack}
-        self={route.params.self}
-        username={route.params.username}
-        hideSettings
-      />
-    ),
+    header: ProfileHeader({
+      goBack: navigation.goBack,
+      self: route.params.self,
+      username: route.params.username,
+      hideSettings: true,
+    }),
   });
 
   const labels =

@@ -95,7 +95,7 @@ function PostMenu(props) {
 }
 
 export function ProfileHeader(props) {
-  return (
+  return () => (
     <VStack pb={0.5} safeAreaTop>
       {props.self && !props.hideSettings ? (
         <HStack mx={2} alignItems="center" justifyContent="space-between">
@@ -212,45 +212,56 @@ function FollowedBy(props) {
 }
 
 function ProfileInfo(props) {
-  const postsCount = useCallback(() => {
-    if (!props?.user?.posts || !props?.user?.postsCount) return 0;
-    if (props?.user?.private) {
-      return props.user.postsCount;
-    }
-    return props.user.posts.length;
-  });
-  const followerCount = useCallback(() => {
-    if (!props?.user?.followers || !props?.user?.followerCount) return 0;
-    if (props?.user?.private) {
-      return props.user.followerCount;
-    }
-    return props.user.followers.length;
-  });
-  const followingCount = useCallback(() => {
-    if (!props?.user?.following || !props?.user?.followingCount) return 0;
-    if (props?.user?.private) {
-      return props.user.followingCount;
-    }
-    return props.user.following.length;
-  });
-
   return (
     <VStack>
       <HStack mx={2} p={3} alignItems="center">
         <View flex={1} paddingLeft={1}>
-          <Pressable onPress={pressAvatar}>
+          <Pressable>
             <Avatar size="2xl" emptyIconSize="64" />
           </Pressable>
         </View>
         <HStack space={3} flex={2} justifyContent="space-around">
-          <Pressable onPress={pressPosts}>
-            <Count label={"Posts"} value={postsCount} />
+          <Pressable>
+            <Count
+              label={"Posts"}
+              value={
+                props?.user?.private
+                  ? props?.user?.postsCount
+                    ? props.user.postsCount
+                    : 0
+                  : props?.user?.posts
+                  ? props.user.posts.length
+                  : 0
+              }
+            />
           </Pressable>
           <Pressable onPress={() => props.peopleScreen("followers")}>
-            <Count label={"Followers"} value={followerCount} />
+            <Count
+              label={"Followers"}
+              value={
+                props?.user?.private
+                  ? props?.user?.followerCount
+                    ? props.user.followerCount
+                    : 0
+                  : props?.user?.followers
+                  ? props.user.followers.length
+                  : 0
+              }
+            />
           </Pressable>
           <Pressable onPress={() => props.peopleScreen("following")}>
-            <Count label={"Following"} value={followingCount} />
+            <Count
+              label={"Following"}
+              value={
+                props?.user?.private
+                  ? props?.user?.followingCount
+                    ? props.user.followingCount
+                    : 0
+                  : props?.user?.following
+                  ? props.user.following.length
+                  : 0
+              }
+            />
           </Pressable>
         </HStack>
       </HStack>
@@ -373,14 +384,12 @@ const Tab = (props) => {
         props.setMeasurement(e.nativeEvent.layout);
       }}
     >
-      <Text fontSize="md" fontWeight="medium">
-        {props.icon}
-      </Text>
+      {props.icon}
     </Pressable>
   );
 };
 
-function Tabs({ labels, setHeight, scrollX, onItemPress }) {
+function Tabs({ labels, scrollX, onItemPress }) {
   const [measurements, setMeasurements] = useState({});
 
   useEffect(() => {
@@ -389,9 +398,6 @@ function Tabs({ labels, setHeight, scrollX, onItemPress }) {
 
   return (
     <View
-      onLayout={(e) => {
-        setHeight(e.nativeEvent.layout.height);
-      }}
       pb={2}
       borderBottomWidth={1}
       backgroundColor={"muted.100"}
@@ -489,14 +495,12 @@ export function ProfileScreen({ navigation, route }) {
   }, [user]);
 
   navigation.setOptions({
-    header: () => (
-      <ProfileHeader
-        goBack={navigation.goBack}
-        self={self}
-        username={self ? user.username : route.params.username}
-        openSettings={onOpen}
-      />
-    ),
+    header: ProfileHeader({
+      goBack: navigation.goBack,
+      self: self,
+      username: self ? user.username : route.params.username,
+      openSettings: onOpen,
+    }),
   });
 
   function peopleScreen(path) {
@@ -508,8 +512,6 @@ export function ProfileScreen({ navigation, route }) {
       path: path,
     });
   }
-  const [secondHeaderHeight, setHeight] = useState(0);
-
   const scrollX = useRef(new Animated.Value(0)).current;
 
   const ref = createRef();
@@ -527,11 +529,7 @@ export function ProfileScreen({ navigation, route }) {
         <ScrollView flex={1} stickyHeaderIndices={[2]}>
           <SettingsActionsheet self={self} open={isOpen} close={onClose} />
           <ProfileInfo self={self} user={profile} peopleScreen={peopleScreen} />
-          <Tabs
-            setHeight={setHeight}
-            scrollX={scrollX}
-            onItemPress={onItemPress}
-          />
+          <Tabs scrollX={scrollX} onItemPress={onItemPress} />
 
           <VStack>
             <Animated.ScrollView
@@ -546,7 +544,7 @@ export function ProfileScreen({ navigation, route }) {
                 { useNativeDriver: false }
               )}
             >
-              <Posts spacer={secondHeaderHeight} postIds={profile.posts} />
+              <Posts postIds={profile.posts} />
               <Clothing clothing={profile.wardrobe.items} />
               <Outfits outfits={profile.wardrobe.outfits} />
             </Animated.ScrollView>

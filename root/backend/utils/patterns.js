@@ -1,7 +1,7 @@
 //https://omjclothing.com/blogs/blog/17243569-patterns-101
 //https://sewguide.com/fabric-patterns/
 
-export default patterns = [
+const patterns = [
   //common mens
   "stripes",
   "hairline stripes",
@@ -105,3 +105,4 @@ export default patterns = [
   "suzaani",
   "tribal",
 ];
+export default patterns;
