@@ -2,7 +2,10 @@ const router = require("express").Router();
 const multer = require("multer");
 
 const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+const upload = multer({ 
+  storage: storage,
+  limits: { fileSize: 1048576 }
+ });
 
 const {
   validateCreateItem,
