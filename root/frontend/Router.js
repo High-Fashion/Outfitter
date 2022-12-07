@@ -86,7 +86,7 @@ export default function Router() {
             resolve();
             return;
           }
-          let bool = await refreshUser();
+          await refreshUser();
           resolve();
         });
       } catch (e) {

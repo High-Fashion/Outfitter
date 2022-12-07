@@ -31,7 +31,7 @@ import ItemCard from "../components/ItemCard";
 import OutfitCard from "../components/OutfitCard";
 import PostCard from "../components/PostCard";
 import { useAuth } from "../contexts/Auth";
-import { followUser, getUser } from "../services/userService";
+import { getUser } from "../services/userService";
 
 function SettingsActionsheet(props) {
   const { signOut } = useAuth();
@@ -223,18 +223,6 @@ function ProfileInfo(props) {
   function pressFollowing() {}
   function editProfile() {
     navigation.navigate("EditProfile");
-  }
-
-  async function follow() {
-    setFollowLoading(true);
-    let res = await followUser(
-      props.user,
-      props.user.private
-        ? !user.sentRequests.includes(props.user._id)
-        : !user.following.includes(props.user._id)
-    );
-    await refreshUser();
-    setFollowLoading(false);
   }
 
   return (

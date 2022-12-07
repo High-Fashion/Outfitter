@@ -190,7 +190,7 @@ exports.generateSimilarOutfits = async (req, res) => {
     }
   });
   console.log("starting");
-  py = spawn("python3", ["python/recommend/recommend_outfit.py"], {
+  let py = spawn("python3", ["python/recommend/recommend_outfit.py"], {
     shell: true,
   });
   py.stdout.setEncoding("utf8");
@@ -235,7 +235,7 @@ exports.generateSimilarOutfits = async (req, res) => {
           legs: outfit.bottoms,
           feet: outfit.shoes,
         };
-        Object.keys(outfit).map((slot) => {
+        Object.forEach(outfit).map((slot) => {
           if (["tops", "bottoms", "one_pieces", "feet"].includes(slot)) return;
           props[slot] = outfit[slot];
         });
@@ -296,7 +296,7 @@ exports.updateOne = (req, res) => {
     "waist",
     "hips",
     "feet",
-  ].map((slot) => {
+  ].forEach((slot) => {
     if (!Object.keys(req.body).includes(slot)) {
       req.body[slot] = [];
     }
