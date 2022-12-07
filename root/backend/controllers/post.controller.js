@@ -92,8 +92,7 @@ exports.readAll = (req, res) => {
       "firstName lastName username role created private hideWardrobe"
     )
     .then((data) => {
-      filtered_posts = data.filter((post) => !post.user.private);
-      console.log(filtered_posts);
+      let filtered_posts = data.filter((post) => !post.user.private);
       return res.status(200).send(filtered_posts.map((p) => p._id));
     })
     .catch((err) => {
@@ -113,7 +112,7 @@ exports.readAllFollowing = (req, res) => {
     },
   })
     .then((data) => {
-      filtered_posts = data.filter((post) =>
+      let filtered_posts = data.filter((post) =>
         req.user.following.includes(post.user)
       );
       console.log(filtered_posts);

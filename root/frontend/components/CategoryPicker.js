@@ -11,14 +11,11 @@ import {
   Select,
   VStack,
 } from "native-base";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../contexts/Auth";
 
-import { Dimensions } from "react-native";
 import capitalize from "../utils/capitalize";
 import SearchBar from "./SearchBar";
-
-const { width, height } = Dimensions.get("window");
 
 function getCategories(type, gender) {
   if (type == undefined) return {};

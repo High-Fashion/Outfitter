@@ -1,32 +1,12 @@
-import { useState } from "react";
-import {
-  Text,
-  HStack,
-  Box,
-  Pressable,
-  Center,
-  SunIcon,
-  MoonIcon,
-  PlayIcon,
-  QuestionIcon,
-  Icon,
-  IconButton,
-} from "native-base";
-import { useAuth } from "../contexts/Auth";
+import { Icon } from "native-base";
 
-import WardrobeScreen from "../pages/WardrobeScreen.js";
 import HomeScreen from "../pages/HomeScreen.js";
 import OutfitScreen from "../pages/OutfitScreen.js";
-import PeopleListScreen from "../pages/PeopleListScreen.js";
-import { ProfileHeader, ProfileScreen } from "../pages/ProfileScreen.js";
+import { ProfileScreen } from "../pages/ProfileScreen.js";
+import WardrobeScreen from "../pages/WardrobeScreen.js";
 
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import {
-  Ionicons,
-  MaterialCommunityIcons,
-  Entypo,
-  FontAwesome5,
-} from "@expo/vector-icons";
 import Avatar from "./Avatar";
 
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -41,6 +21,56 @@ function HomeScreenNav() {
       />
       <Stack.Screen name="UserProfile" component={ProfileScreen} />
     </Stack.Navigator>
+  );
+}
+
+function WardrobeIcon({ focused }) {
+  return focused ? (
+    <Icon
+      size="xl"
+      color={"black"}
+      as={<MaterialCommunityIcons name="wardrobe" />}
+    />
+  ) : (
+    <Icon
+      size="xl"
+      color={"black"}
+      as={<MaterialCommunityIcons name="wardrobe-outline" />}
+    />
+  );
+}
+
+function HomeIcon({ focused }) {
+  return focused ? (
+    <Icon
+      size="xl"
+      color={"black"}
+      as={<MaterialCommunityIcons name="home-variant" />}
+    />
+  ) : (
+    <Icon
+      size="xl"
+      color={"black"}
+      as={<MaterialCommunityIcons name="home-variant-outline" />}
+    />
+  );
+}
+
+function OutfitIcon({ focused }) {
+  return focused ? (
+    <Icon size="xl" color={"black"} as={<Ionicons name="body" />} />
+  ) : (
+    <Icon size="xl" color={"black"} as={<Ionicons name="body-outline" />} />
+  );
+}
+
+function ProfileIcon({ focused }) {
+  return (
+    <Avatar
+      focused={focused}
+      navBar
+      emptyIconColor={focused ? "indigo.900" : "black"}
+    />
   );
 }
 
@@ -59,21 +89,7 @@ export default function Footer() {
         component={WardrobeScreen}
         options={{
           headerShown: false,
-          tabBarIcon: ({ focused }) => {
-            return focused ? (
-              <Icon
-                size="xl"
-                color={"black"}
-                as={<MaterialCommunityIcons name="wardrobe" />}
-              />
-            ) : (
-              <Icon
-                size="xl"
-                color={"black"}
-                as={<MaterialCommunityIcons name="wardrobe-outline" />}
-              />
-            );
-          },
+          tabBarIcon: ({ focused }) => <WardrobeIcon focused={focused} />,
         }}
       />
       <Tab.Screen
@@ -81,21 +97,7 @@ export default function Footer() {
         component={HomeScreenNav}
         options={{
           headerShown: false,
-          tabBarIcon: ({ focused }) => {
-            return focused ? (
-              <Icon
-                size="xl"
-                color={"black"}
-                as={<MaterialCommunityIcons name="home-variant" />}
-              />
-            ) : (
-              <Icon
-                size="xl"
-                color={"black"}
-                as={<MaterialCommunityIcons name="home-variant-outline" />}
-              />
-            );
-          },
+          tabBarIcon: ({ focused }) => <HomeIcon focused={focused} />,
         }}
       />
       <Tab.Screen
@@ -103,32 +105,14 @@ export default function Footer() {
         component={OutfitScreen}
         options={{
           headerShown: false,
-          tabBarIcon: ({ focused }) => {
-            return focused ? (
-              <Icon size="xl" color={"black"} as={<Ionicons name="body" />} />
-            ) : (
-              <Icon
-                size="xl"
-                color={"black"}
-                as={<Ionicons name="body-outline" />}
-              />
-            );
-          },
+          tabBarIcon: ({ focused }) => <OutfitIcon focused={focused} />,
         }}
       />
       <Tab.Screen
         name="Profile"
         component={ProfileScreen}
         options={{
-          tabBarIcon: ({ focused }) => {
-            return (
-              <Avatar
-                focused={focused}
-                navBar
-                emptyIconColor={focused ? "indigo.900" : "black"}
-              />
-            );
-          },
+          tabBarIcon: ({ focused }) => <ProfileIcon focused={focused} />,
         }}
       />
     </Tab.Navigator>

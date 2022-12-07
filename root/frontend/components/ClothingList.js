@@ -1,4 +1,4 @@
-import { Box, Checkbox, Divider, HStack, Text, VStack } from "native-base";
+import { Box, Checkbox, HStack, Text, VStack } from "native-base";
 import ItemCard from "./ItemCard";
 
 export default function ClothingList(props) {

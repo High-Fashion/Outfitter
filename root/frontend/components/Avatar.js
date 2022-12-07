@@ -1,11 +1,4 @@
-import {
-  Box,
-  Image,
-  View,
-  Icon,
-  Avatar as NativeBaseAvatar,
-  VStack,
-} from "native-base";
+import { Avatar as NativeBaseAvatar, VStack } from "native-base";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
 

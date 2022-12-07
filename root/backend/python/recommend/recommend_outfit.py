@@ -662,12 +662,6 @@ def main(args):
     accessories_dict = json.loads(args["accessories"])
     one_pieces_dict = json.loads(args["one_pieces"])
 
-    # outfits = pd.read_json("outfits.json").truncate(after=9)
-    # tops = pd.read_json("tops.json")
-    # bottoms = pd.read_json("bottoms.json")
-    # accessories = pd.read_json("accessories.json")
-    # shoes = pd.read_json("shoes.json")
-    # one_pieces = pd.read_json("one_pieces.json")
     outfits = pd.json_normalize(outfit_dict)
     tops = pd.json_normalize(tops_dict)
     bottoms = pd.json_normalize(bottoms_dict)
@@ -736,37 +730,9 @@ def main(args):
     for key in del_keys:
         del desired_outfit_dict[key]
     best_outfits_propogated.append(desired_outfit_dict)
-    # for i, outfit in enumerate(best_outfit_ids):
-    #     outfit_propogated = {
-    #         "_id": i + 1,
-    #         "tops": [],
-    #     }
-    #     for top in outfit["tops"]:
-    #         outfit_propogated["tops"].append(
-    #             tops.loc[tops['_id'] == top].to_dict())
-    #     for slot in options["accessories"].keys():
-    #         for accessory in outfit[slot]:
-    #             if slot not in outfit_propogated.keys():
-    #                 outfit_propogated[slot] = []
-    #             outfit_propogated[slot].append(
-    #                 accessories.loc[accessories['_id'] == accessory].to_json())
-    #     if "bottoms" in outfit.keys():
-    #         outfit_propogated["bottoms"] = bottoms.loc[bottoms['_id']
-    #                                                    == outfit["bottoms"]].to_dict()
-    #     if "one_piece" in outfit.keys():
-    #         outfit_propogated["one_piece"] = one_pieces.loc[one_pieces['_id']
-    #                                                         == outfit["one_pieces"]].to_dict()
-    #     outfit_propogated["shoes"] = shoes.loc[shoes['_id']
-    #                                            == outfit["shoes"]].to_dict()
-    #     best_outfits_propogated.append(outfit_propogated)
 
     json_out = json.dumps(best_outfit_ids, ensure_ascii=False)
     print(json_out)
-    # original_stout = sys.stdout
-    # with open("recommended_outfits.json", "w") as f:
-    #     sys.stdout = f
-    #     print(json_out)
-    #     sys.stdout = original_stout
 
 
 if __name__ == "__main__":
@@ -777,10 +743,4 @@ if __name__ == "__main__":
     args["shoes"] = input("shoes")
     args["accessories"] = input("accessories")
     args["one_pieces"] = input("one_pieces")
-    # args["desired_outfit"] = '{"ear":{"left":[],"right":[]},"left":{"upper_arm":[],"forearm":[],"wrist":[],"hand":{"thumb":[],"index":[],"middle":[],"ring":[],"pinky":[]},"thigh":[],"ankle":[]},"right":{"upper_arm":[],"forearm":[],"wrist":[],"hand":{"thumb":[],"index":[],"middle":[],"ring":[],"pinky":[]},"thigh":[],"ankle":[]},"_id":"638878c36a8454b4200ac5db","styles":[],"user":"635941840ad5083e2bc720cb","hair":[],"head":[{"colors":{"primary":"#FFFFFF","secondary":"#006400"},"_id":"63852aa7968d2866c692da76","user":"635941840ad5083e2bc720cb","type":"accessory","category":"hats","subcategories":["dad"],"brand":"LaCost","pattern":"No pattern / solid","material":"Cotton","__v":0}],"eyes":[],"nose":[],"mouth":[],"neck":[],"torso":[{"colors":{"primary":"#FF7F50"},"_id":"637e4ea767775ef57d47745d","type":"top","category":"shirts","subcategories":["button front"],"brand":"bvnnbvbnv","pattern":"dress stripes","material":"Silk","__v":0,"name":"Coral Shirt","fit":"normal"},{"colors":{"primary":"#FF0000","secondary":"#E9967A","tertiary":"#8B0000"},"_id":"637ea30c7d1baa7c5e98ba2d","type":"top","category":"hoodies","subcategories":["fitted"],"brand":"PacSun","pattern":"graphic","material":"Cotton","__v":0,"name":"my fav hoodie XD 😂","fit":"normal"}],"back":[],"legs":[{"colors":{"primary":"#4682B4","secondary":"#FFFFFF","tertiary":"#A9A9A9"},"_id":"637e66f367775ef57d477513","type":"bottoms","category":"jeans","subcategories":["baggy","carpenter"],"brand":"Gucci","pattern":"No pattern / solid","material":"Denim","__v":0,"fit":"baggy"}],"waist":[],"hips":[],"feet":[{"colors":{"primary":"#000000","secondary":"#FFFFFF"},"_id":"637eafe054b349b9f9115864","type":"shoes","material":"Fur","category":"sneakers","subcategories":["skateboarding"],"brand":"Vans","pattern":"No pattern / solid","__v":0}],"__v":0}'
-    # args["tops"] = '[{"colors":{"primary":"#FF7F50"},"_id":"637e4ea767775ef57d47745d","type":"top","category":"shirts","subcategories":["button front"],"brand":"bvnnbvbnv","pattern":"dress stripes","material":"Silk","name":"Coral Shirt","fit":"normal"},{"colors":{"primary":"#FF0000","secondary":"#E9967A","tertiary":"#8B0000"},"_id":"637ea30c7d1baa7c5e98ba2d","type":"top","category":"hoodies","subcategories":["fitted"],"brand":"PacSun","pattern":"graphic","material":"Cotton","name":"my fav hoodie XD 😂","fit":"normal"},{"colors":{"primary":"#FF0000"},"_id":"63841a95e0ccdc7c3c439a40","type":"top","category":"shirts","subcategories":["henley"],"brand":"Cat","pattern":"stripes","material":"Silk","fit":"tight"},{"colors":{"primary":"#DC143C"},"_id":"638436f7f427be3d4c1dc7d5","type":"top","category":"shirts","subcategories":["henley"],"brand":"asdasd","pattern":"candy stripes","material":"Silk","fit":"normal"},{"colors":{"primary":"#F08080"},"_id":"63843f236a888f4c01a2ba61","user":"635941840ad5083e2bc720cb","type":"top","imageName":"bbdd149a45427e5fcc7ad6f0e9be8665c23579e316c8b1e3fde5e6da993b3fe7","category":"sweaters","subcategories":["crewneck","cardigan"],"brand":"😺","pattern":"candy stripes","material":"Leather","name":"Light Coral Sweaters","fit":"normal"},{"colors":{"primary":"#F5F5F5"},"_id":"6384437c7fae8f3faa03c456","user":"635941840ad5083e2bc720cb","type":"top","imageName":"74b0a3bada617e09a5f5e6da673613f696c50c7b911c81f2bcadc09501ba9b5a","category":"shirts","subcategories":["henley"],"brand":"🐕 ","pattern":"No pattern / solid","material":"Fur","name":"White Smoke Shirts","fit":"normal"}]'
-    # args["bottoms"] = '[{"colors":{"primary":"#4682B4","secondary":"#FFFFFF","tertiary":"#A9A9A9"},"_id":"637e66f367775ef57d477513","type":"bottoms","category":"jeans","subcategories":["baggy","carpenter"],"brand":"Gucci","pattern":"No pattern / solid","material":"Denim","fit":"baggy"}]'
-    # args["shoes"] = '[{"colors":{"primary":"#000000","secondary":"#FFFFFF"},"_id":"637eafe054b349b9f9115864","type":"shoes","material":"Fur","category":"sneakers","subcategories":["skateboarding"],"brand":"Vans","pattern":"No pattern / solid"}]'
-    # args["accessories"] = '[{"colors":{"primary":"#B8860B"},"_id":"637eaf7154b349b9f9115850","type":"accessory","category":"glasses","subcategories":["prescription","round"],"brand":"EyeBuyDirect","pattern":"No pattern / solid"},{"colors":{"primary":"#FFFFFF","secondary":"#006400"},"_id":"63852aa7968d2866c692da76","user":"635941840ad5083e2bc720cb","type":"accessory","category":"hats","subcategories":["dad"],"brand":"LaCost","pattern":"No pattern / solid","material":"Cotton"}]'
-    # args["one_pieces"] = '[]'
     main(args)

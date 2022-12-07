@@ -14,7 +14,7 @@ export default function FollowButton(props) {
 
   async function follow() {
     setFollowLoading(true);
-    let res = await followUser(
+    await followUser(
       props.user,
       props.user.private
         ? !user.sentRequests.includes(props.user._id)

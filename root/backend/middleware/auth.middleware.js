@@ -7,7 +7,7 @@ exports.validateSignUp = (req, res, next) => {
     req.body;
 
   //Check terms
-  if (acceptTerms != true)
+  if (acceptTerms !== true)
     return res.status(400).json({
       success: false,
       message: "TERMS",
@@ -19,8 +19,6 @@ exports.validateSignUp = (req, res, next) => {
       success: false,
       message: "EMAIL",
     });
-
-  //TODO: Require unique email address
 
   //Require first and last name to be only letters
   if (firstName == null || !validator.isAlpha(firstName))
@@ -51,8 +49,6 @@ exports.validateSignUp = (req, res, next) => {
       message: "USERNAME",
     });
 
-  //TODO: Require unique username
-
   //Require strong password, default settings https://www.npmjs.com/package/validator
   if (password == null || !validator.isStrongPassword(password))
     return res.status(400).json({
@@ -64,7 +60,7 @@ exports.validateSignUp = (req, res, next) => {
 };
 
 exports.validateSignIn = (req, res, next) => {
-  let { username, email, password } = req.body;
+  let { username, email } = req.body;
   if (email != null) {
     //Use email to login
     return next();

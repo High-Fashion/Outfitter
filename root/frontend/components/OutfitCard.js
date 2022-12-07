@@ -24,7 +24,7 @@ import {
   View,
   VStack,
 } from "native-base";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Dimensions } from "react-native";
 import { useAuth } from "../contexts/Auth";
 import {
@@ -373,7 +373,7 @@ function CardMenu(props) {
             Share to Profile
           </Text>
         </Menu.Item>
-        <Menu.Item isDisabled onPress={share}>
+        <Menu.Item isDisabled>
           <Icon color="muted.800" as={Ionicons} name="share-social" size="md" />
           <Text color="muted.800" fontSize="md" fontWeight="semibold">
             Share to Friend
@@ -473,6 +473,7 @@ function ItemImageArray(props) {
             {Object.keys(props.outfit).map((slot) => {
               if (
                 slot == "user" ||
+                slot == "__v" ||
                 slot == "_id" ||
                 slot == "id" ||
                 slot == "styles" ||
@@ -483,7 +484,7 @@ function ItemImageArray(props) {
                 return;
               } else {
                 return (
-                  <>
+                  <React.Fragment key={slot}>
                     {props.outfit[slot].map((item) => {
                       return (
                         <HStack
@@ -504,7 +505,7 @@ function ItemImageArray(props) {
                         </HStack>
                       );
                     })}
-                  </>
+                  </React.Fragment>
                 );
               }
             })}
@@ -682,6 +683,7 @@ export default function OutfitCard(props) {
                   if (
                     slot == "user" ||
                     slot == "_id" ||
+                    slot == "__v" ||
                     slot == "id" ||
                     slot == "styles" ||
                     slot.includes("image") ||
