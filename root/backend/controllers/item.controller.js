@@ -35,11 +35,11 @@ exports.create = async (req, res) => {
       Wardrobe.findById(req.user.wardrobe).then((wardrobe) => {
         wardrobe.items.push(item);
         wardrobe.save();
-        res.send(data);
+        return res.status(200).send(data);
       });
     })
     .catch((err) => {
-      res.status(500).send({
+      return res.status(500).send({
         message: err.message || "Some error occurred while creating the item.",
       });
     });
@@ -51,8 +51,10 @@ exports.readOne = (req, res) => {
   Item.findById(id)
     .then((data) => {
       if (!data)
-        res.status(404).send({ message: "Not found item with id " + id });
-      else res.send(data);
+        return res
+          .status(404)
+          .send({ message: "Not found item with id " + id });
+      else return res.status(200).send(data);
     })
     .catch((err) => {
       res.status(500).send({ message: "Error retrieving item with id=" + id });
@@ -62,7 +64,7 @@ exports.readOne = (req, res) => {
 exports.readAll = (req, res) => {
   Item.find()
     .then((data) => {
-      return res.send(data);
+      return res.status(200).send(data);
     })
     .catch((err) => {
       return res.status(500).send({
@@ -80,7 +82,10 @@ exports.updateOne = (req, res) => {
         return res.status(404).send({
           message: `Cannot update item with id=${id}. Maybe item was not found!`,
         });
-      } else res.send({ message: "Item was updated successfully." });
+      } else
+        return res
+          .status(200)
+          .send({ message: "Item was updated successfully." });
     })
     .catch((err) => {
       return res.status(500).send({
@@ -95,17 +100,17 @@ exports.deleteOne = (req, res) => {
   Item.findByIdAndRemove(id)
     .then((data) => {
       if (!data) {
-        res.status(404).send({
+        return res.status(404).send({
           message: `Cannot delete Item with id=${id}. Maybe Item was not found!`,
         });
       } else {
-        res.send({
+        return res.status(200).send({
           message: "Item was deleted successfully!",
         });
       }
     })
     .catch((err) => {
-      res.status(500).send({
+      return res.status(500).send({
         message: "Could not delete Item with id=" + id,
       });
     });

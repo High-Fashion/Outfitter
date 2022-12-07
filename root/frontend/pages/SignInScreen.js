@@ -9,11 +9,11 @@ import {
   HStack,
   Button,
   ScrollView,
-  View
+  View,
+  Image,
 } from "native-base";
 import { useAuth } from "../contexts/Auth";
 import { useState } from "react";
-import { Image } from "react-native";
 
 function SignInScreen({ navigation }) {
   const [username, setUsername] = useState("");
@@ -28,7 +28,7 @@ function SignInScreen({ navigation }) {
     <ScrollView>
       <VStack paddingTop={4} alignItems="center" space={3} paddingBottom={4}>
         <VStack alignItems="center" paddingBottom={4}>
-        <HStack
+          <HStack
             style={{
               position: "relative",
               left: 20,

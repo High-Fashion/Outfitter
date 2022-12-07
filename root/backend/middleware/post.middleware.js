@@ -1,4 +1,10 @@
 exports.validateCreatePost = (req, res, next) => {
+  if (!req.body.data) {
+    console.log("fail");
+    res.status(400).send({ message: "Content can not be empty!" });
+    return;
+  }
+  req.body = JSON.parse(req.body.data);
   next();
 };
 

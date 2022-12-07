@@ -1,4 +1,8 @@
 const router = require("express").Router();
+const multer = require("multer");
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 const {
   validateCreatePost,
@@ -7,7 +11,13 @@ const {
 
 const post_controller = require("../controllers/post.controller");
 
-router.post("/create", validateCreatePost, post_controller.create);
+router.post(
+  "/create",
+  upload.single("image"),
+  validateCreatePost,
+  post_controller.create
+);
+router.get("/follow", post_controller.readAllFollowing);
 router.get("/", post_controller.readAll);
 router.get("/:id", post_controller.readOne);
 router.put("/:id", validateUpdatePost, post_controller.updateOne);

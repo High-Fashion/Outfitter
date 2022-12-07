@@ -31,11 +31,13 @@ import {
   FontAwesome5,
   MaterialIcons,
 } from "@expo/vector-icons";
-import { Dimensions } from "react-native";
-import { useState, useEffect } from "react";
+import { Dimensions, Animated } from "react-native";
+import { useState, useEffect, useRef, useCallback, createRef } from "react";
 import { HeaderBackButton } from "@react-navigation/elements";
 import { getUser, followUser } from "../services/userService";
 import { useNavigation } from "@react-navigation/native";
+import { useHeaderHeight } from "@react-navigation/elements";
+import PostCard from "../components/PostCard";
 
 function SettingsActionsheet(props) {
   const { signOut } = useAuth();
@@ -88,9 +90,7 @@ function PostMenu(props) {
           Post Outfit Picture
         </Text>
       </Menu.Item>
-      <Menu.Item
-        onPress={() => navigation.navigate("Post", { type: "clothing" })}
-      >
+      <Menu.Item onPress={() => navigation.navigate("Post", { type: "item" })}>
         <FontAwesome5 name="tshirt" size={18} color="muted.800" />
         <Text color="muted.800" fontSize="md" fontWeight="semibold">
           Post Clothing Picture
@@ -310,134 +310,204 @@ function ProfileInfo(props) {
   );
 }
 
-const { width } = Dimensions.get("window");
+const { height, width } = Dimensions.get("window");
 
 function Posts(props) {
   return (
-    <FlatList
-      style={{ width: width }}
-      data={props.postIds}
-      numColumns={3}
-      renderItem={({ item, index }) => {
-        return (
-          <View
-            paddingLeft={(index + 1) % 3 == 0 ? 0.5 : 0}
-            paddingRight={(index + 1) % 3 == 1 ? 0.5 : 0}
-            paddingBottom={0.5}
-            style={{ width: width / 3, height: width / 3 }}
-          >
-            <Button flex={1} borderRadius={0} />
-          </View>
-        );
-      }}
-    />
+    <VStack flex={1}>
+      <FlatList
+        style={{ width: width }}
+        data={props.postIds}
+        numColumns={3}
+        renderItem={({ item, index }) => {
+          return (
+            <View
+              paddingLeft={(index + 1) % 3 == 0 ? 0.5 : 0}
+              paddingRight={(index + 1) % 3 == 1 ? 0.5 : 0}
+              paddingBottom={0.5}
+              style={{ width: width / 3, height: width / 3 }}
+            >
+              <Pressable flex={1}>
+                <PostCard square postId={item} />
+              </Pressable>
+            </View>
+          );
+        }}
+      />
+    </VStack>
   );
 }
 
 function Clothing(props) {
   return (
-    <FlatList
-      style={{ width: width }}
-      data={props.clothing}
-      numColumns={1}
-      renderItem={({ item, index }) => {
-        return (
-          <View paddingBottom={3}>
-            <ItemCard item={item} />
-          </View>
-        );
-      }}
-    />
+    <VStack flex={1}>
+      <FlatList
+        p={4}
+        style={{ width: width }}
+        data={props.clothing}
+        numColumns={1}
+        renderItem={({ item, index }) => {
+          return (
+            <View paddingBottom={4}>
+              <ItemCard info item={item} />
+            </View>
+          );
+        }}
+      />
+    </VStack>
   );
 }
 
 function Outfits(props) {
   return (
-    <FlatList
-      style={{ width: width }}
-      data={props.outfits}
-      numColumns={1}
-      renderItem={({ item, index }) => {
-        return (
-          <View>
-            <OutfitCard outfit={item} />
-          </View>
-        );
+    <VStack flex={1}>
+      <FlatList
+        style={{ width: width }}
+        p={4}
+        data={props.outfits}
+        numColumns={1}
+        renderItem={({ item, index }) => {
+          return (
+            <View pb={4}>
+              <OutfitCard info outfit={item} />
+            </View>
+          );
+        }}
+      />
+    </VStack>
+  );
+}
+
+function Indicator(props) {
+  const inputRange = Object.keys(props.measurements).map((m) => m * width);
+  const indicatorWidth = props.scrollX.interpolate({
+    inputRange,
+    outputRange: Object.keys(props.measurements).map(
+      (measurement) => props.measurements[measurement].width
+    ),
+  });
+  const translateX = props.scrollX.interpolate({
+    inputRange,
+    outputRange: Object.keys(props.measurements).map(
+      (measurement) => props.measurements[measurement].x
+    ),
+  });
+  return (
+    <Animated.View
+      style={{
+        position: "absolute",
+        backgroundColor: "#818cf8",
+        height: 3,
+        width: indicatorWidth,
+        bottom: 0,
+        left: 0,
+        transform: [{ translateX }],
       }}
     />
   );
 }
 
-function ProfileContent(props) {
-  if (!props.user) return <></>;
-  const [focused, setFocused] = useState("grid");
+const Tab = (props) => {
   return (
-    <VStack>
-      <HStack paddingBottom={0.5} justifyContent={"space-evenly"} width={width}>
-        <View
-          borderBottomWidth={focused == "grid" ? 1 : 0}
-          borderColor="black"
-          width={width / 3}
-        >
-          <IconButton
-            onPress={() => setFocused("grid")}
-            borderRadius={"full"}
-            icon={
-              <Icon
-                size="xl"
-                color={focused == "grid" ? "indigo.900" : "black"}
-                as={<MaterialCommunityIcons name="grid" />}
-              />
+    <Pressable
+      onPress={props.onPress}
+      onLayout={(e) => {
+        props.setMeasurement(e.nativeEvent.layout);
+      }}
+    >
+      <Text fontSize="md" fontWeight="medium">
+        {props.icon}
+      </Text>
+    </Pressable>
+  );
+};
+
+function Tabs({ labels, setHeight, scrollX, onItemPress }) {
+  const [measurements, setMeasurements] = useState({});
+
+  useEffect(() => {
+    console.log(measurements);
+  }, [measurements]);
+
+  return (
+    <View
+      onLayout={(e) => {
+        setHeight(e.nativeEvent.layout.height);
+      }}
+      pb={2}
+      borderBottomWidth={1}
+      backgroundColor={"muted.100"}
+      borderBottomColor="muted.400"
+      flexDir={"row"}
+      justifyContent="space-evenly"
+    >
+      {[
+        {
+          id: 0,
+          icon: (
+            <IconButton
+              onPress={() => onItemPress(0)}
+              variant="unstyled"
+              borderRadius={"full"}
+              icon={
+                <Icon
+                  size="xl"
+                  color={"black"}
+                  as={<MaterialCommunityIcons name="grid" />}
+                />
+              }
+            />
+          ),
+        },
+        {
+          id: 1,
+          icon: (
+            <IconButton
+              onPress={() => onItemPress(1)}
+              variant="unstyled"
+              borderRadius={"full"}
+              icon={
+                <Icon
+                  size="xl"
+                  color={"black"}
+                  as={<MaterialCommunityIcons name="hanger" />}
+                />
+              }
+            />
+          ),
+        },
+        {
+          id: 2,
+          icon: (
+            <IconButton
+              onPress={() => onItemPress(2)}
+              variant="unstyled"
+              borderRadius={"full"}
+              icon={
+                <Icon
+                  size="xl"
+                  color={"black"}
+                  as={<FontAwesome5 name="person-booth" />}
+                />
+              }
+            />
+          ),
+        },
+      ].map((item, index) => {
+        return (
+          <Tab
+            key={index}
+            icon={item.icon}
+            setMeasurement={(measurement) =>
+              setMeasurements({ ...measurements, [item.id]: measurement })
             }
           />
-        </View>
-        <View
-          borderBottomWidth={focused == "wardrobe" ? 1 : 0}
-          borderColor="black"
-          width={width / 3}
-        >
-          <IconButton
-            onPress={() => setFocused("wardrobe")}
-            borderRadius={"full"}
-            icon={
-              <Icon
-                size="xl"
-                color={focused == "wardrobe" ? "indigo.900" : "black"}
-                as={<MaterialCommunityIcons name="hanger" />}
-              />
-            }
-          />
-        </View>
-        <View
-          borderBottomWidth={focused == "outfits" ? 1 : 0}
-          borderColor="black"
-          width={width / 3}
-        >
-          <IconButton
-            onPress={() => setFocused("outfits")}
-            borderRadius={"full"}
-            icon={
-              <Icon
-                size="xl"
-                color={focused == "outfits" ? "indigo.900" : "black"}
-                as={<FontAwesome5 name="person-booth" />}
-              />
-            }
-          />
-        </View>
-      </HStack>
-      <ScrollView
-        horizontal={true}
-        snapToInterval={width}
-        disableIntervalMomentum={true}
-      >
-        <HStack>
-          <Posts posts={props.posts} postIds={props.postIds} />
-          <Clothing clothing={props.clothing} />
-          <Outfits outfits={props.outfits} />
-        </HStack>
-      </ScrollView>
-    </VStack>
+        );
+      })}
+      {Object.keys(measurements).length === 3 && (
+        <Indicator measurements={measurements} scrollX={scrollX} />
+      )}
+    </View>
   );
 }
 
@@ -446,7 +516,6 @@ export function ProfileScreen({ navigation, route }) {
   const { isOpen, onOpen, onClose } = useDisclose();
   const self = route?.params?.id ? false : true;
   const [profile, setProfile] = useState({});
-  const [posts, setPosts] = useState({});
 
   useEffect(() => {
     async function get() {
@@ -460,20 +529,6 @@ export function ProfileScreen({ navigation, route }) {
     }
     get();
   }, [user]);
-
-  useEffect(() => {
-    async function loadPosts() {
-      await Promise.all(
-        profile.posts.map(async (post) => {
-          if (!post) return;
-          const postData = await getPost(post);
-          setPosts({ ...posts, post: postData });
-        })
-      );
-    }
-    if (!profile.posts?.length || profile.posts?.length == 0) return;
-    loadPosts();
-  }, [profile.posts]);
 
   navigation.setOptions({
     header: () => (
@@ -495,22 +550,51 @@ export function ProfileScreen({ navigation, route }) {
       path: path,
     });
   }
+  const [secondHeaderHeight, setHeight] = useState(0);
+  const headerHeight = useHeaderHeight();
+
+  const scrollX = useRef(new Animated.Value(0)).current;
+
+  const ref = createRef();
+
+  const onItemPress = useCallback((itemIndex) => {
+    console.log(ref);
+    ref?.current?.scrollTo({
+      x: itemIndex * width,
+    });
+  }, []);
 
   return (
     <View flex={1}>
       {profile.username ? (
-        <VStack flex={1}>
+        <ScrollView flex={1} stickyHeaderIndices={[2]}>
           <SettingsActionsheet self={self} open={isOpen} close={onClose} />
           <ProfileInfo self={self} user={profile} peopleScreen={peopleScreen} />
-          <ProfileContent
-            postIds={profile.posts}
-            posts={posts}
-            clothing={profile.wardrobe.items}
-            outfits={profile.wardrobe.outfits}
-            self={self}
-            user={profile}
+          <Tabs
+            setHeight={setHeight}
+            scrollX={scrollX}
+            onItemPress={onItemPress}
           />
-        </VStack>
+
+          <VStack>
+            <Animated.ScrollView
+              ref={ref}
+              horizontal={true}
+              pagingEnabled
+              bounces={false}
+              disableIntervalMomentum={true}
+              showsHorizontalScrollIndicator={false}
+              onScroll={Animated.event(
+                [{ nativeEvent: { contentOffset: { x: scrollX } } }],
+                { useNativeDriver: false }
+              )}
+            >
+              <Posts spacer={secondHeaderHeight} postIds={profile.posts} />
+              <Clothing clothing={profile.wardrobe.items} />
+              <Outfits outfits={profile.wardrobe.outfits} />
+            </Animated.ScrollView>
+          </VStack>
+        </ScrollView>
       ) : (
         <VStack flex={1} alignItems="center" justifyContent="space-around">
           <Spinner />

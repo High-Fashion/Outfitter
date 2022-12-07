@@ -1,5 +1,6 @@
 import {
   Box,
+  Spinner,
   Button,
   FormControl,
   Heading,
@@ -16,12 +17,12 @@ import {
   VStack,
 } from "native-base";
 import { useEffect, useState } from "react";
-import DropDownPicker from "react-native-dropdown-picker";
 import OutfitCard from "../components/OutfitCard";
 import ToastAlert from "../components/ToastAlert";
 import capitalize from "../utils/capitalize";
 import ImageSelecter from "../utils/imageSelecter";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { editPost, addPost } from "../services/postService";
 import { useAuth } from "../contexts/Auth";
 import ItemCard from "../components/ItemCard";
 import SearchBar from "../components/SearchBar";
@@ -165,17 +166,16 @@ export default function PostScreen({ route, navigation }) {
   const [formData, setData] = useState(
     editing
       ? { ...route.params.post }
-      : route.params.type == "clothing"
+      : route.params.type == "item"
       ? {
+          type: route.params.type,
           item: route.params?.item ? route.params.item : undefined,
         }
       : {
+          type: route.params.type,
           outfit: route.params?.outfit ? route.params.outfit : undefined,
         }
   );
-
-  async function addPost() {}
-  async function editPost() {}
 
   const finish = async () => {
     if (!formData.image) {
@@ -192,7 +192,7 @@ export default function PostScreen({ route, navigation }) {
       });
       return;
     }
-    if (route.params.type == "clothing" && !formData.item) {
+    if (route.params.type == "item" && !formData.item) {
       toast.show({
         render: () => {
           return (
@@ -233,7 +233,7 @@ export default function PostScreen({ route, navigation }) {
             colorScheme={res === true ? "success" : "error"}
             title={
               res === true
-                ? "Item successfully " + (editing ? "updated" : "created") + "!"
+                ? "Post successfully " + (editing ? "updated" : "created") + "!"
                 : "Failed to " +
                   (editing ? "update" : "create") +
                   " post, please try again."
@@ -298,7 +298,7 @@ export default function PostScreen({ route, navigation }) {
             />
           </FormControl>
         )}
-        {route.params.type == "clothing" && (
+        {route.params.type == "item" && (
           <FormControl>
             <FormControl.Label
               _text={{

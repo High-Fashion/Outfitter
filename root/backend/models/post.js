@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 const postSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  imageName: { type: String, required: true },
   type: { type: String, required: true }, //photo, item, outfit
   outfit: { type: Schema.Types.ObjectId, ref: "Outfit", autopopulate: true },
   item: { type: Schema.Types.ObjectId, ref: "Item", autopopulate: true },
