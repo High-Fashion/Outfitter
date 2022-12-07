@@ -1,10 +1,6 @@
 import {
   Actionsheet,
-  AddIcon,
-  Box,
-  Button,
   FlatList,
-  HamburgerIcon,
   Heading,
   HStack,
   Icon,
@@ -27,7 +23,6 @@ import { useAuth } from "../contexts/Auth";
 import {
   Ionicons,
   MaterialCommunityIcons,
-  Entypo,
   FontAwesome5,
   MaterialIcons,
 } from "@expo/vector-icons";

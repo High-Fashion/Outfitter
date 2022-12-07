@@ -1,18 +1,9 @@
-import React, {
-  createRef,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useState } from "react";
 
+import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import {
-  Button,
-  Center,
   CloseIcon,
-  DeleteIcon,
   FlatList,
-  Heading,
   HStack,
   Icon,
   IconButton,
@@ -22,15 +13,14 @@ import {
   View,
   VStack,
 } from "native-base";
-import { useAuth } from "../contexts/Auth";
-import SearchBar from "../components/SearchBar";
-import { MaterialIcons, FontAwesome5 } from "@expo/vector-icons";
 import { Animated, Dimensions, Keyboard, Pressable } from "react-native";
-import Avatar from "../components/Avatar";
-import { getUsers } from "../services/userService";
-import { getPublicPosts, getFollowPosts } from "../services/postService";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Avatar from "../components/Avatar";
 import PostCard from "../components/PostCard";
+import SearchBar from "../components/SearchBar";
+import { useAuth } from "../contexts/Auth";
+import { getFollowPosts, getPublicPosts } from "../services/postService";
+import { getUsers } from "../services/userService";
 const { width } = Dimensions.get("window");
 
 function FollowTab(props) {

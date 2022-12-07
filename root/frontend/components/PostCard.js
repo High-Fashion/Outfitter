@@ -9,23 +9,13 @@ import {
   View,
   Image,
   Button,
-  Box,
-  Divider,
-  Heading,
   IconButton,
   Menu,
-  Modal,
   AlertDialog,
   Skeleton,
-  CloseIcon,
-  Alert,
   Center,
-  Input,
-  useContrastText,
-  Pressable,
   VStack,
 } from "native-base";
-import { ScrollView as GestureScrollView } from "react-native-gesture-handler";
 import Avatar from "./Avatar";
 import ItemCard from "./ItemCard";
 import { Dimensions, StyleSheet, TouchableOpacity } from "react-native";
@@ -33,8 +23,6 @@ const { width } = Dimensions.get("window");
 import {
   Entypo,
   MaterialCommunityIcons,
-  MaterialIcons,
-  FontAwesome,
   Ionicons,
   Feather,
   AntDesign,

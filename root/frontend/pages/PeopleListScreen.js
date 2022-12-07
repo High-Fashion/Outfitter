@@ -1,6 +1,5 @@
+import { useHeaderHeight } from "@react-navigation/elements";
 import {
-  Box,
-  Button,
   FlatList,
   HStack,
   Pressable,
@@ -9,22 +8,12 @@ import {
   View,
   VStack,
 } from "native-base";
-import { Dimensions } from "react-native";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Animated, Dimensions } from "react-native";
 import Avatar from "../components/Avatar";
-import { ProfileHeader } from "./ProfileScreen";
-import { useHeaderHeight } from "@react-navigation/elements";
-import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import {
-  createRef,
-  forwardRef,
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import { Animated } from "react-native";
-import { useAuth } from "../contexts/Auth";
 import FollowButton from "../components/FollowButton";
+import { useAuth } from "../contexts/Auth";
+import { ProfileHeader } from "./ProfileScreen";
 
 const { width } = Dimensions.get("window");
 const { height } = Dimensions.get("window");

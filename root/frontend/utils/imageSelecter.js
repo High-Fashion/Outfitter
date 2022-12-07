@@ -1,20 +1,19 @@
-import React, { useState, useEffect, useRef } from "react";
-import {
-  Button,
-  Image,
-  View,
-  HStack,
-  Icon,
-  Box,
-  Text,
-  VStack,
-  Center,
-} from "native-base";
 import * as ImagePicker from "expo-image-picker";
+import {
+  Box,
+  Button,
+  Center,
+  Icon,
+  Image,
+  Text,
+  View,
+  VStack,
+} from "native-base";
+import { useEffect, useRef, useState } from "react";
 
+import AntDesign from "@expo/vector-icons/AntDesign";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import AntDesign from "@expo/vector-icons/AntDesign";
 import { Animated, Dimensions } from "react-native";
 
 const { width } = Dimensions.get("window");
