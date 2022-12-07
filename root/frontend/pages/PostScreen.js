@@ -1,31 +1,28 @@
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import {
   Box,
-  Spinner,
   Button,
   FormControl,
   Heading,
-  HStack,
   Icon,
-  IconButton,
   Input,
   Modal,
   Pressable,
   ScrollView,
-  Select,
+  Spinner,
   useToast,
   View,
   VStack,
 } from "native-base";
 import { useEffect, useState } from "react";
+import ItemCard from "../components/ItemCard";
 import OutfitCard from "../components/OutfitCard";
+import SearchBar from "../components/SearchBar";
 import ToastAlert from "../components/ToastAlert";
+import { useAuth } from "../contexts/Auth";
+import { addPost, editPost } from "../services/postService";
 import capitalize from "../utils/capitalize";
 import ImageSelecter from "../utils/imageSelecter";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { editPost, addPost } from "../services/postService";
-import { useAuth } from "../contexts/Auth";
-import ItemCard from "../components/ItemCard";
-import SearchBar from "../components/SearchBar";
 
 function ItemPicker(props) {
   const { user } = useAuth();
@@ -94,6 +91,16 @@ function ItemPicker(props) {
 
 function OutfitPicker(props) {
   const { user } = useAuth();
+  const [list, setList] = useState(user.wardrobe.outfits);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    setList(
+      user.wardrobe.outfits.map((o) => {
+        if (o.name.includes(searchQuery)) return true;
+      })
+    );
+  }, [searchQuery]);
 
   return (
     <View>
@@ -113,7 +120,7 @@ function OutfitPicker(props) {
                 <SearchBar hideFilter />
               </View>
               <VStack pt="3" space="3">
-                {user?.wardrobe?.outfits?.map((outfit) => (
+                {list.map((outfit) => (
                   <Pressable
                     onPress={() => {
                       props.setOutfit(outfit);
