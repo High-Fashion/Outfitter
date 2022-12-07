@@ -58,7 +58,7 @@ export default function ImageSelecter(props) {
   useEffect(() => {
     Animated.spring(animatedHeight, {
       friction: 100,
-      toValue: windowHeight,
+      toValue: windowHeight(),
       useNativeDriver: false,
     }).start();
   }, [open, props.image]);

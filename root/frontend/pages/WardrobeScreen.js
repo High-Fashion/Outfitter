@@ -121,7 +121,7 @@ function FilterOptionsModal(props) {
 
 function getItemString(item) {
   let result = "";
-  Object.keys(item).map((key) => {
+  Object.keys(item).forEach((key) => {
     if (
       !["category", "material", "pattern", "brand", "fit", "name"].includes(key)
     )
@@ -131,7 +131,7 @@ function getItemString(item) {
     }
   });
   if (item.colors) {
-    Object.keys(item.colors).map((color) => {
+    Object.keys(item.colors).forEach((color) => {
       if (item.colors[color]) {
         result += item.colors[color];
       }

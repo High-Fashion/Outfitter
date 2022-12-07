@@ -13,7 +13,7 @@ import {
   View,
   VStack,
 } from "native-base";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Pressable } from "react-native";
 import ItemCard from "../components/ItemCard";
 import Model from "../components/Model";
@@ -214,7 +214,7 @@ function unflatten(obj) {
 function depopulate(outfit) {
   const flat = flattenObj(outfit);
   let newOutfit = flat;
-  Object.keys(flat).map((slot) => {
+  Object.keys(flat).forEach((slot) => {
     if (
       slot == "user" ||
       slot == "_id" ||
@@ -233,7 +233,7 @@ function depopulate(outfit) {
 }
 
 function NewOutfitScreen({ navigation, route }) {
-  const { user, refreshUser } = useAuth();
+  const { user } = useAuth();
   const editing = route?.params?.outfit != undefined;
   const [outfit, setOutfit] = useState(
     editing ? { ...route.params.outfit } : {}
