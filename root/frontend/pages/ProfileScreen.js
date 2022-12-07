@@ -200,34 +200,6 @@ function FollowedBy(props) {
     }
   }
 
-  const postsCount = () => {
-    return props?.user?.private
-      ? props?.user?.postsCount
-        ? props.user.postsCount
-        : 0
-      : props?.user?.posts
-      ? props.user.posts.length
-      : 0;
-  };
-  const followerCount = () => {
-    props?.user?.private
-      ? props?.user?.followerCount
-        ? props.user.followerCount
-        : 0
-      : props?.user?.followers
-      ? props.user.followers.length
-      : 0;
-  };
-  const followingCount = () => {
-    props?.user?.private
-      ? props?.user?.followingCount
-        ? props.user.followingCount
-        : 0
-      : props?.user?.following
-      ? props.user.following.length
-      : 0;
-  };
-
   return (
     <HStack>
       <NativeBaseAvatar.Group />
@@ -240,6 +212,28 @@ function FollowedBy(props) {
 }
 
 function ProfileInfo(props) {
+  const postsCount = () => {
+    if (!props?.user?.posts || !props?.user?.postsCount) return 0;
+    if (props?.user?.private) {
+      return props.user.postsCount;
+    }
+    return props.user.posts.length;
+  };
+  const followerCount = () => {
+    if (!props?.user?.followers || !props?.user?.followerCount) return 0;
+    if (props?.user?.private) {
+      return props.user.followerCount;
+    }
+    return props.user.followers.length;
+  };
+  const followingCount = () => {
+    if (!props?.user?.following || !props?.user?.followingCount) return 0;
+    if (props?.user?.private) {
+      return props.user.followingCount;
+    }
+    return props.user.following.length;
+  };
+
   return (
     <VStack>
       <HStack mx={2} p={3} alignItems="center">
