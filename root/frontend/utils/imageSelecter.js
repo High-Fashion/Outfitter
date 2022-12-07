@@ -49,14 +49,16 @@ export default function ImageSelecter(props) {
   const fullHeight = 200;
   const animatedHeight = useRef(new Animated.Value(startingHeight)).current;
 
+  const windowHeight = () => {
+    if (!open) return startingHeight;
+    if (!props.image) return fullHeight;
+    return (width / props.image.width) * props.image.height;
+  };
+
   useEffect(() => {
     Animated.spring(animatedHeight, {
       friction: 100,
-      toValue: open
-        ? props.image
-          ? (width / props.image.width) * props.image.height
-          : fullHeight
-        : startingHeight,
+      toValue: windowHeight,
       useNativeDriver: false,
     }).start();
   }, [open, props.image]);

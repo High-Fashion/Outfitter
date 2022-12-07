@@ -3,7 +3,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { View } from "native-base";
 
-import * as SplashScreen from "expo-splash-screen";
 import EditProfileScreen from "./pages/EditProfileScreen.js";
 import ItemScreen from "./pages/ItemScreen.js";
 import NewOutfitScreen from "./pages/NewOutfitScreen.js";
@@ -19,8 +18,7 @@ import {
   WardrobeSettings,
 } from "./pages/SetupScreen.js";
 
-import { useCallback, useEffect, useState } from "react";
-import { Keyboard } from "react-native";
+import { useEffect, useState } from "react";
 import Footer from "./components/Footer.js";
 import config from "./config";
 import { useAuth } from "./contexts/Auth";
@@ -44,8 +42,7 @@ const finishSetup = async (data) => {
 export default function Router() {
   const [isSetup, setIsSetup] = useState(false);
   const [appIsReady, setAppIsReady] = useState(false);
-  const [navReady, setNavReady] = useState(false);
-  const { signedIn, refreshUser, getTokens, user, signOut } = useAuth();
+  const { signedIn, refreshUser, getTokens, user } = useAuth();
 
   useEffect(() => {
     if (!appIsReady) return;
@@ -53,28 +50,6 @@ export default function Router() {
       setIsSetup(true);
     }
   }, [user, appIsReady]);
-
-  const [isKeyboardVisible, setKeyboardVisible] = useState(false);
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      () => {
-        setKeyboardVisible(true); // or some other action
-      }
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      () => {
-        setKeyboardVisible(false); // or some other action
-      }
-    );
-
-    return () => {
-      keyboardDidHideListener.remove();
-      keyboardDidShowListener.remove();
-    };
-  }, []);
 
   useEffect(() => {
     async function prepare() {
@@ -99,17 +74,6 @@ export default function Router() {
 
     prepare();
   }, []);
-
-  const onLayoutRootView = useCallback(async () => {
-    if (appIsReady) {
-      // This tells the splash screen to hide immediately! If we call this after
-      // `setAppIsReady`, then we may see a blank screen while the app is
-      // loading its initial state and rendering its first pixels. So instead,
-      // we hide the splash screen once we know the root view has already
-      // performed layout.
-      await SplashScreen.hideAsync();
-    }
-  }, [appIsReady]);
 
   if (!appIsReady) {
     return null;
@@ -141,7 +105,7 @@ export default function Router() {
                   <Stack.Screen
                     name="NewOutfit"
                     component={NewOutfitScreen}
-                    options={({ navigation, route }) => ({
+                    options={({ route }) => ({
                       headerTitle: route?.params?.title
                         ? route.params.title
                         : "New Outfit",

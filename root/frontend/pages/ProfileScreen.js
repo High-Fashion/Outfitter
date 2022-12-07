@@ -244,13 +244,13 @@ function ProfileInfo(props) {
         </View>
         <HStack space={3} flex={2} justifyContent="space-around">
           <Pressable onPress={pressPosts}>
-            <Count label={"Posts"} value={postsCount()} />
+            <Count label={"Posts"} value={postsCount} />
           </Pressable>
           <Pressable onPress={() => props.peopleScreen("followers")}>
-            <Count label={"Followers"} value={followerCount()} />
+            <Count label={"Followers"} value={followerCount} />
           </Pressable>
           <Pressable onPress={() => props.peopleScreen("following")}>
-            <Count label={"Following"} value={followingCount()} />
+            <Count label={"Following"} value={followingCount} />
           </Pressable>
         </HStack>
       </HStack>
