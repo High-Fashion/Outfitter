@@ -1,31 +1,28 @@
-import React, { useState, useEffect } from "react";
-import {
-  Spinner,
-  Button,
-  VStack,
-  Text,
-  ScrollView,
-  Box,
-  HStack,
-  Modal,
-  Heading,
-  View,
-  Checkbox,
-  Divider,
-  Icon,
-  useToast,
-} from "native-base";
-import { useAuth } from "../contexts/Auth";
-import ClothingList from "../components/ClothingList";
-import Model from "../components/Model";
-import capitalize from "../utils/capitalize";
-import { addOutfit, editOutfit } from "../services/wardrobeService";
-import ImageSelecter from "../utils/imageSelecter";
-import ItemCard from "../components/ItemCard";
-import { Pressable } from "react-native";
-const clothingSlots = require("../assets/clothing_slots.json");
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  Box,
+  Button,
+  Divider,
+  Heading,
+  HStack,
+  Icon,
+  Modal,
+  ScrollView,
+  Text,
+  useToast,
+  View,
+  VStack,
+} from "native-base";
+import React, { useEffect, useState } from "react";
+import { Pressable } from "react-native";
+import ItemCard from "../components/ItemCard";
+import Model from "../components/Model";
 import ToastAlert from "../components/ToastAlert";
+import { useAuth } from "../contexts/Auth";
+import { addOutfit, editOutfit } from "../services/wardrobeService";
+import capitalize from "../utils/capitalize";
+import ImageSelecter from "../utils/imageSelecter";
+const clothingSlots = require("../assets/clothing_slots.json");
 
 const flattenObj = (ob) => {
   let result = {};
@@ -49,7 +46,7 @@ function ItemSearchModal(props) {
     if (!selected.map((i) => i._id).includes(item._id)) {
       setSelected([...selected, item]);
     } else {
-      var newSelect = selected.filter((i) => i._id != item._id);
+      let newSelect = selected.filter((i) => i._id != item._id);
       setSelected(newSelect);
     }
   };
@@ -140,7 +137,15 @@ function SlotModal(props) {
               <VStack space={3}>
                 {props.inSlot && props.inSlot.length > 0 ? (
                   props.inSlot.map((item) => {
-                    return <ItemCard key={item._id} hideShadow selected info item={item} />;
+                    return (
+                      <ItemCard
+                        key={item._id}
+                        hideShadow
+                        selected
+                        info
+                        item={item}
+                      />
+                    );
                   })
                 ) : (
                   <Box
@@ -182,7 +187,7 @@ function SlotModal(props) {
   );
 }
 
-function unflatten(obj){
+function unflatten(obj) {
   let result = {},
     temp,
     substrings,
@@ -203,26 +208,27 @@ function unflatten(obj){
     }
     temp[substrings[substrings.length - 1]] = obj[property];
   }
- return result;
-};
+  return result;
+}
 
 function depopulate(outfit) {
   const flat = flattenObj(outfit);
-  var newOutfit = flat;
+  let newOutfit = flat;
   Object.keys(flat).map((slot) => {
-    if ((slot == "user" ||
+    if (
+      slot == "user" ||
       slot == "_id" ||
       slot == "id" ||
       slot == "styles" ||
-      slot.includes("image"))
+      slot.includes("image")
     ) {
-      return
+      return;
     }
     if (outfit[slot]) {
       newOutfit[slot] = outfit[slot].map((item) => item._id);
     }
   });
-  const unflat = unflatten(newOutfit)
+  const unflat = unflatten(newOutfit);
   return unflat;
 }
 
@@ -232,13 +238,13 @@ function NewOutfitScreen({ navigation, route }) {
   const [outfit, setOutfit] = useState(
     editing ? { ...route.params.outfit } : {}
   );
-  console.log(outfit)
+  console.log(outfit);
   const [image, setImage] = useState(undefined);
   const [slot, setSlot] = useState();
   const [submitting, setSubmitting] = useState(false);
 
   const getText = (item) => {
-    var text = "";
+    let text = "";
     if (item.colors) {
       if (item.colors.primary) text += item.colors.primary;
       if (item.colors.tertiary) {
@@ -264,7 +270,7 @@ function NewOutfitScreen({ navigation, route }) {
 
   const finish = async () => {
     setSubmitting(true);
-    var res = editing
+    let res = editing
       ? await editOutfit(depopulate(outfit), image, route.params.outfit._id)
       : await addOutfit(depopulate(outfit), image);
     setSubmitting(false);
@@ -320,13 +326,23 @@ function NewOutfitScreen({ navigation, route }) {
             )
               return;
             return (
-              <HStack key={slot} mx={3} alignItems="center" justifyContent="space-between">
+              <HStack
+                key={slot}
+                mx={3}
+                alignItems="center"
+                justifyContent="space-between"
+              >
                 <View>
                   <Text>{capitalize(slot)}</Text>
                 </View>
                 {outfit[slot].map((item) => {
                   return (
-                    <Button key={item._id} variant={"subtle"} p={1} style={{ flexShrink: 1 }}>
+                    <Button
+                      key={item._id}
+                      variant={"subtle"}
+                      p={1}
+                      style={{ flexShrink: 1 }}
+                    >
                       {item.name ? item.name : getText(item)}
                     </Button>
                   );

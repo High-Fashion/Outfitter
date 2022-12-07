@@ -1,23 +1,23 @@
-import { useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import {
-  VStack,
-  HStack,
-  Heading,
-  View,
-  Box,
-  Text,
-  Button,
-  Divider,
-  ScrollView,
-  CloseIcon,
   AddIcon,
-  Modal,
-  FormControl,
+  Box,
+  Button,
   Checkbox,
-  SmallCloseIcon,
+  CloseIcon,
+  Divider,
+  FormControl,
+  Heading,
+  HStack,
   Image,
+  Modal,
+  ScrollView,
+  SmallCloseIcon,
+  Text,
+  View,
+  VStack,
 } from "native-base";
+import { useEffect, useState } from "react";
 import SearchBar from "../components/SearchBar";
 import { useAuth } from "../contexts/Auth";
 
@@ -117,7 +117,7 @@ function FilterOptionsModal(props) {
 }
 
 function getItemString(item) {
-  var result = "";
+  let result = "";
   Object.keys(item).map((key) => {
     if (!["category", "material", "pattern", "brand"].includes(key)) return;
     if (item[key]) {

@@ -23,17 +23,17 @@ exports.readOne = (req, res) => {
           .status(404)
           .send({ message: "Not found user with id " + id });
 
-      var postsCount = 0;
-      var followerCount = 0;
-      var followingCount = 0;
+      let postsCount = 0;
+      let followerCount = 0;
+      let followingCount = 0;
 
-      var followers = user.followers.map((f) => f._id);
-      var mutuals = req.user.following.filter((following) => {
+      let followers = user.followers.map((f) => f._id);
+      let mutuals = req.user.following.filter((following) => {
         if (followers.includes(following)) {
           return true;
         }
       });
-      var projection = "";
+      let projection = "";
       postsCount = user.posts.length;
       followerCount = user.followers.length;
       followingCount = user.following.length;
@@ -49,7 +49,7 @@ exports.readOne = (req, res) => {
         .populate("followers", privateProjection)
         .populate("following", privateProjection)
         .then((user) => {
-          var ret = { ...user._doc };
+          let ret = { ...user._doc };
           ret.postsCount = postsCount;
           ret.followerCount = followerCount;
           ret.followingCount = followingCount;
@@ -71,7 +71,7 @@ exports.readOne = (req, res) => {
 };
 
 exports.readAll = (req, res) => {
-  var users = [];
+  let users = [];
   User.find({ private: true }, privateProjection)
     .then((privateData) => {
       User.find({ private: false, hideWardrobe: true }, followProjection)
@@ -162,14 +162,14 @@ exports.follow = (req, res) => {
 
   User.findById(id)
     .then((user) => {
-      var isInArray = false;
+      let isInArray = false;
       if (user.private == true) {
-        var requests = user.recievedRequests.map((f) => f._id);
+        let requests = user.recievedRequests.map((f) => f._id);
         isInArray = requests.some((f) => {
           return f.equals(req.user._id);
         });
       } else {
-        var followers = user.followers.map((f) => f._id);
+        let followers = user.followers.map((f) => f._id);
         isInArray = followers.some((f) => {
           return f.equals(req.user._id);
         });

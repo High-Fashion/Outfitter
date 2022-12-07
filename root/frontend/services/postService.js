@@ -1,6 +1,6 @@
-import axiosInstance from "../utils/axiosInstance";
-import config from "../config";
 import axios from "axios";
+import config from "../config";
+import axiosInstance from "../utils/axiosInstance";
 import tokenService from "./tokenService";
 // import id from "faker/lib/locales/id_ID";
 
@@ -62,7 +62,7 @@ async function getFollowPosts() {
 
 async function addPost(post) {
   console.log("adding ", post);
-  var formData = new FormData();
+  let formData = new FormData();
   if (post.image) {
     let uri = post.image.uri;
     let filename = uri.split("/").pop();
@@ -70,7 +70,7 @@ async function addPost(post) {
     let type = match ? `image/${match[1]}` : `image`;
     formData.append("image", { uri: uri, name: filename, type });
   }
-  var newPost = post;
+  let newPost = post;
   delete newPost.image;
   formData.append("data", JSON.stringify(post));
   console.log(formData);

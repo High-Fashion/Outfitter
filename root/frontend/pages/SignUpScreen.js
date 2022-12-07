@@ -1,23 +1,22 @@
 import {
-  Heading,
-  Stack,
-  Input,
-  View,
-  Text,
+  Box,
+  Button,
+  Checkbox,
   Divider,
   FormControl,
-  VStack,
+  Heading,
   HStack,
-  Button,
-  ScrollView,
-  Checkbox,
+  Input,
   Pressable,
-  Card,
-  Box,
+  ScrollView,
+  Stack,
+  Text,
+  View,
+  VStack,
 } from "native-base";
-import { React, useState, useEffect, useRef } from "react";
-import { useAuth } from "../contexts/Auth";
+import { React, useEffect, useRef, useState } from "react";
 import { Image } from "react-native";
+import { useAuth } from "../contexts/Auth";
 
 const validator = require("validator");
 
@@ -131,8 +130,8 @@ function SignUpScreen({ navigation }) {
   };
 
   const validate = () => {
-    var temp = {};
-    var valid = true;
+    let temp = {};
+    let valid = true;
     console.log(formData);
 
     //Validate email
@@ -183,14 +182,14 @@ function SignUpScreen({ navigation }) {
   };
 
   const setName = (name) => {
-    var nameSplit = name.split(/\s+/);
+    let nameSplit = name.split(/\s+/);
     if (nameSplit.length < 2 || nameSplit[1] == "") {
       setData({ ...formData, firstName: "", lastName: "" });
       validateName();
 
       return;
     }
-    var temp = nameSplit
+    let temp = nameSplit
       .splice(1, nameSplit.length)
       .toString()
       .split(",")

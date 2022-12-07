@@ -1,39 +1,21 @@
-import React, { Component, useState, useEffect } from "react";
-import { useAuth } from "../contexts/Auth";
 import {
-  Button,
-  Image,
-  Box,
-  HStack,
-  VStack,
-  Text,
-  FormControl,
-  Input,
-  Checkbox,
-  ScrollView,
-  Select,
-  Divider,
-  AddIcon,
-  Modal,
-  Icon,
-  DeleteIcon,
-  CheckCircleIcon,
-  View,
-  ChevronDownIcon,
   ArrowBackIcon,
-  Heading,
-  Spinner,
-  useToast,
+  Button,
+  Center,
   CheckIcon,
   CloseIcon,
+  Heading,
+  HStack,
   IconButton,
-  Center,
-  SmallCloseIcon,
-  Pressable,
+  ScrollView,
+  Select,
+  VStack,
 } from "native-base";
+import React, { useEffect, useState } from "react";
+import { useAuth } from "../contexts/Auth";
 
-import capitalize from "../utils/capitalize";
 import { Dimensions } from "react-native";
+import capitalize from "../utils/capitalize";
 import SearchBar from "./SearchBar";
 
 const { width, height } = Dimensions.get("window");
@@ -41,8 +23,8 @@ const { width, height } = Dimensions.get("window");
 function getCategories(type, gender) {
   if (type == undefined) return {};
   type = ["top", "bottoms", "one_piece"].includes(type) ? "clothing" : type;
-  var categories = require("../assets/categories.json");
-  var newCategories = {};
+  let categories = require("../assets/categories.json");
+  let newCategories = {};
   gender.map((gender) => {
     newCategories = { ...newCategories, ...categories[type][gender] };
   });

@@ -1,46 +1,39 @@
 import {
+  AlertDialog,
+  Box,
+  Button,
+  Heading,
   HStack,
+  Icon,
+  IconButton,
   Image,
+  Input,
+  Menu,
+  Spinner,
   Text,
+  useContrastText,
+  useToast,
   View,
   VStack,
-  Button,
-  Box,
-  Divider,
-  Heading,
-  IconButton,
-  Icon,
-  Menu,
-  Modal,
-  AlertDialog,
-  useToast,
-  Skeleton,
-  Spinner,
-  CloseIcon,
-  Alert,
-  Center,
-  Input,
-  useContrastText,
 } from "native-base";
 
-import { Dimensions, StyleSheet, TouchableOpacity } from "react-native";
-import { useNavigation } from "@react-navigation/native";
 import {
   Entypo,
+  Feather,
+  Ionicons,
   MaterialCommunityIcons,
   MaterialIcons,
-  FontAwesome,
-  Ionicons,
-  Feather,
 } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { Dimensions, StyleSheet } from "react-native";
 
-import capitalize from "../utils/capitalize";
-import { deleteItem, getImage } from "../services/wardrobeService";
 import { useEffect, useRef, useState } from "react";
-import { useAuth } from "../contexts/Auth";
-import ToastAlert from "./ToastAlert";
-import IconImage from "./IconImage";
 import colors from "../assets/colors.json";
+import { useAuth } from "../contexts/Auth";
+import { deleteItem, editItem, getImage } from "../services/wardrobeService";
+import capitalize from "../utils/capitalize";
+import IconImage from "./IconImage";
+import ToastAlert from "./ToastAlert";
 
 const colorCodes = colors["codes"];
 
@@ -48,7 +41,6 @@ const { width, height } = Dimensions.get("window");
 const CARD_HEIGHT = height / 2;
 const CARD_WIDTH = width - 50;
 const SPACING_FOR_CARD_INSET = width * 0.1 - 10;
-import { editItem } from "../services/wardrobeService";
 
 function CardMenu(props) {
   const navigation = useNavigation();
@@ -239,7 +231,7 @@ export default function ItemCard(props) {
   const { user } = useAuth();
 
   const getText = () => {
-    var text = "";
+    let text = "";
     if (props.item.colors) {
       if (props.item.colors.primary) text += props.item.colors.primary;
       if (props.item.colors.tertiary) {
@@ -268,7 +260,7 @@ export default function ItemCard(props) {
 
   const updateName = async () => {
     setUpdatingName(true);
-    var res = await editItem({ name: name }, props.item._id);
+    let res = await editItem({ name: name }, props.item._id);
     setUpdatingName(false);
     toast.show({
       render: () => {

@@ -1,29 +1,28 @@
-import { useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import {
-  VStack,
-  HStack,
-  Heading,
-  View,
-  Box,
-  Text,
-  Button,
-  Divider,
-  ScrollView,
-  CloseIcon,
   AddIcon,
-  Modal,
-  FormControl,
+  Box,
+  Button,
   Checkbox,
-  SmallCloseIcon,
+  CloseIcon,
+  Divider,
+  FormControl,
+  Heading,
+  HStack,
   Image,
+  Modal,
+  ScrollView,
+  SmallCloseIcon,
+  Text,
+  View,
+  VStack,
 } from "native-base";
+import { useEffect, useState } from "react";
 import SearchBar from "../components/SearchBar";
 import { useAuth } from "../contexts/Auth";
 
-import ClothingList from "../components/ClothingList";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { TouchableWithoutFeedback } from "react-native";
+import ClothingList from "../components/ClothingList";
 
 function TypeSelector(props) {
   return (
@@ -121,7 +120,7 @@ function FilterOptionsModal(props) {
 }
 
 function getItemString(item) {
-  var result = "";
+  let result = "";
   Object.keys(item).map((key) => {
     if (
       !["category", "material", "pattern", "brand", "fit", "name"].includes(key)
@@ -235,52 +234,118 @@ function SortBar(props) {
 function AddItemFab(props) {
   const { navigation } = props;
   const { user } = useAuth();
-  var gender = user.wardrobe.gender
+  let gender = user.wardrobe.gender;
   if (gender.includes("mens") && !gender.includes("womens")) {
-    gender = "mens"
+    gender = "mens";
   } else if (gender.includes("womens") && !gender.includes("mens")) {
-    gender = "womens"
+    gender = "womens";
   } else {
-    gender = "non-binary"
+    gender = "non-binary";
   }
+
+  const topImage = () => {
+    if (gender == "mens") {
+      return require("../assets/icons/mens_top.png");
+    }
+    if (gender == "womens") {
+      return require("../assets/icons/womens_top.png");
+    }
+    return [
+      require("../assets/icons/mens_top.png"),
+      require("../assets/icons/womens_top.png"),
+    ][Math.random()];
+  };
+
+  const bottomImage = () => {
+    if (gender == "mens") {
+      return require("../assets/icons/mens_bottoms.png");
+    }
+    if (gender == "womens") {
+      return require("../assets/icons/womens_bottoms.png");
+    }
+    return [
+      require("../assets/icons/mens_bottoms.png"),
+      require("../assets/icons/womens_bottoms.png"),
+    ][Math.random()];
+  };
+
+  const onePieceImage = () => {
+    if (gender == "mens") {
+      return require("../assets/icons/mens_one_piece.png");
+    }
+    if (gender == "womens") {
+      return require("../assets/icons/womens_one_piece.png");
+    }
+    return [
+      require("../assets/icons/mens_one_piece.png"),
+      require("../assets/icons/womens_one_piece.png"),
+    ][Math.random()];
+  };
+
+  const accessoryImage = () => {
+    if (gender == "mens") {
+      return require("../assets/icons/mens_accessory.png");
+    }
+    if (gender == "womens") {
+      return require("../assets/icons/womens_accessory.png");
+    }
+    return [
+      require("../assets/icons/mens_accessory.png"),
+      require("../assets/icons/womens_accessory.png"),
+    ][Math.random()];
+  };
+
+  const shoesImage = () => {
+    if (gender == "mens") {
+      return require("../assets/icons/mens_shoes.png");
+    }
+    if (gender == "womens") {
+      return require("../assets/icons/womens_shoes.png");
+    }
+    return [
+      require("../assets/icons/mens_shoes.png"),
+      require("../assets/icons/womens_shoes.png"),
+    ][Math.random()];
+  };
 
   const types = [
     {
       name: "Top",
-      image: gender == "mens" ? require("../assets/icons/mens_top.png") : gender == "womens" ? require("../assets/icons/womens_top.png") : [require("../assets/icons/mens_top.png"), require("../assets/icons/womens_top.png")][Math.random()],
+      image: topImage,
       onPress: () => {
         navigation.navigate("Item", { type: "top" });
       },
     },
     {
       name: "Bottoms",
-      image: gender == "mens" ? require("../assets/icons/mens_bottoms.png") : gender == "womens" ? require("../assets/icons/womens_bottoms.png") : [require("../assets/icons/mens_bottoms.png"), require("../assets/icons/womens_bottoms.png")][Math.random()],
+      image: bottomImage,
       onPress: () => {
         navigation.navigate("Item", { type: "bottoms" });
       },
     },
     {
       name: "One Piece",
-      image: gender == "mens" ? require("../assets/icons/mens_one_piece.png") : gender == "womens" ? require("../assets/icons/womens_one_piece.png") : [require("../assets/icons/mens_one_piece.png"), require("../assets/icons/womens_one_piece.png")][Math.random()],
+      image: onePieceImage,
       onPress: () => {
         navigation.navigate("Item", { type: "one_piece" });
       },
     },
     {
       name: "Accessory",
-      image: gender == "mens" ? require("../assets/icons/mens_accessory.png") : gender == "womens" ? require("../assets/icons/womens_accessory.png") : [require("../assets/icons/mens_accessory.png"), require("../assets/icons/womens_accessory.png")][Math.random()],
+      image: accessoryImage,
       onPress: () => {
         navigation.navigate("Item", { type: "accessory" });
       },
     },
     {
       name: "Shoes",
-      image: gender == "mens" ? require("../assets/icons/mens_shoes.png") : gender == "womens" ? require("../assets/icons/womens_shoes.png") : [require("../assets/icons/mens_shoes.png"), require("../assets/icons/womens_shoes.png")][Math.random()],
+      image: shoesImage,
       onPress: () => {
         navigation.navigate("Item", { type: "shoes" });
       },
     },
   ];
+
   return (
     <VStack
       style={{ zIndex: 2, position: "absolute", right: 25, bottom: 20 }}
@@ -352,7 +417,7 @@ function WardrobeScreen({ navigation }) {
   const [itemList, setItemList] = useState(user.wardrobe.items);
   const [selectedType, setSelectedType] = useState("clothing");
   const [filteredItemList, setFilteredItemList] = useState(itemList);
-  
+
   useEffect(() => {
     // Call only when screen open or when back on screen
     if (isFocused) {

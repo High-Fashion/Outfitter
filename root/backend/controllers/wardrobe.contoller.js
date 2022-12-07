@@ -3,7 +3,7 @@ const Style = require("../models/style");
 const User = require("../models/user");
 
 exports.create = (req, res) => {
-  var styleObjectList = [];
+  let styleObjectList = [];
   if (req.body.styles) {
     req.body.styles.map((style) => {
       Style.findOne({ name: style })

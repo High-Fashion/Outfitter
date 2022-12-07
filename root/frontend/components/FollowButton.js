@@ -1,8 +1,8 @@
+import { useNavigation } from "@react-navigation/native";
 import { Button } from "native-base";
 import { useState } from "react";
 import { useAuth } from "../contexts/Auth";
 import { followUser } from "../services/userService";
-import { useNavigation } from "@react-navigation/native";
 
 export default function FollowButton(props) {
   const { user, refreshUser } = useAuth();
@@ -14,7 +14,7 @@ export default function FollowButton(props) {
 
   async function follow() {
     setFollowLoading(true);
-    var res = await followUser(
+    let res = await followUser(
       props.user,
       props.user.private
         ? !user.sentRequests.includes(props.user._id)

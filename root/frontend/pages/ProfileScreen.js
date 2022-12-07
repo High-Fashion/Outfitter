@@ -1,5 +1,14 @@
 import {
+  FontAwesome5,
+  Ionicons,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons";
+import { HeaderBackButton, useHeaderHeight } from "@react-navigation/elements";
+import { useNavigation } from "@react-navigation/native";
+import {
   Actionsheet,
+  Avatar as NativeBaseAvatar,
   FlatList,
   Heading,
   HStack,
@@ -14,25 +23,15 @@ import {
   View,
   VStack,
 } from "native-base";
+import { createRef, useCallback, useEffect, useRef, useState } from "react";
+import { Animated, Dimensions } from "react-native";
+import Avatar from "../components/Avatar";
 import FollowButton from "../components/FollowButton";
 import ItemCard from "../components/ItemCard";
 import OutfitCard from "../components/OutfitCard";
-import { Avatar as NativeBaseAvatar } from "native-base";
-import Avatar from "../components/Avatar";
-import { useAuth } from "../contexts/Auth";
-import {
-  Ionicons,
-  MaterialCommunityIcons,
-  FontAwesome5,
-  MaterialIcons,
-} from "@expo/vector-icons";
-import { Dimensions, Animated } from "react-native";
-import { useState, useEffect, useRef, useCallback, createRef } from "react";
-import { HeaderBackButton } from "@react-navigation/elements";
-import { getUser, followUser } from "../services/userService";
-import { useNavigation } from "@react-navigation/native";
-import { useHeaderHeight } from "@react-navigation/elements";
 import PostCard from "../components/PostCard";
+import { useAuth } from "../contexts/Auth";
+import { getUser } from "../services/userService";
 
 function SettingsActionsheet(props) {
   const { signOut } = useAuth();
@@ -158,7 +157,6 @@ function FollowedBy(props) {
   const mutualFollows = user_followers.filter((f) =>
     self_following.includes(f)
   );
-  const [names, setNames] = useState([]);
 
   if (mutualFollows.length == 0) return <></>;
 
@@ -214,29 +212,27 @@ function FollowedBy(props) {
 }
 
 function ProfileInfo(props) {
-  const { user, refreshUser } = useAuth();
-  const [followLoading, setFollowLoading] = useState(false);
-  const navigation = useNavigation();
-
-  function pressAvatar() {}
-  function pressPosts() {}
-  function pressFollowers() {}
-  function pressFollowing() {}
-  function editProfile() {
-    navigation.navigate("EditProfile");
-  }
-
-  async function follow() {
-    setFollowLoading(true);
-    var res = await followUser(
-      props.user,
-      props.user.private
-        ? !user.sentRequests.includes(props.user._id)
-        : !user.following.includes(props.user._id)
-    );
-    await refreshUser();
-    setFollowLoading(false);
-  }
+  const postsCount = useCallback(() => {
+    if (!props?.user?.posts || !props?.user?.postsCount) return 0;
+    if (props?.user?.private) {
+      return props.user.postsCount;
+    }
+    return props.user.posts.length;
+  });
+  const followerCount = useCallback(() => {
+    if (!props?.user?.followers || !props?.user?.followerCount) return 0;
+    if (props?.user?.private) {
+      return props.user.followerCount;
+    }
+    return props.user.followers.length;
+  });
+  const followingCount = useCallback(() => {
+    if (!props?.user?.following || !props?.user?.followingCount) return 0;
+    if (props?.user?.private) {
+      return props.user.followingCount;
+    }
+    return props.user.following.length;
+  });
 
   return (
     <VStack>
@@ -248,46 +244,13 @@ function ProfileInfo(props) {
         </View>
         <HStack space={3} flex={2} justifyContent="space-around">
           <Pressable onPress={pressPosts}>
-            <Count
-              label={"Posts"}
-              value={
-                props?.user?.private
-                  ? props?.user?.postsCount
-                    ? props.user.postsCount
-                    : 0
-                  : props?.user?.posts
-                  ? props.user.posts.length
-                  : 0
-              }
-            />
+            <Count label={"Posts"} value={postsCount} />
           </Pressable>
           <Pressable onPress={() => props.peopleScreen("followers")}>
-            <Count
-              label={"Followers"}
-              value={
-                props?.user?.private
-                  ? props?.user?.followerCount
-                    ? props.user.followerCount
-                    : 0
-                  : props?.user?.followers
-                  ? props.user.followers.length
-                  : 0
-              }
-            />
+            <Count label={"Followers"} value={followerCount} />
           </Pressable>
           <Pressable onPress={() => props.peopleScreen("following")}>
-            <Count
-              label={"Following"}
-              value={
-                props?.user?.private
-                  ? props?.user?.followingCount
-                    ? props.user.followingCount
-                    : 0
-                  : props?.user?.following
-                  ? props.user.following.length
-                  : 0
-              }
-            />
+            <Count label={"Following"} value={followingCount} />
           </Pressable>
         </HStack>
       </HStack>

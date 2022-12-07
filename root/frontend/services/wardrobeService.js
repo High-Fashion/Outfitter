@@ -1,6 +1,6 @@
-import axiosInstance from "../utils/axiosInstance";
-import config from "../config";
 import axios from "axios";
+import config from "../config";
+import axiosInstance from "../utils/axiosInstance";
 import tokenService from "./tokenService";
 // import id from "faker/lib/locales/id_ID";
 
@@ -31,7 +31,7 @@ async function getImage(imageName) {
 
 async function addItem(item) {
   console.log("adding ", item);
-  var formData = new FormData();
+  let formData = new FormData();
   if (item.image) {
     let uri = item.image.uri;
     let filename = uri.split("/").pop();
@@ -39,7 +39,7 @@ async function addItem(item) {
     let type = match ? `image/${match[1]}` : `image`;
     formData.append("image", { uri: uri, name: filename, type });
   }
-  var newItem = item;
+  let newItem = item;
   delete newItem.image;
   formData.append("data", JSON.stringify(item));
   const keys = await tokenService.getCredentials();
@@ -93,7 +93,7 @@ async function deleteItem(id) {
 function getOutfits() {}
 
 async function addOutfit(outfit, image) {
-  var formData = new FormData();
+  let formData = new FormData();
   if (image) {
     let uri = image.uri;
     let filename = uri.split("/").pop();

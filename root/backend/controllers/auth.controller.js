@@ -9,7 +9,7 @@ exports.signup = (req, res) => {
   let { email, firstName, lastName, acceptTerms, username, password } =
     req.body;
   bcrypt.hash(password, 10, (err, hash) => {
-    if (err | (hash == null))
+    if (err || hash == null)
       return res.status(400).json({
         success: false,
         message: "Failed to hash password",
