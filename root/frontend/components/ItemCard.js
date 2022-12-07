@@ -190,6 +190,43 @@ function CardMenu(props) {
   );
 }
 
+function ColorButton({ color, index, last }) {
+  const colorCode = colorCodes[color];
+  const textColor = useContrastText(colorCode);
+  return (
+    <View py="0.5">
+      <Button
+        borderWidth={1}
+        borderColor="muted.800"
+        borderRadius="none"
+        bgColor={colorCode}
+        _text={{
+          color: textColor,
+        }}
+        borderLeftRadius={index == 0 ? "2xl" : "none"}
+        borderLeftWidth={index == 0 ? 1 : 0}
+        variant="outline"
+        borderRightRadius={last ? "2xl" : "none"}
+        borderRightWidth={last ? 1 : 0}
+        py={0.5}
+        px={1.5}
+        leftIcon={
+          index == 0 && (
+            <Icon
+              as={Ionicons}
+              name="color-palette-sharp"
+              color={textColor}
+              size="sm"
+            />
+          )
+        }
+      >
+        {color}
+      </Button>
+    </View>
+  );
+}
+
 function ItemImage(props) {
   const [uri, setUri] = useState(null);
 
@@ -228,7 +265,6 @@ export default function ItemCard(props) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [updatingName, setUpdatingName] = useState(false);
   const [layout, setLayout] = useState({});
-  const { user } = useAuth();
 
   const getText = () => {
     let text = "";
@@ -366,48 +402,14 @@ export default function ItemCard(props) {
                 >
                   {Object.keys(props.item.colors).map((rank, index) => {
                     return (
-                      <View py="0.5" key={rank}>
-                        <Button
-                          borderWidth={1}
-                          borderColor="muted.800"
-                          borderRadius="none"
-                          bgColor={colorCodes[props.item.colors[rank]]}
-                          _text={{
-                            color: useContrastText(
-                              colorCodes[props.item.colors[rank]]
-                            ),
-                          }}
-                          borderLeftRadius={index == 0 ? "2xl" : "none"}
-                          borderLeftWidth={index == 0 ? 1 : 0}
-                          variant="outline"
-                          borderRightRadius={
-                            index == Object.keys(props.item.colors).length - 1
-                              ? "2xl"
-                              : "none"
-                          }
-                          borderRightWidth={
-                            index == Object.keys(props.item.colors).length - 1
-                              ? 1
-                              : 0
-                          }
-                          py={0.5}
-                          px={1.5}
-                          leftIcon={
-                            index == 0 && (
-                              <Icon
-                                as={Ionicons}
-                                name="color-palette-sharp"
-                                color={useContrastText(
-                                  colorCodes[props.item.colors[rank]]
-                                )}
-                                size="sm"
-                              />
-                            )
-                          }
-                        >
-                          {props.item.colors[rank]}
-                        </Button>
-                      </View>
+                      <ColorButton
+                        color={props.item.colors[rank]}
+                        index={index}
+                        key={rank}
+                        last={
+                          index == Object.keys(props.item.colors).length - 1
+                        }
+                      />
                     );
                   })}
                 </HStack>

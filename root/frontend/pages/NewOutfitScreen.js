@@ -43,7 +43,7 @@ function ItemSearchModal(props) {
   const [selected, setSelected] = useState([]);
 
   const toggleSelect = (item) => {
-    if (!selected.map((i) => i._id).includes(item._id)) {
+    if (!selected.forEach((i) => i._id).includes(item._id)) {
       setSelected([...selected, item]);
     } else {
       let newSelect = selected.filter((i) => i._id != item._id);
@@ -112,7 +112,7 @@ function SlotModal(props) {
   }, [props.slot]);
 
   const clear = () => {
-    props.inSlot.map((i) => {
+    props.inSlot.forEach((i) => {
       props.removeItem(i, props.slot);
     });
   };

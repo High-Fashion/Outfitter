@@ -32,6 +32,29 @@ function ListHeader(props) {
   );
 }
 
+function CustomSelectItem(color, setOpen, setColor) {
+  const colorCode = colorCodes[color];
+  const textColor = useContrastText(colorCode);
+
+  return {
+    comp: () => (
+      <Select.Item
+        key={color}
+        label={color}
+        value={color}
+        _text={{
+          color: textColor,
+        }}
+        onPress={() => {
+          setColor(color);
+          setOpen(false);
+        }}
+        bgColor={colorCode}
+      />
+    ),
+  };
+}
+
 export default function ColorSelect(props) {
   const [open, setOpen] = useState(false);
 
@@ -68,29 +91,6 @@ export default function ColorSelect(props) {
     );
   };
 
-  function CustomSelectItem(color) {
-    const colorCode = colorCodes[color];
-    const textColor = useContrastText(colorCode);
-
-    return {
-      comp: () => (
-        <Select.Item
-          key={color}
-          label={color}
-          value={color}
-          _text={{
-            color: textColor,
-          }}
-          onPress={() => {
-            props.setColor(color);
-            setOpen(false);
-          }}
-          bgColor={colorCode}
-        />
-      ),
-    };
-  }
-
   return (
     <Select
       flex={1}
@@ -126,7 +126,7 @@ export default function ColorSelect(props) {
       }}
     >
       {filteredListOptions.map((color) => {
-        return CustomSelectItem(color).comp();
+        return CustomSelectItem(color, setOpen, props.setColor).comp();
       })}
     </Select>
   );

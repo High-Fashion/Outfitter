@@ -97,7 +97,7 @@ function QuizScreen({ navigation: { navigate }, route }) {
 
   useEffect(() => {
     console.log("key");
-    let complete = true;
+    var complete = true;
     Object.keys(completed).forEach((key) => {
       console.log(key + " " + completed[key]);
       if (!completed[key]) complete = false;
@@ -107,7 +107,7 @@ function QuizScreen({ navigation: { navigate }, route }) {
 
   async function finishSetup() {
     if (!setupComplete) return;
-    let finished = await route.params.finish({
+    var finished = await route.params.finish({
       styles: styles,
     });
     if (finished) {
