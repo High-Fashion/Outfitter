@@ -462,7 +462,7 @@ function WardrobeScreen({ navigation }) {
   }, [itemList, searchQuery, selectedType]);
 
   function removeItem(item) {
-    newlist = filteredItemList;
+    let newlist = filteredItemList;
     newlist.filter((i) => i._id != item._id);
     setFilteredItemList(newlist);
   }

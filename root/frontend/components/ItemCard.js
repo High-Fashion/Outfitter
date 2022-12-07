@@ -80,11 +80,9 @@ function CardMenu(props) {
       refreshUser();
     }
   }
-  function outfit() {}
   function post() {
     navigation.navigate("Post", { type: "clothing", item: props.item });
   }
-  function share() {}
 
   return (
     <View>
@@ -262,7 +260,6 @@ function ItemImage(props) {
 }
 
 export default function ItemCard(props) {
-  const [isLoaded, setIsLoaded] = useState(false);
   const [updatingName, setUpdatingName] = useState(false);
   const [layout, setLayout] = useState({});
 
@@ -343,11 +340,7 @@ export default function ItemCard(props) {
         >
           {!props.info && (
             <View position={"absolute"} zIndex={5} top="2" right="1">
-              <CardMenu
-                setDeleted={props.setDeleted}
-                setIsLoaded={setIsLoaded}
-                item={props.item}
-              />
+              <CardMenu setDeleted={props.setDeleted} item={props.item} />
             </View>
           )}
           <View position={"absolute"} zIndex={4} top={0} left={0}>
@@ -368,7 +361,13 @@ export default function ItemCard(props) {
               {!props.info ? (
                 <View>
                   <Input
-                    rightElement={<Icon as={Entypo} name="edit" size="lg" />}
+                    rightElement={
+                      updatingName ? (
+                        <Spinner />
+                      ) : (
+                        <Icon as={Entypo} name="edit" size="lg" />
+                      )
+                    }
                     fontSize="xl"
                     p={0}
                     defaultValue={name}

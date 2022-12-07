@@ -276,11 +276,9 @@ function CardMenu(props) {
   function similarScreen() {
     navigation.navigate("Similar Outfits", { outfit: props.outfit });
   }
-  function outfit() {}
   function post() {
     navigation.navigate("Post", { type: "outfit", outfit: props.outfit });
   }
-  function share() {}
 
   return (
     <View>
@@ -561,7 +559,6 @@ export default function OutfitCard(props) {
   if (!outfit["user"]) {
     console.log(outfit);
   }
-  const { user, refreshUser } = useAuth();
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [updatingName, setUpdatingName] = useState(false);
   const [spacerHeight, setSpacerHeight] = useState(0);
@@ -569,12 +566,6 @@ export default function OutfitCard(props) {
     props.outfit?.name ? props.outfit.name : "Untitled Outfit"
   );
   const [layout, setLayout] = useState({});
-  const remove = async (id) => {
-    const response = await deleteOutfit(id);
-    if (response) {
-      refreshUser();
-    }
-  };
 
   const toast = useToast();
   const updateName = async () => {
@@ -667,7 +658,13 @@ export default function OutfitCard(props) {
               {!props.info ? (
                 <View>
                   <Input
-                    rightElement={<Icon as={Entypo} name="edit" size="lg" />}
+                    rightElement={
+                      updatingName ? (
+                        <Spinner />
+                      ) : (
+                        <Icon as={Entypo} name="edit" size="lg" />
+                      )
+                    }
                     fontSize="xl"
                     p={0}
                     defaultValue={name}

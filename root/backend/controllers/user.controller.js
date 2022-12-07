@@ -156,7 +156,7 @@ exports.follow = (req, res) => {
   User.findById(id)
     .then((user) => {
       let isInArray = false;
-      if (user.private == true) {
+      if (user.private === true) {
         let requests = user.recievedRequests.map((f) => f._id);
         isInArray = requests.some((f) => {
           return f.equals(req.user._id);

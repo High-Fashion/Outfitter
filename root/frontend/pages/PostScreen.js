@@ -91,16 +91,7 @@ function ItemPicker(props) {
 
 function OutfitPicker(props) {
   const { user } = useAuth();
-  const [list, setList] = useState(user.wardrobe.outfits);
-  const [searchQuery, setSearchQuery] = useState("");
-
-  useEffect(() => {
-    setList(
-      user.wardrobe.outfits.map((o) => {
-        if (o.name.includes(searchQuery)) return true;
-      })
-    );
-  }, [searchQuery]);
+  const list = user.wardrobe.outfits;
 
   return (
     <View>
@@ -116,9 +107,6 @@ function OutfitPicker(props) {
           </Modal.Header>
           <Modal.Body>
             <ScrollView>
-              <View mx="2">
-                <SearchBar hideFilter />
-              </View>
               <VStack pt="3" space="3">
                 {list.map((outfit) => (
                   <Pressable
@@ -249,7 +237,7 @@ export default function PostScreen({ route, navigation }) {
         );
       },
     });
-    if (res == true) {
+    if (res === true) {
       navigation.navigate("Wardrobe");
     }
   };
