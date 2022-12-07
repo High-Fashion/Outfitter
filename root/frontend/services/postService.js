@@ -73,6 +73,7 @@ async function addPost(post) {
   var newPost = post;
   delete newPost.image;
   formData.append("data", JSON.stringify(post));
+  console.log(formData);
   const keys = await tokenService.getCredentials();
   if (!keys) return false;
   const { access_token } = keys;

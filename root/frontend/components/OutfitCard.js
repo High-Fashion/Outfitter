@@ -277,8 +277,8 @@ function CardMenu(props) {
       refreshUser();
     }
   }
-  function similarScreen(){
-    navigation.navigate("Similar Outfits", {outfit: props.outfit});
+  function similarScreen() {
+    navigation.navigate("Similar Outfits", { outfit: props.outfit });
   }
   function outfit() {}
   function post() {
@@ -357,7 +357,7 @@ function CardMenu(props) {
             Delete Outfit
           </Text>
         </Menu.Item>
-        <Menu.Item  onPress={similarScreen}>
+        <Menu.Item onPress={similarScreen}>
           <Icon
             color="muted.800"
             as={MaterialIcons}
@@ -413,7 +413,8 @@ function ItemImage(props) {
       {uri ? (
         <Image
           style={{
-            width: props.dims.width, height: props.dims.height
+            width: props.dims.width,
+            height: props.dims.height,
           }}
           source={{ uri: uri }}
           alt="image missing"
@@ -495,7 +496,7 @@ function ItemImageArray(props) {
                           key={item._id}
                           alignItems={"center"}
                           style={{
-                            width: (cardLayout.width / count),
+                            width: cardLayout.width / count,
                             height: cardLayout.width / count,
                           }}
                         >
@@ -562,7 +563,7 @@ export default function OutfitCard(props) {
   const [rating, setRating] = useState(0);
   const outfit = flattenObj(props.outfit);
   if (!outfit["user"]) {
-    console.log(outfit)
+    console.log(outfit);
   }
   const { user, refreshUser } = useAuth();
   const [showRatingModal, setShowRatingModal] = useState(false);
@@ -578,7 +579,6 @@ export default function OutfitCard(props) {
       refreshUser();
     }
   };
-
 
   const toast = useToast();
   const updateName = async () => {
@@ -603,7 +603,11 @@ export default function OutfitCard(props) {
   };
 
   return (
-    <View shadow="5" borderTopRadius="xl" borderBottomRadius={"2xl"}>
+    <View
+      shadow={!props.hideShadow ? "5" : "0"}
+      borderTopRadius={!props.square ? "xl" : "none"}
+      borderBottomRadius={!props.square ? "2xl" : "none"}
+    >
       <RatingModal
         rating={rating}
         setRating={setRating}
@@ -614,8 +618,8 @@ export default function OutfitCard(props) {
         flex={1}
         zIndex={1}
         backgroundColor="white"
-        borderTopRadius="lg"
-        borderBottomRadius={"2xl"}
+        borderTopRadius={!props.square ? "xl" : "none"}
+        borderBottomRadius={!props.square ? "2xl" : "none"}
         borderWidth={0.5}
         borderColor="gray.300"
         overflow={"hidden"}
@@ -656,6 +660,7 @@ export default function OutfitCard(props) {
             borderColor="gray.300"
             backgroundColor="white"
             borderRadius={"2xl"}
+            borderBottomRadius={props.square ? "none" : "2xl"}
             position={"absolute"}
             zIndex={5}
             bottom={-1}
@@ -691,7 +696,7 @@ export default function OutfitCard(props) {
                     outfit[slot].length == 0
                   )
                     return;
-                  
+
                   return (
                     <HStack
                       key={slot}
@@ -704,22 +709,22 @@ export default function OutfitCard(props) {
                       </View>
 
                       <HStack
-                        space={2}  
+                        space={2}
                         alignItems="center"
                         justifyContent="space-between"
                       >
-                      {outfit[slot].map((item) => {
-                        return (
-                          <Button
-                          key={item._id}
-                          variant={"subtle"}
-                          p={1}
-                          style={{ flexShrink: 1 }}
-                          >
-                            {item.name ? item.name : getText(item)}
-                          </Button>
-                        );
-                      })}
+                        {outfit[slot].map((item) => {
+                          return (
+                            <Button
+                              key={item._id}
+                              variant={"subtle"}
+                              p={1}
+                              style={{ flexShrink: 1 }}
+                            >
+                              {item.name ? item.name : getText(item)}
+                            </Button>
+                          );
+                        })}
                       </HStack>
                     </HStack>
                   );

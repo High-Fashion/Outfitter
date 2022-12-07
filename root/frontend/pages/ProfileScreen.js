@@ -90,9 +90,7 @@ function PostMenu(props) {
           Post Outfit Picture
         </Text>
       </Menu.Item>
-      <Menu.Item
-        onPress={() => navigation.navigate("Post", { type: "clothing" })}
-      >
+      <Menu.Item onPress={() => navigation.navigate("Post", { type: "item" })}>
         <FontAwesome5 name="tshirt" size={18} color="muted.800" />
         <Text color="muted.800" fontSize="md" fontWeight="semibold">
           Post Clothing Picture

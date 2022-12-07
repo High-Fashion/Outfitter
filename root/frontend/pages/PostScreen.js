@@ -166,7 +166,7 @@ export default function PostScreen({ route, navigation }) {
   const [formData, setData] = useState(
     editing
       ? { ...route.params.post }
-      : route.params.type == "clothing"
+      : route.params.type == "item"
       ? {
           type: route.params.type,
           item: route.params?.item ? route.params.item : undefined,
@@ -192,7 +192,7 @@ export default function PostScreen({ route, navigation }) {
       });
       return;
     }
-    if (route.params.type == "clothing" && !formData.item) {
+    if (route.params.type == "item" && !formData.item) {
       toast.show({
         render: () => {
           return (
@@ -298,7 +298,7 @@ export default function PostScreen({ route, navigation }) {
             />
           </FormControl>
         )}
-        {route.params.type == "clothing" && (
+        {route.params.type == "item" && (
           <FormControl>
             <FormControl.Label
               _text={{

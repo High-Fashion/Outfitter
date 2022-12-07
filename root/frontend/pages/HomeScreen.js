@@ -233,46 +233,6 @@ function Tabs({ labels, setHeight, scrollX, onItemPress }) {
   );
 }
 
-function Media(props) {
-  const [view, setView] = useState("follow");
-  const [secondHeaderHeight, setHeight] = useState(0);
-  const scrollX = useRef(new Animated.Value(0)).current;
-  const ref = createRef();
-  const onItemPress = useCallback((itemIndex) => {
-    ref?.current?.scrollTo({
-      x: itemIndex * width,
-    });
-  }, []);
-  return (
-    <ScrollView flex={1} stickyHeaderIndices={[2]}>
-      <VStack>
-        <Tabs
-          setHeight={setHeight}
-          scrollX={scrollX}
-          onItemPress={onItemPress}
-        />
-        <VStack flex={1}>
-          <Animated.ScrollView
-            ref={ref}
-            horizontal={true}
-            pagingEnabled
-            bounces={false}
-            disableIntervalMomentum={true}
-            showsHorizontalScrollIndicator={false}
-            onScroll={Animated.event(
-              [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-              { useNativeDriver: false }
-            )}
-          >
-            <FollowTab />
-            <PublicTab />
-          </Animated.ScrollView>
-        </VStack>
-      </VStack>
-    </ScrollView>
-  );
-}
-
 function UserCard(props) {
   const { user, username } = props;
   return (
@@ -387,7 +347,7 @@ function HomeScreen({ navigation }) {
             searchQuery={searchQuery}
           />
         ) : (
-          <Media isKeyboardVisible={isKeyboardVisible} />
+          <PublicTab />
         )}
       </VStack>
     </SafeAreaView>

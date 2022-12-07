@@ -25,6 +25,7 @@ import {
   Pressable,
   VStack,
 } from "native-base";
+import { ScrollView as GestureScrollView } from "react-native-gesture-handler";
 import Avatar from "./Avatar";
 import ItemCard from "./ItemCard";
 import { Dimensions, StyleSheet, TouchableOpacity } from "react-native";
@@ -36,6 +37,8 @@ import {
   FontAwesome,
   Ionicons,
   Feather,
+  AntDesign,
+  Octicons,
 } from "@expo/vector-icons";
 
 import { getImage } from "../services/wardrobeService";
@@ -43,6 +46,7 @@ import { getPost, deletePost, editPost } from "../services/postService";
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../contexts/Auth";
 import ToastAlert from "./ToastAlert";
+import OutfitCard from "./OutfitCard";
 
 function PostMenu(props) {
   const navigation = useNavigation();
@@ -229,16 +233,69 @@ export default function PostCard(props) {
               })
             }
           >
-            <HStack height={"10"}>
-              <Avatar navBar />
-              <Text p={1} fontWeight="bold" size="xs">
-                {post?.user?.username}
-              </Text>
+            <HStack alignItems={"center"} justifyContent={"space-between"}>
+              <HStack alignItems={"center"}>
+                <Avatar navBar />
+                <Text p={1} fontWeight="bold">
+                  {post?.user?.username}
+                </Text>
+              </HStack>
               <PostMenu />
             </HStack>
-            <View flex={1}>
+            <ScrollView
+              nestedScrollEnabled
+              horizontal
+              pagingEnabled
+              showsHorizontalScrollIndicator={false}
+              onScroll={(e) => console.log(e.nativeEvent.contentOffset)}
+            >
               <PostImage layout={layout} imageName={post.imageName} />
-            </View>
+              {post?.type == "item" && (
+                <View width={width}>
+                  <ItemCard item={post?.item} />
+                </View>
+              )}
+
+              {post?.type == "outfit" && (
+                <View width={width}>
+                  <OutfitCard hideShadow square info outfit={post?.outfit} />
+                </View>
+              )}
+            </ScrollView>
+            <HStack alignItems={"center"} justifyContent={"space-between"}>
+              <HStack alignItems={"center"}>
+                <IconButton
+                  size="lg"
+                  variant="unstyled"
+                  icon={<Icon as={AntDesign} name="hearto" color="muted.600" />}
+                />
+                <IconButton
+                  size="lg"
+                  variant="unstyled"
+                  icon={<Icon as={Octicons} name="comment" color="muted.600" />}
+                />
+              </HStack>
+              <IconButton
+                variant="unstyled"
+                icon={
+                  <Icon
+                    as={MaterialCommunityIcons}
+                    name="bookmark-plus-outline"
+                    color="muted.600"
+                    size={8}
+                  />
+                }
+              />
+            </HStack>
+            {post?.text && (
+              <HStack space="1">
+                <Text fontWeight={"black"}>{post?.user?.username}</Text>
+                <Text>{post?.text}</Text>
+              </HStack>
+            )}
+            <Text fontWeight={"black"}>
+              {post?.likes?.length ? post?.likes?.length : 0} likes
+            </Text>
           </VStack>
         ) : (
           <Center w="100%">

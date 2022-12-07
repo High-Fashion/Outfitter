@@ -24,7 +24,10 @@ exports.create = async (req, res) => {
     const imageName = crypto.randomBytes(32).toString("hex");
     props = { ...props, imageName: imageName };
     await uploadFile(req.file.buffer, imageName, req.file.mimetype).catch(
-      (err) => console.log(err)
+      (err) => {
+        console.log(err);
+        return res.status(400).send({ message: "failed to upload image" });
+      }
     );
   } else {
     console.log("img fail");
@@ -60,6 +63,10 @@ exports.readOne = (req, res) => {
     .populate(
       "user",
       "firstName lastName username role created private hideWardrobe"
+    )
+    .populate(
+      "item",
+      "name type imageName category subcategories brand colors pattern material fit"
     )
     .then((data) => {
       if (!data)
