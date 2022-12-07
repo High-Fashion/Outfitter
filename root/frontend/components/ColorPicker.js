@@ -1,37 +1,14 @@
-import React, { Component, useState, useEffect } from "react";
 import {
   Button,
-  Image,
-  Box,
-  HStack,
-  VStack,
-  Text,
-  FormControl,
-  Input,
-  Checkbox,
-  ScrollView,
-  Select,
-  Divider,
-  AddIcon,
-  Modal,
-  Icon,
-  DeleteIcon,
-  CheckCircleIcon,
-  View,
-  ChevronDownIcon,
-  ArrowBackIcon,
   Heading,
-  Spinner,
-  useToast,
-  CheckIcon,
+  HStack,
+  Select,
   useContrastText,
-  IconButton,
-  Center,
+  VStack,
 } from "native-base";
+import { useEffect, useState } from "react";
 import colors from "../assets/colors.json";
 import SearchBar from "./SearchBar";
-import capitalize from "../utils/capitalize";
-import { Dimensions, Keyboard } from "react-native";
 const colorList = colors.list;
 const colorCodes = colors.codes;
 
@@ -55,10 +32,52 @@ function ListHeader(props) {
   );
 }
 
+function CustomSelectItem(color, setOpen, setColor) {
+  const colorCode = colorCodes[color];
+  const textColor = useContrastText(colorCode);
+
+  return {
+    comp: () => (
+      <Select.Item
+        key={color}
+        label={color}
+        value={color}
+        _text={{
+          color: textColor,
+        }}
+        onPress={() => {
+          setColor(color);
+          setOpen(false);
+        }}
+        bgColor={colorCode}
+      />
+    ),
+  };
+}
+
+const ButtonTemplate = ({ color, setOpen }) => {
+  const colorCode = colorCodes[color];
+  const textColor = useContrastText(colorCode);
+  return (
+    <HStack px={2} space={1}>
+      <Button
+        py={1}
+        px={2}
+        borderRadius="full"
+        bgColor={colorCode}
+        _text={{ color: textColor }}
+        onPress={() => setOpen(true)}
+      >
+        {color}
+      </Button>
+    </HStack>
+  );
+};
+
 export default function ColorSelect(props) {
   const [open, setOpen] = useState(false);
 
-  const [listOptions, setListOptions] = useState(Object.keys(colorCodes));
+  const listOptions = Object.keys(colorCodes);
   const [filteredListOptions, setFilteredListOptions] = useState(listOptions);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -83,20 +102,7 @@ export default function ColorSelect(props) {
       }}
       placeholder={!props.color ? "Select " + props.rank + " color" : ""}
       leftElement={
-        props.color && (
-          <HStack px={2} space={1}>
-            <Button
-              py={1}
-              px={2}
-              borderRadius="full"
-              bgColor={colorCodes[props.color]}
-              _text={{ color: useContrastText(colorCodes[props.color]) }}
-              onPress={() => setOpen(true)}
-            >
-              {props.color}
-            </Button>
-          </HStack>
-        )
+        props.color && <ButtonTemplate color={props.color} setOpen={setOpen} />
       }
       _item={{
         _stack: {
@@ -122,21 +128,7 @@ export default function ColorSelect(props) {
       }}
     >
       {filteredListOptions.map((color) => {
-        return (
-          <Select.Item
-            key={color}
-            label={color}
-            value={color}
-            _text={{
-              color: useContrastText(colorCodes[color]),
-            }}
-            onPress={() => {
-              props.setColor(color);
-              setOpen(false);
-            }}
-            bgColor={colorCodes[color]}
-          />
-        );
+        return CustomSelectItem(color, setOpen, props.setColor).comp();
       })}
     </Select>
   );
