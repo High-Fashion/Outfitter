@@ -262,6 +262,9 @@ export function BodyShape({ navigation }) {
     <ScrollView>
       <VStack space={3} paddingTop={4} paddingBottom={4} mx={4}>
         <View>
+          <Heading pb={10}>
+            This screen was not implemented. Please go back and skip.
+          </Heading>
           <Heading>What is Body Shape?</Heading>
           <Text>
             Bodies come in different all shapes and sizes, yet most people fit

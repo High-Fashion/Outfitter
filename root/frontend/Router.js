@@ -57,7 +57,7 @@ export default function Router() {
         // Pre-load fonts, make any API calls you need to do here
         const keys = await getTokens();
         await new Promise(async (resolve) => {
-          if (!keys) {
+          if (!keys || !isSetup) {
             resolve();
             return;
           }
