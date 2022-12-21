@@ -1,9 +1,9 @@
 # Outfitter
-Wardrobe tracker application
 
-After cloning the project, you must run the command 'npm install' in both the frontend and backend folders.
+Outfitter is a cross-platform mobile application designed for iOS and Android using Expo, React Native, and the Native Base UI framework.
 
-Downloading ngrok: 
-You must download ngrok for this project to work. After downloading, run it on the port the application is using with the command 'ngrok http "portnumber" ' Copy the address in the Forwarding line and create an .env file in the Frontend where you will write "API_URL=address". You must redo this everytime the session expires.
+The goal of the application is to allow users to create an inventory of their clothing, shoes, and accessories. Using these items, users may create outfits. Users may also post these items as well as outfits to their profile to share with other users on the platform. 
 
-After downloading the packages and dependencies and ngrok, start the server in the backend first with the command 'npm start'. Then proceed to run it in the frontend with the command 'npx expo start --clear'. 
+Users may also generate outfits using machine learning. This function is a proof of concept but can be greatly expanded on. In its current state, a user can choose an outfit that they like, whether that be one of their own or one posted by another user, and generate a similar outfit using items from their own wardrobe. In the future, we wish to expand on this feature by automatically generating similar outfits based on the posts users like and the outfits they create. We would also like to implement specific functionality for the occasion, style, and community receptiveness.
+
+The backend server uses the Express Node.js web application framework and a MongoDB database. The server also uses python for machine-learning purposes. The python libraries used include pandas and sklearnkit.
